@@ -1,0 +1,102 @@
+@import '_normalize.scss';
+
+@font-face {
+    font-family: "Sansation";
+    src: url("../fonts/Sansation-Regular.ttf") format("truetype");
+}
+
+// variables
+$bodybg: #25171A;
+$inputbordercolor: #533A7B;
+$inputfocusbordercolor: #6969B3;
+$formbuttonbg: #533A7B;
+$buttoncolor: #6969B3;
+$buttonbg: transparent;
+$buttonbordercolor: #6969B3;
+$buttonhoverbg: #6969B3;
+$deletebuttonbg: #BB0030;
+
+
+:root {
+    --x: 0;
+    --y: 0;
+}
+
+* {
+    font-family: "Sansation";
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    color: #fff
+}
+
+body {
+    background-color: $bodybg;
+}
+
+a {
+    text-decoration: none;
+}
+
+a, button {
+    background-color: $formbuttonbg;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color .3s;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $buttonhoverbg;
+    }
+    
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        height: 10px;
+        width: 10px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background-color: transparent;
+        transition: all 0s;
+    }
+
+    &:active::before {
+        width: 500px;
+        height: 500px;
+        left: var(--x);
+        top: var(--y);
+        background-color: rgba(0, 0, 0, .3);
+        transition: width .6s, height .6s, color .6s;
+    }
+}
+
+.delete {
+    background-color: $deletebuttonbg;
+}
+
+
+.home {
+    &-header {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        padding-top: 100px;
+
+        &__description {
+            margin-top: 34px;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        &__button {
+
+        }
+
+    }
+}
+
