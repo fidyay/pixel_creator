@@ -1,11 +1,14 @@
 @import '_normalize.scss';
 
+// fonts
+
 @font-face {
     font-family: "Sansation";
     src: url("../fonts/Sansation-Regular.ttf") format("truetype");
 }
 
 // variables
+
 $bodybg: #25171A;
 $inputbordercolor: #533A7B;
 $inputfocusbordercolor: #6969B3;
@@ -15,6 +18,8 @@ $buttonbg: transparent;
 $buttonbordercolor: #6969B3;
 $buttonhoverbg: #6969B3;
 $deletebuttonbg: #BB0030;
+$modalbg: rgba(0, 0, 0, .3);
+$requiredcolor: #F56325;
 
 
 :root {
@@ -74,10 +79,39 @@ a, button {
     }
 }
 
+
+input[type="text"] {
+    background-color: $buttonbg;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    transition: color .2s;
+    padding: 0 10px 5px 10px;
+    position: relative;
+    transition: color .2s, border-bottom .2s;
+
+    &:focus {
+        color: $inputfocusbordercolor;
+        border-bottom: 1px solid $inputfocusbordercolor; 
+    }
+}
+
+input[type="radio"] {
+    background-color: transparent;
+    transition: background-color .2s;
+
+    &:checked {
+        background-color: $inputfocusbordercolor;
+    }
+}
+
 .delete {
     background-color: $deletebuttonbg;
 }
 
+.required { 
+    color: $requiredcolor;
+}
 
 .home {
     &-header {
@@ -93,10 +127,73 @@ a, button {
             margin-bottom: 30px;
         }
 
-        &__button {
-
-        }
-
     }
 }
 
+.modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: $modalbg;
+
+    &__form {
+        background-color: $bodybg;
+    }
+}
+
+.project-configuration-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px;
+
+    &__heading {
+        font-size: 24px;
+    }
+}
+
+.fieldset {
+
+
+
+
+    &__radiobutton {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        position: relative;
+        display: inline-block;
+        border: 2px solid rgba($color: #fff, $alpha: .7);
+
+        &::before {
+            content: '';
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: $inputfocusbordercolor;
+            transition: width .2s, height .2s;
+        }
+
+        &_checked::before {
+            height: 70%;
+            width: 70%;
+        }
+
+        input {
+            width: 15px;
+            height: 15px;
+            opacity: 0;
+        }
+    }
+}
