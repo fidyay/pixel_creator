@@ -17,10 +17,13 @@ const pointerDownHandler: React.PointerEventHandler<HTMLElement> = e => {
     document.documentElement.style.setProperty('--y', `${newY}px`)
 }
 
-export default ({link, linkPath, buttonOnClickHandler, className, children}: ButtonProps) => {
+
+const Button = ({link, linkPath, buttonOnClickHandler, className, children}: ButtonProps) => {
     return link ? 
     <Link to={linkPath} onPointerDown={pointerDownHandler} className={className}>{children}</Link> 
     :
     <button onPointerDown={pointerDownHandler}
     onClick={buttonOnClickHandler} className={className}>{children}</button>
 }
+
+export default Button

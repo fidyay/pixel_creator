@@ -3,7 +3,8 @@ import Logo from "./Logo";
 import Button from "./Button";
 import { Outlet } from "react-router-dom";
 
-export default () => {
+
+const HomePage = () => {
     return (
         <>
             <header className="home-header">
@@ -15,3 +16,5 @@ export default () => {
         </>
     )
 }
+
+export default HomePage

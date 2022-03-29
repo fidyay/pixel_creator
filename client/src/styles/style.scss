@@ -35,6 +35,25 @@ $requiredcolor: #F56325;
     color: #fff
 }
 
+// remove arrows from input[type="number"]
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+
+
+
+
 body {
     background-color: $bodybg;
 }
@@ -52,6 +71,7 @@ a, button {
     overflow: hidden;
     border: none;
     cursor: pointer;
+    display: block;
 
     &:hover {
         background-color: $buttonhoverbg;
@@ -80,7 +100,7 @@ a, button {
 }
 
 
-input[type="text"] {
+input[type="text"], input[type="number"] {
     background-color: $buttonbg;
     border: none;
     border-bottom: 1px solid #fff;
@@ -88,6 +108,7 @@ input[type="text"] {
     transition: color .2s;
     padding: 0 10px 5px 10px;
     position: relative;
+    text-align: center;
     transition: color .2s, border-bottom .2s;
 
     &:focus {
@@ -140,6 +161,7 @@ input[type="radio"] {
 
     &__form {
         background-color: $bodybg;
+        transition: width .2s, height .2s;
     }
 }
 
@@ -157,18 +179,57 @@ input[type="radio"] {
     &__heading {
         font-size: 24px;
     }
+
+
+    &__project {
+        &-type, &-size {
+            margin-top: 10px;
+        }
+    }
+
+    &__buttons {
+        margin-top: 10px;
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+    }
 }
 
 .fieldset {
+    border: none;
 
+    &__legend {
+        text-align: center;
+        font-size: 18px;
+    }
 
+    &__label {
+        margin-left: 50px;
+        cursor: pointer;
 
+        &:nth-of-type(1) {
+            margin-left: 0;
+        }
+    }
+
+    &__tips {
+        color: rgba($color: #fff, $alpha: .7);
+    }
+
+    &__number-inputs {
+        margin-top: 10px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
 
     &__radiobutton {
-        width: 15px;
-        height: 15px;
+        width: 16px;
+        height: 16px;
+        margin-right: 5px;
         border-radius: 50%;
         position: relative;
+        top: 4px;
         display: inline-block;
         border: 2px solid rgba($color: #fff, $alpha: .7);
 
@@ -191,8 +252,9 @@ input[type="radio"] {
         }
 
         input {
-            width: 15px;
-            height: 15px;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
             opacity: 0;
         }
     }

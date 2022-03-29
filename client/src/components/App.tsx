@@ -9,7 +9,8 @@ import HomePage from "./HomePage";
 import ProjectConfiguration from "./ProjectConfiguration";
 
 
-export default () => {
+
+const App = () => {
     return (
         <>
             <React.StrictMode>
@@ -26,3 +27,5 @@ export default () => {
         </>
     )
 }
+
+export default App
