@@ -5,7 +5,6 @@ import ColorPicker from "./ColorPicker";
 const spriteSizeTips = 'Maximum width and height for animated sprites is 100'
 const imageSizeTips = 'For images maximum width is 1024 and maximum height is 768'
 
-
 const ProjectConfiguration = () => {
     const [projectType, setProjectType] = useState('')
     const [projectBG, setProjectBG] = useState('transparent')
@@ -15,7 +14,6 @@ const ProjectConfiguration = () => {
     }
     const numberPlaceHolder = projectType === 'sprite' ? '16' : '100'
     
-
     return (
         <div className="modal">
             <form className="modal__form project-configuration-form">
@@ -44,7 +42,7 @@ const ProjectConfiguration = () => {
                 </fieldset>
 
                 <div className="project-configuration-form__buttons">
-                    <Button className="project-configuration-form__button" link linkPath="/create">Ok</Button>
+                    <Button className="project-configuration-form__button" link linkPath="/workplace">Ok</Button>
                     <Button className="project-configuration-form__button" link linkPath="/">Cancel</Button>
                 </div>
             </form> 

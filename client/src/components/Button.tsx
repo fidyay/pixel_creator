@@ -4,12 +4,15 @@ import { Link } from "react-router-dom";
 interface ButtonProps {
     link?: boolean,
     linkPath?: string
-    buttonOnClickHandler?: React.MouseEventHandler<HTMLButtonElement>,
+    onClick?: React.PointerEventHandler<HTMLButtonElement>,
     className: string,
-    children: string
+    children: React.ReactNode,
+    transparent?: boolean,
+    chosen?: boolean,
+    deleteButton?: boolean
 }
 
-const pointerDownHandler: React.PointerEventHandler<HTMLElement> = e => {
+export const pointerDownHandler: React.PointerEventHandler<HTMLElement> = e => {
     const {left: targetLeft, top: targetTop} = e.currentTarget.getBoundingClientRect()
     const newX = e.clientX - targetLeft
     const newY = e.clientY - targetTop
@@ -18,12 +21,12 @@ const pointerDownHandler: React.PointerEventHandler<HTMLElement> = e => {
 }
 
 
-const Button = ({link, linkPath, buttonOnClickHandler, className, children}: ButtonProps) => {
+const Button = ({link, linkPath, onClick, className, children, transparent, chosen, deleteButton}: ButtonProps) => {
     return link ? 
-    <Link to={linkPath} onPointerDown={pointerDownHandler} className={className}>{children}</Link> 
+    <Link to={linkPath} onPointerDown={pointerDownHandler} className={`${className}${chosen ? ' chosen' : transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>{children}</Link> 
     :
     <button onPointerDown={pointerDownHandler}
-    onClick={buttonOnClickHandler} className={className}>{children}</button>
+    onClick={onClick} className={`${className}${chosen ? ' chosen' : transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>{children}</button>
 }
 
 export default Button

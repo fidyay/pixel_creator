@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import HomePage from "./HomePage";
 import ProjectConfiguration from "./ProjectConfiguration";
+import Workplace from "./Workplace";
 
 
 
@@ -19,7 +20,7 @@ const App = () => {
                         <Route path="/" element={<HomePage/>}>
                             <Route path="project-configuration" element={<ProjectConfiguration/>}/>
                         </Route>
-                        {/* <Route path="create"/> */}
+                        <Route path="workplace" element={<Workplace/>}/>
                         <Route path="*" element={<Navigate to="/"/>}/>
                     </Routes>
                 </Router>
