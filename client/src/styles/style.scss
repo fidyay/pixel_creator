@@ -85,8 +85,8 @@ a, button {
     }
 
     &:active::before {
-        width: 500px;
-        height: 500px;
+        width: 1000px;
+        height: 1000px;
         left: var(--x);
         top: var(--y);
         background-color: rgba(0, 0, 0, .3);
@@ -136,7 +136,7 @@ a, button {
     
     &.chosen {
         color: #fff;
-        background-color: $formbuttonbg;
+        background-color: $formbuttonbg !important;
 
         path {
             fill: #fff;
@@ -178,6 +178,10 @@ input[type="number"] {
 
 .delete {
     background-color: $deletebuttonbg;
+
+    &:hover {
+        background-color: #ee0640;
+    }
 }
 
 .required { 
@@ -330,6 +334,21 @@ input[type="number"] {
         margin-bottom: 10px;
     }
 
+    &__rgb-input {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        label { 
+            margin-left: 10px;
+            margin-bottom: 10px;
+
+            &:first-of-type {
+                margin-left: 0;
+            }
+        }
+    }
+
     &__canvases {
         margin-top: 15px;
         display: flex;
@@ -392,6 +411,70 @@ input[type="number"] {
 
     &__nickname-compliment {
         font-size: 24px;
+    }
+}
+
+.workplace { 
+    .main { 
+        display: flex;
+
+        &__tools {
+            flex-grow: 0;
+            margin-left: 10px;
+        }
+        
+        &__frames {
+            margin-left: 10px;
+        }
+
+        &__canvas {
+            flex-grow: 1;
+        }
+    }
+}
+
+.tools {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 12.5%;
+    
+
+    &__heading {
+        align-self: center;
+        margin-bottom: 10px;
+    }
+
+    &__pen-sizes {
+        display: flex;
+        justify-content: space-evenly;
+        margin-bottom: 10px;
+    }
+
+    &__pen-size {
+
+        &:first-of-type {
+            margin-left: 0;
+        }
+    }
+
+    &__pens {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    &__pen {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+
+        svg {
+            width: 30px;
+            height: 30px;
+        }
     }
 }
 
@@ -490,5 +573,35 @@ input[type="number"] {
 
     &__create-frame {
         margin-top: 10px;
+    }
+}
+
+.project-options {
+    width: 16.7%;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-right: 10px;
+
+    &__button {
+        margin-top: 10px;
+    }
+}
+
+.sprite-animation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__fps-contoller {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 10px 0;
+
+        input {
+            margin: 0 10px;
+        }
     }
 }

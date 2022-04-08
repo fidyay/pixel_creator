@@ -9,7 +9,7 @@ const Frames = () => {
     const [chosenFrame, setChosenFrame] = useState(0)
     const [frames, setFrames] = useState([{}])
     return (
-        <div className="workplace__frames frames">
+        <div className="main__frames frames">
             <h3 className="frames__heading">
                 Frames
             </h3>

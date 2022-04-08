@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import Tools from "./Tools";
 import Frames from "./Frames";
+import Canvas from "./Canvas";
+import ProjectOptions from "./ProjectOptions";
 import getRandomNumber from "../functions/getRandomNumber";
 
 const compliments = ['awesome', 'best', 'great', 'amazing']
@@ -30,6 +32,8 @@ const Workplace = () => {
             <main className="workplace__main main">
                 <Tools/>
                 <Frames/>
+                <Canvas actionType="pen"/>
+                <ProjectOptions/>
             </main>
         </div>
     )

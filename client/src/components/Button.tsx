@@ -23,10 +23,10 @@ export const pointerDownHandler: React.PointerEventHandler<HTMLElement> = e => {
 
 const Button = ({link, linkPath, onClick, className, children, transparent, chosen, deleteButton}: ButtonProps) => {
     return link ? 
-    <Link to={linkPath} onPointerDown={pointerDownHandler} className={`${className}${chosen ? ' chosen' : transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>{children}</Link> 
+    <Link to={linkPath} onPointerDown={pointerDownHandler} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>{children}</Link> 
     :
     <button onPointerDown={pointerDownHandler}
-    onClick={onClick} className={`${className}${chosen ? ' chosen' : transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>{children}</button>
+    onClick={onClick} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>{children}</button>
 }
 
 export default Button
