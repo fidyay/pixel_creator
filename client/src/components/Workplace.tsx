@@ -11,6 +11,8 @@ const compliments = ['awesome', 'best', 'great', 'amazing']
 
 // termporary code
 const name = 'Nameofartist'
+const defaultWidth = 500
+const defaultHeight = 500
 
 const Workplace = () => {
     const [projectName, setProjectName] = useState('ProjectName')
@@ -32,7 +34,7 @@ const Workplace = () => {
             <main className="workplace__main main">
                 <Tools/>
                 <Frames/>
-                <Canvas actionType="pen"/>
+                <Canvas widthSqr={defaultWidth} heightSqr={defaultHeight} actionType="pen"/>
                 <ProjectOptions/>
             </main>
         </div>

@@ -429,6 +429,14 @@ input[type="number"] {
 
         &__canvas {
             flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            canvas {
+                flex-grow: 0;
+                flex-shrink: 0;
+            }
         }
     }
 }
