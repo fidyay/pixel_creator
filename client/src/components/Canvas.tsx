@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, PointerEvent, PointerEventHandler } from "react";
 import Drawing from "../classes/Drawing";
 
 interface CanvasProps {
@@ -55,13 +55,42 @@ const Canvas = ({actionType, widthInSquares, heightInSquares, squareSize, setSqu
     }
 
     return (<div className="main__canvas">
-                <canvas onClick={e => {
-                    const { top: canvasTop, left: canvasLeft } = e.currentTarget.getBoundingClientRect()
-                    const coords = {
-                        x: Math.floor((e.clientX - canvasLeft)/squareWidthAndHeight),
-                        y: Math.floor((e.clientY - canvasTop)/squareWidthAndHeight)
+                <canvas className="main__canvas-painting" onPointerDown={e => {
+                    const draw = (e: PointerEvent<HTMLCanvasElement> | MouseEvent) => {
+                        if ((e.target as HTMLCanvasElement).className !== 'main__canvas-painting') return
+                        const { top: canvasTop, left: canvasLeft, width: cannvasWidth, height: canvasHeight } = (e.target as HTMLCanvasElement).getBoundingClientRect()
+                        const coords = {
+                            x: Math.floor((e.clientX - canvasLeft)/squareWidthAndHeight),
+                            y: Math.floor((e.clientY - canvasTop)/squareWidthAndHeight)
+                        }
+
+                        if (coords.x < 0 || coords.x > cannvasWidth || coords.y < 0 || coords.y > canvasHeight) return
+
+                        switch(actionType) {
+                            case 'pen':
+                                drawing.current.drawSquare(coords.x, coords.y, squareWidthAndHeight, '#000')
+                                break
+                            default: 
+                                drawing.current.drawSquare(coords.x, coords.y, squareWidthAndHeight, '#000')
+                                break
+                        }
                     }
-                    drawing.current.drawSquare(coords.x, coords.y, squareWidthAndHeight, '#000')
+
+                    draw(e)
+
+                    const pointerMoveListener = (e:MouseEvent) => {
+                        draw(e)
+                    }
+
+                    const pointerUpListener = () => {
+                        window.removeEventListener('pointermove', pointerMoveListener)
+                        window.removeEventListener('pointerup', pointerUpListener)
+                    } 
+
+
+                    window.addEventListener('pointermove', pointerMoveListener)
+                    window.addEventListener('pointerup', pointerUpListener)
+                    
                 }} width={width} height={height} ref={node => setCanvas(node)}/>
             </div>)
 }
