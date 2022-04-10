@@ -1,30 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import Drawing from "../classes/Drawing";
 
 interface CanvasProps {
     actionType: 'pen' | 'line' | 'paint_bucket' | 'eraser' | 'selection_rectangle' | 'selection_round' | 'selection_rectangle_filled' | 'selection_round_filled' | 'pipette',
-    widthSqr: number,
-    heightSqr: number
+    squareSize: number,
+    setSquareSize: React.Dispatch<React.SetStateAction<number>>,
+    backgroundTransparent: boolean,
+    widthInSquares: number,
+    heightInSquares: number
 }
 
-const maxSquareWidthAndHeight = 7
+const trasparentBgSquareSize = 6
+
+let currentSquareSize = 7
 const maxWidth = document.documentElement.clientWidth * .45
 const maxHeight = document.documentElement.clientHeight * .73
 
-const Canvas = ({actionType, widthSqr, heightSqr}: CanvasProps) => {
+const Canvas = ({actionType, widthInSquares, heightInSquares, squareSize, setSquareSize, backgroundTransparent}: CanvasProps) => {
     const [canvas, setCanvas] = useState(null)
+    const drawing = useRef(new Drawing)
 
-    let squareWidthAndHeight = maxSquareWidthAndHeight
-    let width = widthSqr * squareWidthAndHeight
-    let height = heightSqr * squareWidthAndHeight
+    let squareWidthAndHeight = squareSize
+    let width = widthInSquares * squareWidthAndHeight
+    let height = heightInSquares * squareWidthAndHeight
 
     while (width > maxWidth || height > maxHeight) {
         squareWidthAndHeight--
-        width = widthSqr * squareWidthAndHeight
-        height = heightSqr * squareWidthAndHeight
+        width = widthInSquares * squareWidthAndHeight
+        height = heightInSquares * squareWidthAndHeight
+    }
+
+    if (squareWidthAndHeight !== currentSquareSize) {
+        setSquareSize(squareWidthAndHeight)
+        currentSquareSize = squareWidthAndHeight
+    }
+
+    if (canvas) {
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+        drawing.current.setCTX(ctx)
+        if (backgroundTransparent) {
+            let fourTransparentSquaresWidth = Math.ceil(width/(2*trasparentBgSquareSize))
+            let fourTransparentSquaresHeight = Math.ceil(height/(2*trasparentBgSquareSize))
+            for (let i = 0; i < fourTransparentSquaresWidth; i++) {
+                for (let j = 0; j < fourTransparentSquaresHeight; j++) {
+                    for (let k = 0, m = 0; k < 2; k++, m++) {
+                        for (let l = 0; l < 2; l++, m++) {
+                            ctx.fillStyle = (m % 2 === 0) ? '#555555' : '#4c4c4c'
+                            ctx.fillRect(i * 2 * trasparentBgSquareSize + k * trasparentBgSquareSize, j * 2 * trasparentBgSquareSize + l * trasparentBgSquareSize, trasparentBgSquareSize, trasparentBgSquareSize)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     return (<div className="main__canvas">
-                <canvas width={width} height={height} ref={node => setCanvas(node)}/>
+                <canvas onClick={e => {
+                    const { top: canvasTop, left: canvasLeft } = e.currentTarget.getBoundingClientRect()
+                    const coords = {
+                        x: Math.floor((e.clientX - canvasLeft)/squareWidthAndHeight),
+                        y: Math.floor((e.clientY - canvasTop)/squareWidthAndHeight)
+                    }
+                    drawing.current.drawSquare(coords.x, coords.y, squareWidthAndHeight, '#000')
+                }} width={width} height={height} ref={node => setCanvas(node)}/>
             </div>)
 }
 

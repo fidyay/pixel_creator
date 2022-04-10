@@ -11,12 +11,12 @@ const compliments = ['awesome', 'best', 'great', 'amazing']
 
 // termporary code
 const name = 'Nameofartist'
-const defaultWidth = 500
-const defaultHeight = 500
+const defaultSquareSize = 7
 
 const Workplace = () => {
     const [projectName, setProjectName] = useState('ProjectName')
     const compliment = useRef('')
+    const [squareSize, setSquareSize] = useState(defaultSquareSize)
 
     if (compliment.current === '') {
         compliment.current = compliments[Math.round(getRandomNumber(0, 3))]
@@ -34,7 +34,7 @@ const Workplace = () => {
             <main className="workplace__main main">
                 <Tools/>
                 <Frames/>
-                <Canvas widthSqr={defaultWidth} heightSqr={defaultHeight} actionType="pen"/>
+                <Canvas widthInSquares={100} heightInSquares={100} backgroundTransparent squareSize={squareSize} setSquareSize={setSquareSize} actionType="pen"/>
                 <ProjectOptions/>
             </main>
         </div>
