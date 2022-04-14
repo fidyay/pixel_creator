@@ -13,7 +13,12 @@ const compliments = ['awesome', 'best', 'great', 'amazing']
 const name = 'Nameofartist'
 const defaultSquareSize = 7
 
+export type PenSizeType = 1 | 2 | 3 | 4
+export type BrushType = 'pen' | 'line' | 'paint_bucket' | 'eraser' | 'selection_rectangle' | 'selection_round' | 'selection_rectangle_filled' | 'selection_round_filled' | 'pipette'
+
 const Workplace = () => {
+    const [chosenPenSize, setChosenPenSize] = useState<PenSizeType>(1)
+    const [chosenBrush, setChosenBrush] = useState<BrushType>('pen')
     const [projectName, setProjectName] = useState('ProjectName')
     const compliment = useRef('')
     const [squareSize, setSquareSize] = useState(defaultSquareSize)
@@ -32,9 +37,9 @@ const Workplace = () => {
                 <h3 className="header__nickname-compliment">{`By ${compliment.current} artist ${name}`}</h3>
             </header>
             <main className="workplace__main main">
-                <Tools/>
+                <Tools chosenPenSize={chosenPenSize} setChosenPenSize={setChosenPenSize} chosenBrush={chosenBrush} setChosenBrush={setChosenBrush}/>
                 <Frames/>
-                <Canvas widthInSquares={100} heightInSquares={100} backgroundTransparent squareSize={squareSize} setSquareSize={setSquareSize} actionType="pen"/>
+                <Canvas chosenPenSize={chosenPenSize} widthInSquares={100} heightInSquares={100} backgroundTransparent squareSize={squareSize} setSquareSize={setSquareSize} chosenBrush="pen"/>
                 <ProjectOptions/>
             </main>
         </div>

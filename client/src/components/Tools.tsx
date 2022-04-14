@@ -1,10 +1,17 @@
 import React, { useState } from "react";
 import Button from "./Button";
 import ColorPicker from "./ColorPicker";
+import type { PenSizeType, BrushType} from "./Workplace";
 
-const Tools = () => {
-    const [chosenPenSize, setChosenPenSize] = useState(0)
-    const [chosenBrush, setChosenBrush] = useState('')
+
+interface ToolsProps {
+    chosenPenSize: PenSizeType,
+    setChosenPenSize: React.Dispatch<React.SetStateAction<PenSizeType>>,
+    chosenBrush: BrushType,
+    setChosenBrush: React.Dispatch<React.SetStateAction<BrushType>>
+}
+
+const Tools = ({chosenPenSize, setChosenPenSize, chosenBrush, setChosenBrush}: ToolsProps) => {
 
     return (
         <div className="main__tools tools">

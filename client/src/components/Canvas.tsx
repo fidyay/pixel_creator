@@ -1,13 +1,17 @@
-import React, { useState, useRef, PointerEvent, PointerEventHandler } from "react";
+import React, { useState, useRef, PointerEvent } from "react";
 import Drawing from "../classes/Drawing";
+import getRandomNumber from "../functions/getRandomNumber";
+import type { PenSizeType, BrushType} from "./Workplace";
+
 
 interface CanvasProps {
-    actionType: 'pen' | 'line' | 'paint_bucket' | 'eraser' | 'selection_rectangle' | 'selection_round' | 'selection_rectangle_filled' | 'selection_round_filled' | 'pipette',
+    chosenBrush: BrushType,
     squareSize: number,
     setSquareSize: React.Dispatch<React.SetStateAction<number>>,
     backgroundTransparent: boolean,
     widthInSquares: number,
-    heightInSquares: number
+    heightInSquares: number,
+    chosenPenSize: PenSizeType
 }
 
 const trasparentBgSquareSize = 6
@@ -16,7 +20,7 @@ let currentSquareSize = 7
 const maxWidth = document.documentElement.clientWidth * .45
 const maxHeight = document.documentElement.clientHeight * .73
 
-const Canvas = ({actionType, widthInSquares, heightInSquares, squareSize, setSquareSize, backgroundTransparent}: CanvasProps) => {
+const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSquareSize, backgroundTransparent, chosenPenSize}: CanvasProps) => {
     const [canvas, setCanvas] = useState(null)
     const drawing = useRef(new Drawing)
 
@@ -59,19 +63,23 @@ const Canvas = ({actionType, widthInSquares, heightInSquares, squareSize, setSqu
                     const draw = (e: PointerEvent<HTMLCanvasElement> | MouseEvent) => {
                         if ((e.target as HTMLCanvasElement).className !== 'main__canvas-painting') return
                         const { top: canvasTop, left: canvasLeft, width: cannvasWidth, height: canvasHeight } = (e.target as HTMLCanvasElement).getBoundingClientRect()
-                        const coords = {
-                            x: Math.floor((e.clientX - canvasLeft)/squareWidthAndHeight),
-                            y: Math.floor((e.clientY - canvasTop)/squareWidthAndHeight)
-                        }
+                        const pointX = e.clientX - canvasLeft
+                        const pointY = e.clientY - canvasTop
 
-                        if (coords.x < 0 || coords.x > cannvasWidth || coords.y < 0 || coords.y > canvasHeight) return
+                        if (pointX < 0 || pointX > cannvasWidth || pointY < 0 || pointY > canvasHeight) return
 
-                        switch(actionType) {
+                        // just for fun and testing
+                        const r = getRandomNumber(0, 255)
+                        const g = getRandomNumber(0, 255)
+                        const b = getRandomNumber(0, 255)
+                        const color = `rgb(${r}, ${g}, ${b})`
+
+                        switch(chosenBrush) {
                             case 'pen':
-                                drawing.current.drawSquare(coords.x, coords.y, squareWidthAndHeight, '#000')
+                                drawing.current.drawSquare(chosenPenSize, pointX, pointY, squareWidthAndHeight, color)
                                 break
                             default: 
-                                drawing.current.drawSquare(coords.x, coords.y, squareWidthAndHeight, '#000')
+                                drawing.current.drawSquare(chosenPenSize, pointX, pointY, squareWidthAndHeight, color)
                                 break
                         }
                     }
