@@ -1,6 +1,5 @@
 import React, { useState, useRef, PointerEvent } from "react";
 import Drawing from "../classes/Drawing";
-import getRandomNumber from "../functions/getRandomNumber";
 import type { PenSizeType, BrushType} from "./Workplace";
 
 
@@ -42,6 +41,9 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
     if (canvas) {
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
         drawing.current.setCTX(ctx)
+        drawing.current.setSquareSize(squareWidthAndHeight)
+        drawing.current.setPenSize(chosenPenSize)
+        drawing.current.setColor('#000')
         if (backgroundTransparent) {
             let fourTransparentSquaresWidth = Math.ceil(width/(2*trasparentBgSquareSize))
             let fourTransparentSquaresHeight = Math.ceil(height/(2*trasparentBgSquareSize))
@@ -60,33 +62,64 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
 
     return (<div className="main__canvas">
                 <canvas className="main__canvas-painting" onPointerDown={e => {
+                    if ((e.target as HTMLCanvasElement).className !== 'main__canvas-painting') return
+                    const { top: canvasTop, left: canvasLeft, width: cannvasWidth, height: canvasHeight } = (e.target as HTMLCanvasElement).getBoundingClientRect()
+                    const pointX = e.clientX - canvasLeft
+                    const pointY = e.clientY - canvasTop
+
+                    if (pointX < 0 || pointX > cannvasWidth || pointY < 0 || pointY > canvasHeight) return
+
+                    switch(chosenBrush) {
+                        case 'pen':
+                            drawing.current.drawSquare(pointX, pointY)
+                            break
+                        case 'line':
+                            drawing.current.drawLine(pointX, pointY, pointX, pointY)
+                            break
+                        default: 
+                            drawing.current.drawSquare(pointX, pointY)
+                            break
+                    }
                     const draw = (e: PointerEvent<HTMLCanvasElement> | MouseEvent) => {
                         if ((e.target as HTMLCanvasElement).className !== 'main__canvas-painting') return
                         const { top: canvasTop, left: canvasLeft, width: cannvasWidth, height: canvasHeight } = (e.target as HTMLCanvasElement).getBoundingClientRect()
-                        const pointX = e.clientX - canvasLeft
-                        const pointY = e.clientY - canvasTop
+                        const pointMoveX = e.clientX - canvasLeft
+                        const pointMoveY = e.clientY - canvasTop
 
-                        if (pointX < 0 || pointX > cannvasWidth || pointY < 0 || pointY > canvasHeight) return
+                        if (pointMoveX < 0 || pointMoveX > cannvasWidth || pointMoveY < 0 || pointMoveY > canvasHeight) return
 
-                        // just for fun and testing
-                        const r = getRandomNumber(0, 255)
-                        const g = getRandomNumber(0, 255)
-                        const b = getRandomNumber(0, 255)
-                        const color = `rgb(${r}, ${g}, ${b})`
+                        // temporary code
 
                         switch(chosenBrush) {
                             case 'pen':
-                                drawing.current.drawSquare(chosenPenSize, pointX, pointY, squareWidthAndHeight, color)
+                                drawing.current.drawSquare(pointMoveX, pointMoveY)
+                                break
+                            case 'line':
+                                const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+                                ctx.clearRect(0, 0, widthInSquares * squareWidthAndHeight, heightInSquares * squareWidthAndHeight)
+                                if (backgroundTransparent) {
+                                    let fourTransparentSquaresWidth = Math.ceil(width/(2*trasparentBgSquareSize))
+                                    let fourTransparentSquaresHeight = Math.ceil(height/(2*trasparentBgSquareSize))
+                                    for (let i = 0; i < fourTransparentSquaresWidth; i++) {
+                                        for (let j = 0; j < fourTransparentSquaresHeight; j++) {
+                                            for (let k = 0, m = 0; k < 2; k++, m++) {
+                                                for (let l = 0; l < 2; l++, m++) {
+                                                    ctx.fillStyle = (m % 2 === 0) ? '#555555' : '#4c4c4c'
+                                                    ctx.fillRect(i * 2 * trasparentBgSquareSize + k * trasparentBgSquareSize, j * 2 * trasparentBgSquareSize + l * trasparentBgSquareSize, trasparentBgSquareSize, trasparentBgSquareSize)
+                                                }
+                                            }
+                                        }
+                                    }   
+                                }
+                                drawing.current.drawLine(pointX, pointY, pointMoveX, pointMoveY)
                                 break
                             default: 
-                                drawing.current.drawSquare(chosenPenSize, pointX, pointY, squareWidthAndHeight, color)
+                                drawing.current.drawSquare(pointX, pointY)
                                 break
                         }
                     }
 
-                    draw(e)
-
-                    const pointerMoveListener = (e:MouseEvent) => {
+                    const pointerMoveListener = (e: MouseEvent) => {
                         draw(e)
                     }
 
