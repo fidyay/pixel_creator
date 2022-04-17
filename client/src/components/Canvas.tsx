@@ -2,7 +2,6 @@ import React, { useState, useRef, PointerEvent } from "react";
 import Drawing from "../classes/Drawing";
 import type { PenSizeType, BrushType} from "./Workplace";
 
-
 interface CanvasProps {
     chosenBrush: BrushType,
     squareSize: number,
@@ -12,8 +11,6 @@ interface CanvasProps {
     heightInSquares: number,
     chosenPenSize: PenSizeType
 }
-
-const trasparentBgSquareSize = 6
 
 let currentSquareSize = 7
 const maxWidth = document.documentElement.clientWidth * .45
@@ -44,20 +41,9 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
         drawing.current.setSquareSize(squareWidthAndHeight)
         drawing.current.setPenSize(chosenPenSize)
         drawing.current.setColor('#000')
-        if (backgroundTransparent) {
-            let fourTransparentSquaresWidth = Math.ceil(width/(2*trasparentBgSquareSize))
-            let fourTransparentSquaresHeight = Math.ceil(height/(2*trasparentBgSquareSize))
-            for (let i = 0; i < fourTransparentSquaresWidth; i++) {
-                for (let j = 0; j < fourTransparentSquaresHeight; j++) {
-                    for (let k = 0, m = 0; k < 2; k++, m++) {
-                        for (let l = 0; l < 2; l++, m++) {
-                            ctx.fillStyle = (m % 2 === 0) ? '#555555' : '#4c4c4c'
-                            ctx.fillRect(i * 2 * trasparentBgSquareSize + k * trasparentBgSquareSize, j * 2 * trasparentBgSquareSize + l * trasparentBgSquareSize, trasparentBgSquareSize, trasparentBgSquareSize)
-                        }
-                    }
-                }
-            }
-        }
+        drawing.current.setBackground(backgroundTransparent ? 'transparent' : '')
+        drawing.current.setCanvasSize(heightInSquares, widthInSquares)
+        drawing.current.drawImage()
     }
 
     return (<div className="main__canvas">
@@ -69,12 +55,14 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
 
                     if (pointX < 0 || pointX > cannvasWidth || pointY < 0 || pointY > canvasHeight) return
 
+                    let squaresToDraw: string[] = []
+
                     switch(chosenBrush) {
                         case 'pen':
                             drawing.current.drawSquare(pointX, pointY)
                             break
                         case 'line':
-                            drawing.current.drawLine(pointX, pointY, pointX, pointY)
+                            squaresToDraw = drawing.current.drawLine(pointX, pointY, pointX, pointY)
                             break
                         default: 
                             drawing.current.drawSquare(pointX, pointY)
@@ -90,31 +78,16 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
 
                         // temporary code
 
+
                         switch(chosenBrush) {
                             case 'pen':
                                 drawing.current.drawSquare(pointMoveX, pointMoveY)
                                 break
                             case 'line':
-                                const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-                                ctx.clearRect(0, 0, widthInSquares * squareWidthAndHeight, heightInSquares * squareWidthAndHeight)
-                                if (backgroundTransparent) {
-                                    let fourTransparentSquaresWidth = Math.ceil(width/(2*trasparentBgSquareSize))
-                                    let fourTransparentSquaresHeight = Math.ceil(height/(2*trasparentBgSquareSize))
-                                    for (let i = 0; i < fourTransparentSquaresWidth; i++) {
-                                        for (let j = 0; j < fourTransparentSquaresHeight; j++) {
-                                            for (let k = 0, m = 0; k < 2; k++, m++) {
-                                                for (let l = 0; l < 2; l++, m++) {
-                                                    ctx.fillStyle = (m % 2 === 0) ? '#555555' : '#4c4c4c'
-                                                    ctx.fillRect(i * 2 * trasparentBgSquareSize + k * trasparentBgSquareSize, j * 2 * trasparentBgSquareSize + l * trasparentBgSquareSize, trasparentBgSquareSize, trasparentBgSquareSize)
-                                                }
-                                            }
-                                        }
-                                    }   
-                                }
-                                drawing.current.drawLine(pointX, pointY, pointMoveX, pointMoveY)
+                                squaresToDraw = drawing.current.drawLine(pointX, pointY, pointMoveX, pointMoveY)
                                 break
                             default: 
-                                drawing.current.drawSquare(pointX, pointY)
+                                drawing.current.drawSquare(pointMoveX, pointMoveY)
                                 break
                         }
                     }
@@ -124,10 +97,12 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                     }
 
                     const pointerUpListener = () => {
+                        if (squaresToDraw.length > 0) {
+                            drawing.current.addAndDrawSquares(squaresToDraw)
+                        }
                         window.removeEventListener('pointermove', pointerMoveListener)
                         window.removeEventListener('pointerup', pointerUpListener)
                     } 
-
 
                     window.addEventListener('pointermove', pointerMoveListener)
                     window.addEventListener('pointerup', pointerUpListener)

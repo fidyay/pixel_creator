@@ -1,14 +1,35 @@
 import type { PenSizeType } from "../components/Workplace";
 
+const trasparentBgSquareSize = 6
+
 class Drawing {
     drawing: any
     private ctx?: CanvasRenderingContext2D
     private squareSize: number
     private penSize: PenSizeType
     private color: string
+    private background: string
+    private canvasWidthInSquares: number
+    private canvasHeightInSquares: number
 
     constructor() {
         this.drawing = {}
+    }
+
+    setBackground(b: string) {
+        this.background = b
+    }
+
+    setCanvasSize(h: number, w: number) {
+        this.canvasHeightInSquares = h
+        this.canvasWidthInSquares = w
+    }
+
+    get canvasHeightInPixels() {
+        return this.canvasHeightInSquares * this.squareSize
+    }
+    get canvasWidthInPixels() {
+        return this.canvasWidthInSquares * this.squareSize
     }
 
     getSquareCoord(pixelCoord: number) {
@@ -31,14 +52,44 @@ class Drawing {
         this.color = c
     }
 
+    drawBackground() {
+        this.ctx.clearRect(0, 0, this.canvasWidthInPixels, this.canvasHeightInPixels)
+        if (this.background === 'transparent') {
+            let fourTransparentSquaresWidth = Math.ceil(this.canvasWidthInPixels/(2*trasparentBgSquareSize))
+            let fourTransparentSquaresHeight = Math.ceil(this.canvasHeightInPixels/(2*trasparentBgSquareSize))
+            for (let i = 0; i < fourTransparentSquaresWidth; i++) {
+                for (let j = 0; j < fourTransparentSquaresHeight; j++) {
+                    for (let k = 0, m = 0; k < 2; k++, m++) {
+                        for (let l = 0; l < 2; l++, m++) {
+                            this.ctx.fillStyle = (m % 2 === 0) ? '#555555' : '#4c4c4c'
+                            this.ctx.fillRect(i * 2 * trasparentBgSquareSize + k * trasparentBgSquareSize, j * 2 * trasparentBgSquareSize + l * trasparentBgSquareSize, trasparentBgSquareSize, trasparentBgSquareSize)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    drawSquareFromName(name: string) {
+        const coords = name.split(';')
+        const X = Number(coords[0].slice(2))
+        const Y = Number(coords[1].slice(2))
+        this.ctx.fillRect(X * this.squareSize, Y * this.squareSize, this.squareSize, this.squareSize)
+    }
+
     drawImage() {
-        const coordsOfSquares = this.drawing.keys()
+        this.drawBackground()
+        const coordsOfSquares = Object.keys(this.drawing)
         coordsOfSquares.forEach((square: string) => {
             this.ctx.fillStyle = this.drawing[square]
-            const coords = square.split(';')
-            const X = Number(coords[0].slice(2))
-            const Y = Number(coords[1].slice(2))
-            this.ctx.fillRect(X * this.squareSize, Y * this.squareSize, this.squareSize, this.squareSize)
+            this.drawSquareFromName(square)
+        })
+    }
+
+    addAndDrawSquares(squaresToDraw: string[]) {
+        squaresToDraw.forEach(square => {
+            this.drawing[square] = this.color
+            this.drawSquareFromName(square)
         })
     }
 
@@ -60,8 +111,8 @@ class Drawing {
         }
     }
     drawLine(x1: number, y1: number, x2: number, y2: number) {
+        this.drawImage()
         this.ctx.fillStyle = this.color
-        console.log(x1, y1, x2, y2)
         const startCoords = {
             x: this.getSquareCoord(x1),
             y: this.getSquareCoord(y1)
@@ -213,7 +264,6 @@ class Drawing {
             }
         }
 
-
         if (startCoords.x === endCoords.x && startCoords.y === endCoords.y) {
             for (let i = 0; i < this.penSize; i++) {
                 for (let j = 0; j < this.penSize; j++) {
@@ -223,10 +273,7 @@ class Drawing {
         }
         const squaresToDrawArray = Array.from(squaresToDraw)
         squaresToDraw.forEach(square => {
-            const coords = square.split(';')
-            const X = Number(coords[0].slice(2))
-            const Y = Number(coords[1].slice(2))
-            this.ctx.fillRect(X * this.squareSize, Y * this.squareSize, this.squareSize, this.squareSize)
+            this.drawSquareFromName(square)
         })
 
         return squaresToDrawArray
@@ -297,10 +344,7 @@ class Drawing {
         }
         const squaresToDrawArray = Array.from(squaresToDraw)
         squaresToDraw.forEach(square => {
-            const coords = square.split(';')
-            const X = Number(coords[0].slice(2))
-            const Y = Number(coords[1].slice(2))
-            this.ctx.fillRect(X * this.squareSize, Y * this.squareSize, this.squareSize, this.squareSize)
+            this.drawSquareFromName(square)
         })
 
         return squaresToDrawArray
