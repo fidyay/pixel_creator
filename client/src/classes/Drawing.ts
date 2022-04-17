@@ -153,9 +153,67 @@ class Drawing {
                     }
                 }
             }
-
-
         }
+
+        if (startCoords.x === endCoords.x && startCoords.y !== endCoords.y) {
+            if (startCoords.y > endCoords.y) {
+                for (let i = endCoords.x, j = endCoords.y;
+                    j < startCoords.y;
+                    j++) {
+                    for (let k = 0; k < this.penSize; k++) {
+                        for (let m = 0; m < this.penSize; m++) {
+                            const coordX = Math.floor(i) + k
+                            const coordY = Math.floor(j) + m
+                            squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                        }
+                    }
+                }
+            }
+            if (startCoords.y < endCoords.y) {
+                for (let i = endCoords.x, j = endCoords.y;
+                    j > startCoords.y;
+                    j--) {
+                    for (let k = 0; k < this.penSize; k++) {
+                        for (let m = 0; m < this.penSize; m++) {
+                            const coordX = Math.floor(i) + k
+                            const coordY = Math.floor(j) + m
+                            squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                        }
+                    }
+                }
+            }
+        }
+
+        if (startCoords.x !== endCoords.x && startCoords.y === endCoords.y) {
+            if (startCoords.x > endCoords.x) {
+                for (let i = endCoords.x, j = endCoords.y;
+                    i < startCoords.x;
+                    i++) {
+                    for (let k = 0; k < this.penSize; k++) {
+                        for (let m = 0; m < this.penSize; m++) {
+                            const coordX = Math.floor(i) + k
+                            const coordY = Math.floor(j) + m
+                            squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                        }
+                    }
+                }
+            }
+            if (startCoords.x < endCoords.x) {
+                for (let i = endCoords.x, j = endCoords.y;
+                    i > startCoords.x;
+                    i--) {
+                    for (let k = 0; k < this.penSize; k++) {
+                        for (let m = 0; m < this.penSize; m++) {
+                            const coordX = Math.floor(i) + k
+                            const coordY = Math.floor(j) + m
+                            squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                        }
+                    }
+                }
+            }
+        }
+
+
         if (startCoords.x === endCoords.x && startCoords.y === endCoords.y) {
             for (let i = 0; i < this.penSize; i++) {
                 for (let j = 0; j < this.penSize; j++) {
