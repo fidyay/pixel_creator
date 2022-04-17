@@ -22,6 +22,7 @@ const Workplace = () => {
     const [projectName, setProjectName] = useState('ProjectName')
     const compliment = useRef('')
     const [squareSize, setSquareSize] = useState(defaultSquareSize)
+    const [chosenColor, setChosenColor] = useState('#fff')
 
     if (compliment.current === '') {
         compliment.current = compliments[Math.round(getRandomNumber(0, 3))]
@@ -37,9 +38,9 @@ const Workplace = () => {
                 <h3 className="header__nickname-compliment">{`By ${compliment.current} artist ${name}`}</h3>
             </header>
             <main className="workplace__main main">
-                <Tools chosenPenSize={chosenPenSize} setChosenPenSize={setChosenPenSize} chosenBrush={chosenBrush} setChosenBrush={setChosenBrush}/>
+                <Tools setChosenColor={setChosenColor} chosenPenSize={chosenPenSize} setChosenPenSize={setChosenPenSize} chosenBrush={chosenBrush} setChosenBrush={setChosenBrush}/>
                 <Frames/>
-                <Canvas chosenPenSize={chosenPenSize} widthInSquares={100} heightInSquares={100} backgroundTransparent squareSize={squareSize} setSquareSize={setSquareSize} chosenBrush={chosenBrush}/>
+                <Canvas chosenColor={chosenColor} chosenPenSize={chosenPenSize} widthInSquares={100} heightInSquares={100} background={'transparent'} squareSize={squareSize} setSquareSize={setSquareSize} chosenBrush={chosenBrush}/>
                 <ProjectOptions/>
             </main>
         </div>

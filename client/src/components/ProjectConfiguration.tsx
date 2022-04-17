@@ -37,8 +37,8 @@ const ProjectConfiguration = () => {
                 <fieldset className="project-configuration-form__project-background-color fieldset">
                     <legend className="fieldset__legend">Background color<span className="required">*</span></legend>
                     <label onClick={() => setProjectBG('transparent')} className="fieldset__label"><span className={`radiobutton${projectBG === 'transparent' ? ' radiobutton_checked' : ''}`}><input name="type" type="radio"/></span>Transparent</label>
-                    <label onClick={() => setProjectBG('custom')} className="fieldset__label"><span className={`radiobutton${projectBG !== 'transparent' ? ' radiobutton_checked' : ''}`}><input name="type" type="radio"/></span>Custom</label>
-                    {projectBG !== 'transparent' && <ColorPicker className="fieldset__color-picker"/>}
+                    <label onClick={() => setProjectBG(projectBG === 'transparent' ? '#fff' : projectBG)} className="fieldset__label"><span className={`radiobutton${projectBG !== 'transparent' ? ' radiobutton_checked' : ''}`}><input name="type" type="radio"/></span>Custom</label>
+                    {projectBG !== 'transparent' && <ColorPicker onChange={e => setProjectBG(e.value)} className="fieldset__color-picker"/>}
                 </fieldset>
 
                 <div className="project-configuration-form__buttons">

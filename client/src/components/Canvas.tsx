@@ -6,17 +6,18 @@ interface CanvasProps {
     chosenBrush: BrushType,
     squareSize: number,
     setSquareSize: React.Dispatch<React.SetStateAction<number>>,
-    backgroundTransparent: boolean,
+    background: string,
     widthInSquares: number,
     heightInSquares: number,
-    chosenPenSize: PenSizeType
+    chosenPenSize: PenSizeType,
+    chosenColor: string
 }
 
 let currentSquareSize = 7
 const maxWidth = document.documentElement.clientWidth * .45
 const maxHeight = document.documentElement.clientHeight * .73
 
-const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSquareSize, backgroundTransparent, chosenPenSize}: CanvasProps) => {
+const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSquareSize, background, chosenPenSize, chosenColor}: CanvasProps) => {
     const [canvas, setCanvas] = useState(null)
     const drawing = useRef(new Drawing)
 
@@ -40,8 +41,8 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
         drawing.current.setCTX(ctx)
         drawing.current.setSquareSize(squareWidthAndHeight)
         drawing.current.setPenSize(chosenPenSize)
-        drawing.current.setColor('#000')
-        drawing.current.setBackground(backgroundTransparent ? 'transparent' : '')
+        drawing.current.setColor(chosenColor)
+        drawing.current.setBackground(background)
         drawing.current.setCanvasSize(heightInSquares, widthInSquares)
         drawing.current.drawImage()
     }

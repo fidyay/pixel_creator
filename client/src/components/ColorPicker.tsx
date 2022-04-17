@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 
 interface ColorPickerProps {
-    className: string
+    className: string,
+    onChange: (e: {value: string}) => void
 }
 
-const ColorPicker = ({className}: ColorPickerProps) => {
+const ColorPicker = ({className, onChange}: ColorPickerProps) => {
     const [colorBlock, setColorBlock] = useState(null)
     const [colorSlider, setColorSlider] = useState(null)
     const [colorBlockInfo, setColorBlockInfo] = useState({
@@ -58,13 +59,19 @@ const ColorPicker = ({className}: ColorPickerProps) => {
             <div style={{backgroundColor: `rgb(${colorBlockInfo.color.r}, ${colorBlockInfo.color.g}, ${colorBlockInfo.color.b})`}} className="color-picker__color"/>
             <div className="color-picker__rgb-input">
                 <label>R: <input value={colorBlockInfo.color.r} type="number" min="0" max="255" onChange={e => {
-                    setColorBlockInfo({...colorBlockInfo, color: {...colorBlockInfo.color, r: Number(e.target.value)}})
+                    const newColor = {...colorBlockInfo.color, r: Number(e.target.value)}
+                    setColorBlockInfo({...colorBlockInfo, color: newColor})
+                    onChange({value: `rgb(${newColor.r}, ${newColor.g}, ${newColor.b})`})
                 }}/></label>
                 <label>G: <input value={colorBlockInfo.color.g} type="number" min="0" max="255" onChange={e => {
-                    setColorBlockInfo({...colorBlockInfo, color: {...colorBlockInfo.color, g: Number(e.target.value)}})
+                    const newColor = {...colorBlockInfo.color, g: Number(e.target.value)}
+                    setColorBlockInfo({...colorBlockInfo, color: newColor})
+                    onChange({value: `rgb(${newColor.r}, ${newColor.g}, ${newColor.b})`})
                 }}/></label>
                 <label>B: <input value={colorBlockInfo.color.b} type="number" min="0" max="255" onChange={e => {
-                    setColorBlockInfo({...colorBlockInfo, color: {...colorBlockInfo.color, b: Number(e.target.value)}})
+                    const newColor = {...colorBlockInfo.color, b: Number(e.target.value)}
+                    setColorBlockInfo({...colorBlockInfo, color: newColor})
+                    onChange({value: `rgb(${newColor.r}, ${newColor.g}, ${newColor.b})`})
                 }}/></label>
             </div>
             <div className="color-picker__canvases">
@@ -81,7 +88,9 @@ const ColorPicker = ({className}: ColorPickerProps) => {
                                 if (Y > targetHeight) Y = targetHeight - 1
                                 const ctx = colorBlock.getContext('2d')
                                 const pixel = ctx.getImageData(X, Y, 1, 1).data
-                                setColorBlockInfo({color: {r: pixel[0], g: pixel[1], b: pixel[2]}, thumpPos: {x: X - 5, y: Y - 5}})
+                                const newColor = {r: pixel[0], g: pixel[1], b: pixel[2]}
+                                setColorBlockInfo({color: newColor, thumpPos: {x: X - 5, y: Y - 5}})
+                                onChange({value: `rgb(${newColor.r}, ${newColor.g}, ${newColor.b})`})
                             }
                             responseOnBlockEvent(e)
                             const removeListeners = () => {
