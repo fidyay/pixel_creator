@@ -103,7 +103,7 @@ class Drawing {
 
             if (isXStartBigger && isYStartBigger) {
                 for (let i = endCoords.x, j = endCoords.y;
-                    i < startCoords.x, j < startCoords.y;
+                    i <= startCoords.x, j <= startCoords.y;
                     i = isXRangeBigger ? i + 1 : i + difXYRanges, j = isXRangeBigger ? j + difXYRanges : j + 1) {
                     for (let k = 0; k < this.penSize; k++) {
                         for (let m = 0; m < this.penSize; m++) {
@@ -116,7 +116,7 @@ class Drawing {
             }
             if (!isXStartBigger && !isYStartBigger) {
                 for (let i = endCoords.x, j = endCoords.y;
-                    i > startCoords.x, j > startCoords.y;
+                    i >= startCoords.x, j >= startCoords.y;
                     i = isXRangeBigger ? i - 1 : i - difXYRanges, j = isXRangeBigger ? j - difXYRanges : j - 1) {
                     for (let k = 0; k < this.penSize; k++) {
                         for (let m = 0; m < this.penSize; m++) {
@@ -129,7 +129,7 @@ class Drawing {
             }
             if (isXStartBigger && !isYStartBigger) {
                 for (let i = endCoords.x, j = endCoords.y;
-                    i < startCoords.x, j > startCoords.y;
+                    i <= startCoords.x, j >= startCoords.y;
                     i = isXRangeBigger ? i + 1 : i + difXYRanges, j = isXRangeBigger ? j - difXYRanges : j - 1) {
                     for (let k = 0; k < this.penSize; k++) {
                         for (let m = 0; m < this.penSize; m++) {
@@ -142,7 +142,7 @@ class Drawing {
             }
             if (!isXStartBigger && isYStartBigger) {
                 for (let i = endCoords.x, j = endCoords.y;
-                    i > startCoords.x, j < startCoords.y;
+                    i >= startCoords.x, j <= startCoords.y;
                     i = isXRangeBigger ? i - 1 : i - difXYRanges, j = isXRangeBigger ? j + difXYRanges : j + 1) {
                     for (let k = 0; k < this.penSize; k++) {
                         for (let m = 0; m < this.penSize; m++) {
@@ -158,7 +158,7 @@ class Drawing {
         if (startCoords.x === endCoords.x && startCoords.y !== endCoords.y) {
             if (startCoords.y > endCoords.y) {
                 for (let i = endCoords.x, j = endCoords.y;
-                    j < startCoords.y;
+                    j <= startCoords.y;
                     j++) {
                     for (let k = 0; k < this.penSize; k++) {
                         for (let m = 0; m < this.penSize; m++) {
@@ -171,7 +171,7 @@ class Drawing {
             }
             if (startCoords.y < endCoords.y) {
                 for (let i = endCoords.x, j = endCoords.y;
-                    j > startCoords.y;
+                    j >= startCoords.y;
                     j--) {
                     for (let k = 0; k < this.penSize; k++) {
                         for (let m = 0; m < this.penSize; m++) {
@@ -187,7 +187,7 @@ class Drawing {
         if (startCoords.x !== endCoords.x && startCoords.y === endCoords.y) {
             if (startCoords.x > endCoords.x) {
                 for (let i = endCoords.x, j = endCoords.y;
-                    i < startCoords.x;
+                    i <= startCoords.x;
                     i++) {
                     for (let k = 0; k < this.penSize; k++) {
                         for (let m = 0; m < this.penSize; m++) {
@@ -200,7 +200,7 @@ class Drawing {
             }
             if (startCoords.x < endCoords.x) {
                 for (let i = endCoords.x, j = endCoords.y;
-                    i > startCoords.x;
+                    i >= startCoords.x;
                     i--) {
                     for (let k = 0; k < this.penSize; k++) {
                         for (let m = 0; m < this.penSize; m++) {
