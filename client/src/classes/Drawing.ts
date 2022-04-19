@@ -105,6 +105,7 @@ class Drawing {
                 const coordY = startCoords.y + j
                 if (!this.drawing[`x:${coordX};y:${coordY}`] || this.drawing[`x:${coordX};y:${coordY}`].color !== this.color) {
                     this.drawing[`x:${coordX};y:${coordY}`] = this.color
+                    this.ctx.clearRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
                     this.ctx.fillRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
                 }
             }
@@ -277,6 +278,129 @@ class Drawing {
         })
 
         return squaresToDrawArray
+    }
+
+    areaFill(x: number, y: number) {
+        const startCoords = {
+            x: this.getSquareCoord(x),
+            y: this.getSquareCoord(y)
+        }
+
+        const maxX = this.canvasWidthInSquares - 1
+        const maxY = this.canvasHeightInSquares - 1
+
+        const squaresToDraw: string[] = []
+        let targetColor: string
+        if (this.drawing[`x:${startCoords.x};y:${startCoords.y}`]) {
+            targetColor = this.drawing[`x:${startCoords.x};y:${startCoords.y}`]
+        } else {
+            // transparent
+            targetColor = undefined
+        }
+
+        const addToSquaresToDraw = (square: string) => {
+            const squares = [square]
+            let currentSquare = squares.shift()
+          
+            while (currentSquare) {
+              let shouldBreak = false
+          
+            //   if (squaresToDraw.includes(currentSquare)) {
+            //       console.log('its here')
+            //       shouldBreak = true
+            //   }
+              if (!targetColor) {
+                if (this.drawing[currentSquare]) shouldBreak = true
+              } else {
+                if (targetColor !== this.drawing[currentSquare]) shouldBreak = true
+              }
+              const coords = currentSquare.split(";")
+              const X = Number(coords[0].slice(2))
+              const Y = Number(coords[1].slice(2))
+          
+            //   if (X < 0 || Y < 0 || X > maxX || Y > maxX) shouldBreak = true
+          
+              if (shouldBreak) {
+                currentSquare = squares.shift()
+                break
+              }
+          
+              squaresToDraw.push(currentSquare)
+
+            if (
+                X - 1 >= 0 &&
+                !squaresToDraw.includes(`x:${X - 1};y:${Y}`) &&
+                this.drawing[`x:${X - 1};y:${Y}`] === targetColor
+                ) {
+                squares.push(`x:${X - 1};y:${Y}`)
+                squaresToDraw.push(`x:${X - 1};y:${Y}`)
+                }
+
+            if (
+                Y - 1 >= 0 &&
+                !squaresToDraw.includes(`x:${X};y:${Y - 1}`) &&
+                this.drawing[`x:${X};y:${Y - 1}`] === targetColor
+                ) {
+                squares.push(`x:${X};y:${Y - 1}`)
+                squaresToDraw.push(`x:${X};y:${Y - 1}`)
+                }
+
+            if (
+                X + 1 <= maxX &&
+                !squaresToDraw.includes(`x:${X + 1};y:${Y}`) &&
+                this.drawing[`x:${X + 1};y:${Y}`] === targetColor
+                ) {
+                squares.push(`x:${X + 1};y:${Y}`)
+                squaresToDraw.push(`x:${X + 1};y:${Y}`)
+                }
+            
+            if (
+                Y + 1 <= maxY &&
+                !squaresToDraw.includes(`x:${X};y:${Y + 1}`) &&
+                this.drawing[`x:${X};y:${Y + 1}`] === targetColor
+                ) {
+                squares.push(`x:${X};y:${Y + 1}`)
+                squaresToDraw.push(`x:${X};y:${Y + 1}`)
+                }
+
+              currentSquare = squares.shift()
+            }
+          }
+          
+
+        // const addToSquaresToDraw = (square: string) => {
+        //     if (squaresToDraw.includes(square)) return
+        //     if (!targetColor) {
+        //         if (this.drawing[square]) return
+        //     } else {
+        //         if (targetColor !== this.drawing[square]) return
+        //     }
+        //     const coords = square.split(';')
+        //     const X = Number(coords[0].slice(2))
+        //     const Y = Number(coords[1].slice(2))
+
+        //     if (X < 0) return
+        //     if (Y < 0) return
+        //     if (X > maxX) return
+        //     if (Y > maxY) return
+
+        //     squaresToDraw.push(square)
+        //     if (!squaresToDraw.includes(`x:${X - 1};y:${Y}`) && this.drawing[`x:${X - 1};y:${Y}`] === targetColor) {
+        //         addToSquaresToDraw(`x:${X - 1};y:${Y}`)
+        //     }
+        //     if (!squaresToDraw.includes(`x:${X};y:${Y - 1}`) && this.drawing[`x:${X};y:${Y - 1}`] === targetColor) {
+        //         addToSquaresToDraw(`x:${X};y:${Y - 1}`)
+        //     }
+        //     if (!squaresToDraw.includes(`x:${X + 1};y:${Y}`) && this.drawing[`x:${X + 1};y:${Y}`] === targetColor) {
+        //         addToSquaresToDraw(`x:${X + 1};y:${Y}`)
+        //     }
+        //     if (!squaresToDraw.includes(`x:${X};y:${Y + 1}`) && this.drawing[`x:${X};y:${Y + 1}`] === targetColor) {
+        //         addToSquaresToDraw(`x:${X};y:${Y + 1}`)
+        //     }
+        // }
+        addToSquaresToDraw(`x:${startCoords.x};y:${startCoords.y}`)
+
+        this.addAndDrawSquares(squaresToDraw)
     }
 
     selectArea(x1: number, y1: number, x2: number, y2: number) {

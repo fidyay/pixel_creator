@@ -65,6 +65,8 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                         case 'line':
                             squaresToDraw = drawing.current.drawLine(pointX, pointY, pointX, pointY)
                             break
+                        case 'paint_bucket': 
+                            drawing.current.areaFill(pointX, pointY)
                         default: 
                             drawing.current.drawSquare(pointX, pointY)
                             break
