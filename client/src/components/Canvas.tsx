@@ -67,6 +67,7 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                             break
                         case 'paint_bucket': 
                             drawing.current.areaFill(pointX, pointY)
+                            break
                         default: 
                             drawing.current.drawSquare(pointX, pointY)
                             break
@@ -80,7 +81,6 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                         if (pointMoveX < 0 || pointMoveX > cannvasWidth || pointMoveY < 0 || pointMoveY > canvasHeight) return
 
                         // temporary code
-
 
                         switch(chosenBrush) {
                             case 'pen':

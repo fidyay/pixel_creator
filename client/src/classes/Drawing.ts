@@ -289,7 +289,7 @@ class Drawing {
         const maxX = this.canvasWidthInSquares - 1
         const maxY = this.canvasHeightInSquares - 1
 
-        const squaresToDraw: string[] = []
+        const squaresToDraw = new Set<string>()
         let targetColor: string
         if (this.drawing[`x:${startCoords.x};y:${startCoords.y}`]) {
             targetColor = this.drawing[`x:${startCoords.x};y:${startCoords.y}`]
@@ -309,6 +309,7 @@ class Drawing {
             //       console.log('its here')
             //       shouldBreak = true
             //   }
+            
               if (!targetColor) {
                 if (this.drawing[currentSquare]) shouldBreak = true
               } else {
@@ -325,82 +326,51 @@ class Drawing {
                 break
               }
           
-              squaresToDraw.push(currentSquare)
+              squaresToDraw.add(currentSquare)
 
             if (
                 X - 1 >= 0 &&
-                !squaresToDraw.includes(`x:${X - 1};y:${Y}`) &&
+                !squaresToDraw.has(`x:${X - 1};y:${Y}`) &&
                 this.drawing[`x:${X - 1};y:${Y}`] === targetColor
                 ) {
                 squares.push(`x:${X - 1};y:${Y}`)
-                squaresToDraw.push(`x:${X - 1};y:${Y}`)
+                squaresToDraw.add(`x:${X - 1};y:${Y}`)
                 }
 
             if (
                 Y - 1 >= 0 &&
-                !squaresToDraw.includes(`x:${X};y:${Y - 1}`) &&
+                !squaresToDraw.has(`x:${X};y:${Y - 1}`) &&
                 this.drawing[`x:${X};y:${Y - 1}`] === targetColor
                 ) {
                 squares.push(`x:${X};y:${Y - 1}`)
-                squaresToDraw.push(`x:${X};y:${Y - 1}`)
+                squaresToDraw.add(`x:${X};y:${Y - 1}`)
                 }
 
             if (
                 X + 1 <= maxX &&
-                !squaresToDraw.includes(`x:${X + 1};y:${Y}`) &&
+                !squaresToDraw.has(`x:${X + 1};y:${Y}`) &&
                 this.drawing[`x:${X + 1};y:${Y}`] === targetColor
                 ) {
                 squares.push(`x:${X + 1};y:${Y}`)
-                squaresToDraw.push(`x:${X + 1};y:${Y}`)
+                squaresToDraw.add(`x:${X + 1};y:${Y}`)
                 }
             
             if (
                 Y + 1 <= maxY &&
-                !squaresToDraw.includes(`x:${X};y:${Y + 1}`) &&
+                !squaresToDraw.has(`x:${X};y:${Y + 1}`) &&
                 this.drawing[`x:${X};y:${Y + 1}`] === targetColor
                 ) {
                 squares.push(`x:${X};y:${Y + 1}`)
-                squaresToDraw.push(`x:${X};y:${Y + 1}`)
+                squaresToDraw.add(`x:${X};y:${Y + 1}`)
                 }
 
               currentSquare = squares.shift()
             }
           }
           
-
-        // const addToSquaresToDraw = (square: string) => {
-        //     if (squaresToDraw.includes(square)) return
-        //     if (!targetColor) {
-        //         if (this.drawing[square]) return
-        //     } else {
-        //         if (targetColor !== this.drawing[square]) return
-        //     }
-        //     const coords = square.split(';')
-        //     const X = Number(coords[0].slice(2))
-        //     const Y = Number(coords[1].slice(2))
-
-        //     if (X < 0) return
-        //     if (Y < 0) return
-        //     if (X > maxX) return
-        //     if (Y > maxY) return
-
-        //     squaresToDraw.push(square)
-        //     if (!squaresToDraw.includes(`x:${X - 1};y:${Y}`) && this.drawing[`x:${X - 1};y:${Y}`] === targetColor) {
-        //         addToSquaresToDraw(`x:${X - 1};y:${Y}`)
-        //     }
-        //     if (!squaresToDraw.includes(`x:${X};y:${Y - 1}`) && this.drawing[`x:${X};y:${Y - 1}`] === targetColor) {
-        //         addToSquaresToDraw(`x:${X};y:${Y - 1}`)
-        //     }
-        //     if (!squaresToDraw.includes(`x:${X + 1};y:${Y}`) && this.drawing[`x:${X + 1};y:${Y}`] === targetColor) {
-        //         addToSquaresToDraw(`x:${X + 1};y:${Y}`)
-        //     }
-        //     if (!squaresToDraw.includes(`x:${X};y:${Y + 1}`) && this.drawing[`x:${X};y:${Y + 1}`] === targetColor) {
-        //         addToSquaresToDraw(`x:${X};y:${Y + 1}`)
-        //     }
-        // }
         addToSquaresToDraw(`x:${startCoords.x};y:${startCoords.y}`)
 
-        this.addAndDrawSquares(squaresToDraw)
+        this.addAndDrawSquares(Array.from(squaresToDraw))
     }
 
     selectArea(x1: number, y1: number, x2: number, y2: number) {
