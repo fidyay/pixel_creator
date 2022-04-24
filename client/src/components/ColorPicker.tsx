@@ -2,21 +2,22 @@ import React, { useState } from "react";
 
 interface ColorPickerProps {
     className: string,
-    onChange: (e: {value: string}) => void
+    onChange: (e: {value: string}) => void,
+    forBackground?: boolean
 }
 
-const ColorPicker = ({className, onChange}: ColorPickerProps) => {
+const ColorPicker = ({className, onChange, forBackground}: ColorPickerProps) => {
     const [colorBlock, setColorBlock] = useState(null)
     const [colorSlider, setColorSlider] = useState(null)
     const [colorBlockInfo, setColorBlockInfo] = useState({
         color: {
-            r: 255,
-            g: 255,
-            b: 255
+            r: forBackground ? 255 : 0,
+            g: forBackground ? 255 : 0,
+            b: forBackground ? 255 : 0
         },
         thumpPos: {
-            x: -5,
-            y: -5
+            x: forBackground ? -5 : 95,
+            y: forBackground ? -5 : 95
         }
     })
     const [colorSliderInfo, setColorSliderInfo] = useState({

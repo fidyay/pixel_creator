@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: "Sansation";
-    src: url("../fonts/Sansation-Regular.ttf") format("truetype");
+    src: url("../assets/fonts/Sansation-Regular.ttf") format("truetype");
 }
 
 // variables
@@ -433,9 +433,13 @@ input[type="number"] {
             align-items: center;
             justify-content: center;
 
-            canvas {
+            &-painting {
                 flex-grow: 0;
                 flex-shrink: 0;
+                background-image: url('../assets/images/transparent_bg.svg');
+                background-repeat: repeat;
+                background-size: 20px;
+                
             }
         }
     }

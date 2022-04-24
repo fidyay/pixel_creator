@@ -68,6 +68,9 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                         case 'paint_bucket': 
                             drawing.current.areaFill(pointX, pointY)
                             break
+                        case 'eraser':
+                            drawing.current.erase(pointX, pointY)
+                            break
                         default: 
                             drawing.current.drawSquare(pointX, pointY)
                             break
@@ -88,6 +91,9 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                                 break
                             case 'line':
                                 squaresToDraw = drawing.current.drawLine(pointX, pointY, pointMoveX, pointMoveY)
+                                break
+                            case 'eraser':
+                                drawing.current.erase(pointMoveX, pointMoveY)
                                 break
                             default: 
                                 drawing.current.drawSquare(pointMoveX, pointMoveY)

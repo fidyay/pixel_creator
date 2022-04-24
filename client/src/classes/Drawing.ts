@@ -54,17 +54,10 @@ class Drawing {
 
     drawBackground() {
         this.ctx.clearRect(0, 0, this.canvasWidthInPixels, this.canvasHeightInPixels)
-        if (this.background === 'transparent') {
-            let fourTransparentSquaresWidth = Math.ceil(this.canvasWidthInPixels/(2*trasparentBgSquareSize))
-            let fourTransparentSquaresHeight = Math.ceil(this.canvasHeightInPixels/(2*trasparentBgSquareSize))
-            for (let i = 0; i < fourTransparentSquaresWidth; i++) {
-                for (let j = 0; j < fourTransparentSquaresHeight; j++) {
-                    for (let k = 0, m = 0; k < 2; k++, m++) {
-                        for (let l = 0; l < 2; l++, m++) {
-                            this.ctx.fillStyle = (m % 2 === 0) ? '#555555' : '#4c4c4c'
-                            this.ctx.fillRect(i * 2 * trasparentBgSquareSize + k * trasparentBgSquareSize, j * 2 * trasparentBgSquareSize + l * trasparentBgSquareSize, trasparentBgSquareSize, trasparentBgSquareSize)
-                        }
-                    }
+        if (this.background !== 'transparent' && Object.values(this.drawing).length === 0) {
+            for (let i = 0; i < this.canvasWidthInSquares; i++) {
+                for (let j = 0; j < this.canvasHeightInSquares; j++ ) {
+                    this.drawing[`x:${i};y:${j}`] = this.background
                 }
             }
         }
@@ -373,6 +366,32 @@ class Drawing {
         addToSquaresToDraw(`x:${startCoords.x};y:${startCoords.y}`)
 
         this.addAndDrawSquares(Array.from(squaresToDraw))
+    }
+
+    erase(x: number, y: number) { {
+        const startCoords = {
+            x: this.getSquareCoord(x),
+            y: this.getSquareCoord(y)
+        }
+        for (let i = 0; i < this.penSize; i++) {
+            for (let j = 0; j < this.penSize; j++) {
+                const coordX = startCoords.x + i
+                const coordY = startCoords.y + j
+                if (this.drawing[`x:${coordX};y:${coordY}`] && this.drawing[`x:${coordX};y:${coordY}`] !== this.background) {
+                    if (this.background === 'tranparent') {
+                        delete this.drawing[`x:${coordX};y:${coordY}`]
+                        this.ctx.clearRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
+                    } else {
+                        this.ctx.fillStyle = this.background
+                        this.drawing[`x:${coordX};y:${coordY}`] = this.background
+                        this.ctx.clearRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
+                        this.ctx.fillRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
+                    }
+                }
+            }
+        }
+    }
+
     }
 
     selectArea(x1: number, y1: number, x2: number, y2: number) {
