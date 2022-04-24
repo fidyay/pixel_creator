@@ -281,6 +281,8 @@ class Drawing {
     }
 
     areaFill(x: number, y: number) {
+        this.ctx.fillStyle = this.color
+
         const startCoords = {
             x: this.getSquareCoord(x),
             y: this.getSquareCoord(y)
