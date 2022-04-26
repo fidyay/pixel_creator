@@ -71,6 +71,9 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                         case 'eraser':
                             drawing.current.erase(pointX, pointY)
                             break
+                        case 'rectangle':
+                            squaresToDraw = drawing.current.rectangle(pointX, pointY, pointX, pointY)
+                            break
                         default: 
                             drawing.current.drawSquare(pointX, pointY)
                             break
@@ -94,6 +97,9 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                                 break
                             case 'eraser':
                                 drawing.current.erase(pointMoveX, pointMoveY)
+                                break
+                            case 'rectangle':
+                                squaresToDraw = drawing.current.rectangle(pointX, pointY, pointMoveX, pointMoveY)
                                 break
                             default: 
                                 drawing.current.drawSquare(pointMoveX, pointMoveY)

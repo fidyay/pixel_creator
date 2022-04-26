@@ -67,6 +67,7 @@ class Drawing {
         const coords = name.split(';')
         const X = Number(coords[0].slice(2))
         const Y = Number(coords[1].slice(2))
+        this.ctx.clearRect(X * this.squareSize, Y * this.squareSize, this.squareSize, this.squareSize)
         this.ctx.fillRect(X * this.squareSize, Y * this.squareSize, this.squareSize, this.squareSize)
     }
 
@@ -368,7 +369,7 @@ class Drawing {
         this.addAndDrawSquares(Array.from(squaresToDraw))
     }
 
-    erase(x: number, y: number) { {
+    erase(x: number, y: number) { 
         const startCoords = {
             x: this.getSquareCoord(x),
             y: this.getSquareCoord(y)
@@ -392,13 +393,9 @@ class Drawing {
         }
     }
 
-    }
-
-    selectArea(x1: number, y1: number, x2: number, y2: number) {
-        // for future and needs a rework
-        // copy the loops from drawLine method and change them to the appropriate way
+    rectangle(x1: number, y1: number, x2: number, y2: number) {
+        this.drawImage()
         this.ctx.fillStyle = this.color
-        console.log(x1, y1, x2, y2)
         const startCoords = {
             x: this.getSquareCoord(x1),
             y: this.getSquareCoord(y1)
@@ -413,43 +410,126 @@ class Drawing {
             const isXStartBigger: boolean = startCoords.x > endCoords.x
             const isYStartBigger: boolean = startCoords.y > endCoords.y
 
-            let XRange: number
-            let YRange: number
-
-            if (isXStartBigger) {
-                XRange = startCoords.x - endCoords.x
-            } else {
-                XRange = endCoords.x - startCoords.x
+            if (isXStartBigger && isYStartBigger) {
+                for (let i = endCoords.x; i <= startCoords.x; i++) {
+                    for (let j = endCoords.y; j <= startCoords.y; j++) {
+                        if (i === startCoords.x || i === endCoords.x || j === startCoords.y || j === endCoords.y) {
+                            for (let k = 0; k < this.penSize; k++) {
+                                for (let m = 0; m < this.penSize; m++) {
+                                    const coordX = i + k
+                                    const coordY = j + m
+                                    squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                                }
+                            }
+                        }
+                    }
+                }
             }
-
-            if (isYStartBigger) {
-                YRange = startCoords.y - endCoords.y
-            } else {
-                YRange = endCoords.y - startCoords.y
+            if (!isXStartBigger && !isYStartBigger) {
+                for (let i = endCoords.x; i >= startCoords.x; i--) {
+                    for (let j = endCoords.y; j >= startCoords.y; j--) {
+                        if (i === startCoords.x || i === endCoords.x || j === startCoords.y || j === endCoords.y) {
+                            for (let k = 0; k < this.penSize; k++) {
+                                for (let m = 0; m < this.penSize; m++) {
+                                    const coordX = i + k
+                                    const coordY = j + m
+                                    squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                                }
+                            }
+                        }
+                    }
+                }
             }
-
-            const isXRangeBigger: boolean = XRange > YRange
-
-            let difXYRanges: number
-
-            if (isXRangeBigger) {
-                difXYRanges = YRange/XRange
-            } else {
-                difXYRanges = XRange/YRange
+            if (isXStartBigger && !isYStartBigger) {
+                for (let i = endCoords.x; i <= startCoords.x; i++) {
+                    for (let j = endCoords.y; j >= startCoords.y; j--) {
+                        if (i === startCoords.x || i === endCoords.x || j === startCoords.y || j === endCoords.y) {
+                            for (let k = 0; k < this.penSize; k++) {
+                                for (let m = 0; m < this.penSize; m++) {
+                                    const coordX = i + k
+                                    const coordY = j + m
+                                    squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                                }
+                            }
+                        }
+                    }
+                }
             }
+            if (!isXStartBigger && isYStartBigger) {
+                for (let i = endCoords.x; i >= startCoords.x; i--) {
+                    for (let j = endCoords.y; j <= startCoords.y; j++) {
+                        if (i === startCoords.x || i === endCoords.x || j === startCoords.y || j === endCoords.y) {
+                            for (let k = 0; k < this.penSize; k++) {
+                                for (let m = 0; m < this.penSize; m++) {
+                                    const coordX = i + k
+                                    const coordY = j + m
+                                    squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-            for (let i = isXStartBigger ? endCoords.x : startCoords.x; i < (isXStartBigger ? startCoords.x : endCoords.x); i = isXRangeBigger ? i + 1 : i + difXYRanges) {
-                for (let j = isYStartBigger ? endCoords.y : startCoords.y; j < (isYStartBigger ? startCoords.y : endCoords.y); j = isXRangeBigger ? j + difXYRanges : j + 1) {
+        if (startCoords.x === endCoords.x && startCoords.y !== endCoords.y) {
+            if (startCoords.y > endCoords.y) {
+                for (let i = endCoords.x, j = endCoords.y;
+                    j <= startCoords.y;
+                    j++) {
                     for (let k = 0; k < this.penSize; k++) {
                         for (let m = 0; m < this.penSize; m++) {
-                            const coordX = Math.floor(i) + k
-                            const coordY = Math.floor(j) + m
+                            const coordX = i + k
+                            const coordY = j + m
+                            squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                        }
+                    }
+                }
+            }
+            if (startCoords.y < endCoords.y) {
+                for (let i = endCoords.x, j = endCoords.y;
+                    j >= startCoords.y;
+                    j--) {
+                    for (let k = 0; k < this.penSize; k++) {
+                        for (let m = 0; m < this.penSize; m++) {
+                            const coordX = i + k
+                            const coordY = j + m
                             squaresToDraw.add(`x:${coordX};y:${coordY}`)
                         }
                     }
                 }
             }
         }
+
+        if (startCoords.x !== endCoords.x && startCoords.y === endCoords.y) {
+            if (startCoords.x > endCoords.x) {
+                for (let i = endCoords.x, j = endCoords.y;
+                    i <= startCoords.x;
+                    i++) {
+                    for (let k = 0; k < this.penSize; k++) {
+                        for (let m = 0; m < this.penSize; m++) {
+                            const coordX = i + k
+                            const coordY = j + m
+                            squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                        }
+                    }
+                }
+            }
+            if (startCoords.x < endCoords.x) {
+                for (let i = endCoords.x, j = endCoords.y;
+                    i >= startCoords.x;
+                    i--) {
+                    for (let k = 0; k < this.penSize; k++) {
+                        for (let m = 0; m < this.penSize; m++) {
+                            const coordX = i + k
+                            const coordY = j + m
+                            squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                        }
+                    }
+                }
+            }
+        }
+
         if (startCoords.x === endCoords.x && startCoords.y === endCoords.y) {
             for (let i = 0; i < this.penSize; i++) {
                 for (let j = 0; j < this.penSize; j++) {
@@ -464,6 +544,77 @@ class Drawing {
 
         return squaresToDrawArray
     }
+
+    // selectArea(x1: number, y1: number, x2: number, y2: number) {
+    //     // for future and needs a rework
+    //     // copy the loops from drawLine method and change them to the appropriate way
+    //     this.ctx.fillStyle = this.color
+    //     console.log(x1, y1, x2, y2)
+    //     const startCoords = {
+    //         x: this.getSquareCoord(x1),
+    //         y: this.getSquareCoord(y1)
+    //     }
+    //     const endCoords = {
+    //         x: this.getSquareCoord(x2),
+    //         y: this.getSquareCoord(y2)
+    //     }
+    //     const squaresToDraw = new Set<string>()
+
+    //     if (startCoords.x !== endCoords.x && startCoords.y !== endCoords.y) {
+    //         const isXStartBigger: boolean = startCoords.x > endCoords.x
+    //         const isYStartBigger: boolean = startCoords.y > endCoords.y
+
+    //         let XRange: number
+    //         let YRange: number
+
+    //         if (isXStartBigger) {
+    //             XRange = startCoords.x - endCoords.x
+    //         } else {
+    //             XRange = endCoords.x - startCoords.x
+    //         }
+
+    //         if (isYStartBigger) {
+    //             YRange = startCoords.y - endCoords.y
+    //         } else {
+    //             YRange = endCoords.y - startCoords.y
+    //         }
+
+    //         const isXRangeBigger: boolean = XRange > YRange
+
+    //         let difXYRanges: number
+
+    //         if (isXRangeBigger) {
+    //             difXYRanges = YRange/XRange
+    //         } else {
+    //             difXYRanges = XRange/YRange
+    //         }
+
+    //         for (let i = isXStartBigger ? endCoords.x : startCoords.x; i < (isXStartBigger ? startCoords.x : endCoords.x); i = isXRangeBigger ? i + 1 : i + difXYRanges) {
+    //             for (let j = isYStartBigger ? endCoords.y : startCoords.y; j < (isYStartBigger ? startCoords.y : endCoords.y); j = isXRangeBigger ? j + difXYRanges : j + 1) {
+    //                 for (let k = 0; k < this.penSize; k++) {
+    //                     for (let m = 0; m < this.penSize; m++) {
+    //                         const coordX = Math.floor(i) + k
+    //                         const coordY = Math.floor(j) + m
+    //                         squaresToDraw.add(`x:${coordX};y:${coordY}`)
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     if (startCoords.x === endCoords.x && startCoords.y === endCoords.y) {
+    //         for (let i = 0; i < this.penSize; i++) {
+    //             for (let j = 0; j < this.penSize; j++) {
+    //                 squaresToDraw.add(`x:${startCoords.x + i};y:${startCoords.y + j}`)
+    //             }
+    //         }
+    //     }
+    //     const squaresToDrawArray = Array.from(squaresToDraw)
+    //     squaresToDraw.forEach(square => {
+    //         this.drawSquareFromName(square)
+    //     })
+
+    //     return squaresToDrawArray
+    // }
 }
 
 export default Drawing

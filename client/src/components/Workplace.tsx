@@ -14,7 +14,7 @@ const name = 'Nameofartist'
 const defaultSquareSize = 7
 
 export type PenSizeType = 1 | 2 | 3 | 4
-export type BrushType = 'pen' | 'line' | 'paint_bucket' | 'eraser' | 'selection_rectangle' | 'selection_round' | 'selection_rectangle_filled' | 'selection_round_filled' | 'pipette'
+export type BrushType = 'pen' | 'line' | 'paint_bucket' | 'eraser' | 'rectangle' | 'round' | 'selection_rectangle' | 'selection_round' | 'pipette'
 
 const Workplace = () => {
     const [chosenPenSize, setChosenPenSize] = useState<PenSizeType>(1)
