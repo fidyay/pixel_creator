@@ -55,7 +55,7 @@ const Tools = ({chosenPenSize, setChosenPenSize, chosenBrush, setChosenBrush, se
                         <path d="M0 0V30H30V0H0ZM27 26.25H3V3.75H27V26.25Z" fill="#6969B3"/>
                     </svg>
                 </Button>
-                <Button chosen={chosenBrush === 'round'} onClick={() => setChosenBrush('round')} transparent className="tools__pen">
+                <Button chosen={chosenBrush === 'elipse'} onClick={() => setChosenBrush('elipse')} transparent className="tools__pen">
                     <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M15 0C6.705 0 0 6.705 0 15C0 23.295 6.705 30 15 30C23.295 30 30 23.295 30 15C30 6.705 23.295 0 15 0ZM15 27C8.37 27 3 21.63 3 15C3 8.37 8.37 3 15 3C21.63 3 27 8.37 27 15C27 21.63 21.63 27 15 27Z" fill="#6969B3"/>
                     </svg>
@@ -65,7 +65,7 @@ const Tools = ({chosenPenSize, setChosenPenSize, chosenBrush, setChosenBrush, se
                         <path d="M30 0H0V30H30V0Z" fill="#6969B3"/>
                     </svg>
                 </Button>
-                <Button chosen={chosenBrush === 'selection_round'} onClick={() => setChosenBrush('selection_round')} transparent className="tools__pen">
+                <Button chosen={chosenBrush === 'selection_elipse'} onClick={() => setChosenBrush('selection_elipse')} transparent className="tools__pen">
                     <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M15 0C6.72 0 0 6.72 0 15C0 23.28 6.72 30 15 30C23.28 30 30 23.28 30 15C30 6.72 23.28 0 15 0Z" fill="#6969B3"/>
                     </svg>

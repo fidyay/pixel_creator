@@ -545,6 +545,10 @@ class Drawing {
         return squaresToDrawArray
     }
 
+    elipse(x1: number, y1: number, x2: number, y2: number) {
+       // x2/a2+y2/b2=1,a≥b>0
+    }
+
     // selectArea(x1: number, y1: number, x2: number, y2: number) {
     //     // for future and needs a rework
     //     // copy the loops from drawLine method and change them to the appropriate way
