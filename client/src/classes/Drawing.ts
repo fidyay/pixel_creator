@@ -546,7 +546,117 @@ class Drawing {
     }
 
     elipse(x1: number, y1: number, x2: number, y2: number) {
-       // x2/a2+y2/b2=1,a≥b>0
+       this.drawImage()
+        this.ctx.fillStyle = this.color
+        const startCoords = {
+            x: this.getSquareCoord(x1),
+            y: this.getSquareCoord(y1)
+        }
+        const endCoords = {
+            x: this.getSquareCoord(x2),
+            y: this.getSquareCoord(y2)
+        }
+        const squaresToDraw = new Set<string>()
+
+
+        if (startCoords.x !== endCoords.x && startCoords.y !== endCoords.y) {
+            // x^2/a^2+y^2/b^2=1,a≥b>0
+            const a = Math.round(Math.abs(startCoords.x - endCoords.x)/2) - 1
+            const b = Math.round(Math.abs(startCoords.y - endCoords.y)/2) - 1
+
+            const zeroX = startCoords.x > endCoords.x ? startCoords.x - a : endCoords.x - a
+            const zeroY = startCoords.y > endCoords.y ? startCoords.y - b : endCoords.y - b
+            for (let i = 0; i <= a + 1; i++) {
+                const y = Math.round(Math.sqrt((1 - (i ** 2)/(a ** 2)) * (b ** 2)))
+                squaresToDraw.add(`x:${zeroX + i};y:${zeroY + y}`)
+                squaresToDraw.add(`x:${zeroX - i};y:${zeroY + y}`)
+                squaresToDraw.add(`x:${zeroX + i};y:${zeroY - y}`)
+                squaresToDraw.add(`x:${zeroX - i};y:${zeroY - y}`)
+
+                if (!(squaresToDraw.has(`x:${zeroX + i - 1};y:${zeroY + y}`) || squaresToDraw.has(`x:${zeroX + i - 1};y:${zeroY + y + 1}`))) {
+                    const previousY =  Math.round(Math.sqrt((1 - ((i - 1) ** 2)/(a ** 2)) * (b ** 2)))
+                    for (let k = y; k < previousY; k++) {
+                        squaresToDraw.add(`x:${zeroX + i};y:${zeroY - k}`)
+                        squaresToDraw.add(`x:${zeroX - i};y:${zeroY - k}`)
+                        squaresToDraw.add(`x:${zeroX + i};y:${zeroY + k}`)
+                        squaresToDraw.add(`x:${zeroX - i};y:${zeroY + k}`)
+                    }
+                }
+            }
+            
+        }
+
+        if (startCoords.x === endCoords.x && startCoords.y !== endCoords.y) {
+            if (startCoords.y > endCoords.y) {
+                for (let i = endCoords.x, j = endCoords.y;
+                    j <= startCoords.y;
+                    j++) {
+                    for (let k = 0; k < this.penSize; k++) {
+                        for (let m = 0; m < this.penSize; m++) {
+                            const coordX = i + k
+                            const coordY = j + m
+                            squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                        }
+                    }
+                }
+            }
+            if (startCoords.y < endCoords.y) {
+                for (let i = endCoords.x, j = endCoords.y;
+                    j >= startCoords.y;
+                    j--) {
+                    for (let k = 0; k < this.penSize; k++) {
+                        for (let m = 0; m < this.penSize; m++) {
+                            const coordX = i + k
+                            const coordY = j + m
+                            squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                        }
+                    }
+                }
+            }
+        }
+
+        if (startCoords.x !== endCoords.x && startCoords.y === endCoords.y) {
+            if (startCoords.x > endCoords.x) {
+                for (let i = endCoords.x, j = endCoords.y;
+                    i <= startCoords.x;
+                    i++) {
+                    for (let k = 0; k < this.penSize; k++) {
+                        for (let m = 0; m < this.penSize; m++) {
+                            const coordX = i + k
+                            const coordY = j + m
+                            squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                        }
+                    }
+                }
+            }
+            if (startCoords.x < endCoords.x) {
+                for (let i = endCoords.x, j = endCoords.y;
+                    i >= startCoords.x;
+                    i--) {
+                    for (let k = 0; k < this.penSize; k++) {
+                        for (let m = 0; m < this.penSize; m++) {
+                            const coordX = i + k
+                            const coordY = j + m
+                            squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                        }
+                    }
+                }
+            }
+        }
+
+        if (startCoords.x === endCoords.x && startCoords.y === endCoords.y) {
+            for (let i = 0; i < this.penSize; i++) {
+                for (let j = 0; j < this.penSize; j++) {
+                    squaresToDraw.add(`x:${startCoords.x + i};y:${startCoords.y + j}`)
+                }
+            }
+        }
+        const squaresToDrawArray = Array.from(squaresToDraw)
+        squaresToDraw.forEach(square => {
+            this.drawSquareFromName(square)
+        })
+
+        return squaresToDrawArray
     }
 
     // selectArea(x1: number, y1: number, x2: number, y2: number) {
