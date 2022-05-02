@@ -568,18 +568,74 @@ class Drawing {
             const zeroY = startCoords.y > endCoords.y ? startCoords.y - b : endCoords.y - b
             for (let i = 0; i <= a + 1; i++) {
                 const y = Math.round(Math.sqrt((1 - (i ** 2)/(a ** 2)) * (b ** 2)))
-                squaresToDraw.add(`x:${zeroX + i};y:${zeroY + y}`)
-                squaresToDraw.add(`x:${zeroX - i};y:${zeroY + y}`)
-                squaresToDraw.add(`x:${zeroX + i};y:${zeroY - y}`)
-                squaresToDraw.add(`x:${zeroX - i};y:${zeroY - y}`)
+
+                for (let l = 0; l < this.penSize; l++) {
+                    for (let m = 0; m < this.penSize; m++) {
+                        const coordX = zeroX + i + l
+                        const coordY = zeroY + y + m
+                        squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                    }
+                }
+
+                for (let l = 0; l < this.penSize; l++) {
+                    for (let m = 0; m < this.penSize; m++) {
+                        const coordX = zeroX - i + l
+                        const coordY = zeroY + y + m
+                        squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                    }
+                }
+
+                for (let l = 0; l < this.penSize; l++) {
+                    for (let m = 0; m < this.penSize; m++) {
+                        const coordX = zeroX + i + l
+                        const coordY = zeroY - y + m
+                        squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                    }
+                }
+
+                for (let l = 0; l < this.penSize; l++) {
+                    for (let m = 0; m < this.penSize; m++) {
+                        const coordX = zeroX - i + l
+                        const coordY = zeroY - y + m
+                        squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                    }
+                }
 
                 if (!(squaresToDraw.has(`x:${zeroX + i - 1};y:${zeroY + y}`) || squaresToDraw.has(`x:${zeroX + i - 1};y:${zeroY + y + 1}`))) {
                     const previousY =  Math.round(Math.sqrt((1 - ((i - 1) ** 2)/(a ** 2)) * (b ** 2)))
                     for (let k = y; k < previousY; k++) {
-                        squaresToDraw.add(`x:${zeroX + i};y:${zeroY - k}`)
-                        squaresToDraw.add(`x:${zeroX - i};y:${zeroY - k}`)
-                        squaresToDraw.add(`x:${zeroX + i};y:${zeroY + k}`)
-                        squaresToDraw.add(`x:${zeroX - i};y:${zeroY + k}`)
+
+                        for (let l = 0; l < this.penSize; l++) {
+                            for (let m = 0; m < this.penSize; m++) {
+                                const coordX = zeroX + i + l
+                                const coordY = zeroY - k + m
+                                squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                            }
+                        }
+
+                        for (let l = 0; l < this.penSize; l++) {
+                            for (let m = 0; m < this.penSize; m++) {
+                                const coordX = zeroX - i + l
+                                const coordY = zeroY - k + m
+                                squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                            }
+                        }
+
+                        for (let l = 0; l < this.penSize; l++) {
+                            for (let m = 0; m < this.penSize; m++) {
+                                const coordX = zeroX + i + l
+                                const coordY = zeroY + k + m
+                                squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                            }
+                        }
+
+                        for (let l = 0; l < this.penSize; l++) {
+                            for (let m = 0; m < this.penSize; m++) {
+                                const coordX = zeroX - i + l
+                                const coordY = zeroY + k + m
+                                squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                            }
+                        }
                     }
                 }
             }
