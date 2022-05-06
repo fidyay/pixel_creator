@@ -546,7 +546,7 @@ class Drawing {
     }
 
     elipse(x1: number, y1: number, x2: number, y2: number) {
-       this.drawImage()
+        this.drawImage()
         this.ctx.fillStyle = this.color
         const startCoords = {
             x: this.getSquareCoord(x1),
@@ -558,16 +558,16 @@ class Drawing {
         }
         const squaresToDraw = new Set<string>()
 
-
         if (startCoords.x !== endCoords.x && startCoords.y !== endCoords.y) {
             // x^2/a^2+y^2/b^2=1,a≥b>0
-            const a = Math.round(Math.abs(startCoords.x - endCoords.x)/2) - 1
-            const b = Math.round(Math.abs(startCoords.y - endCoords.y)/2) - 1
+            const a = (startCoords.x > endCoords.x ? startCoords.x - endCoords.x : endCoords.x - startCoords.x)/2
+            const b = (startCoords.y > endCoords.y ? startCoords.y - endCoords.y : endCoords.y - startCoords.y)/2
 
-            const zeroX = startCoords.x > endCoords.x ? startCoords.x - a : endCoords.x - a
-            const zeroY = startCoords.y > endCoords.y ? startCoords.y - b : endCoords.y - b
-            for (let i = 0; i <= a + 1; i++) {
-                const y = Math.round(Math.sqrt((1 - (i ** 2)/(a ** 2)) * (b ** 2)))
+            const zeroX = Math.floor(startCoords.x > endCoords.x ? startCoords.x - a : endCoords.x - a)
+            const zeroY = Math.floor(startCoords.y > endCoords.y ? startCoords.y - b : endCoords.y - b)
+            
+            for (let i = 0; i <= a; i++) {
+                const y = Math.ceil(Math.sqrt((1 - (i ** 2)/(a ** 2)) * (b ** 2)))
 
                 for (let l = 0; l < this.penSize; l++) {
                     for (let m = 0; m < this.penSize; m++) {
@@ -602,9 +602,8 @@ class Drawing {
                 }
 
                 if (!(squaresToDraw.has(`x:${zeroX + i - 1};y:${zeroY + y}`) || squaresToDraw.has(`x:${zeroX + i - 1};y:${zeroY + y + 1}`))) {
-                    const previousY =  Math.round(Math.sqrt((1 - ((i - 1) ** 2)/(a ** 2)) * (b ** 2)))
+                    const previousY =  Math.ceil(Math.sqrt((1 - ((i - 1) ** 2)/(a ** 2)) * (b ** 2)))
                     for (let k = y; k < previousY; k++) {
-
                         for (let l = 0; l < this.penSize; l++) {
                             for (let m = 0; m < this.penSize; m++) {
                                 const coordX = zeroX + i + l
@@ -633,6 +632,27 @@ class Drawing {
                             for (let m = 0; m < this.penSize; m++) {
                                 const coordX = zeroX - i + l
                                 const coordY = zeroY + k + m
+                                squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                            }
+                        }
+                    }
+                }
+
+                if (i === Math.floor(a)) {
+                    const previousY =  Math.ceil(Math.sqrt((1 - (Math.floor(a - 1) ** 2)/(a ** 2)) * (b ** 2)))
+                    for (let k = zeroY - previousY + 1; k < zeroY + previousY; k++) {
+                        for (let l = 0; l < this.penSize; l++) {
+                            for (let m = 0; m < this.penSize; m++) {
+                                const coordX = zeroX + i + l
+                                const coordY = k + m
+                                squaresToDraw.add(`x:${coordX};y:${coordY}`)
+                            }
+                        }
+
+                        for (let l = 0; l < this.penSize; l++) {
+                            for (let m = 0; m < this.penSize; m++) {
+                                const coordX = zeroX - i + l
+                                const coordY = k + m
                                 squaresToDraw.add(`x:${coordX};y:${coordY}`)
                             }
                         }

@@ -88,7 +88,7 @@ if (devMode) {
     historyApiFallback: true,
     hot: true,
     client: {
-      reconnect: true,
+      reconnect: true
     },
   }
 }
