@@ -1,6 +1,13 @@
 import type { PenSizeType } from "../components/Workplace";
 
-const trasparentBgSquareSize = 6
+interface SelectedSquares {
+    isDrawing: boolean,
+    xStart: number,
+    yStart: number,
+    xEnd: number,
+    yEnd: number,
+    squares: string[]
+}
 
 class Drawing {
     drawing: any
@@ -11,9 +18,52 @@ class Drawing {
     private background: string
     private canvasWidthInSquares: number
     private canvasHeightInSquares: number
+    public selectedSquares: SelectedSquares
 
     constructor() {
         this.drawing = {}
+        this.selectedSquares = {
+            isDrawing: false,
+            xStart: 0,
+            yStart: 0,
+            xEnd: 0,
+            yEnd: 0,
+            squares: []
+        }
+    }
+
+    resetSelectedSquares() {
+        this.selectedSquares.squares.length = 0
+        this.selectedSquares.isDrawing = false
+        this.selectedSquares.xStart = 0
+        this.selectedSquares.yStart = 0
+        this.selectedSquares.xEnd = 0
+        this.selectedSquares.yEnd = 0
+    }
+
+    moveSelection(x: number, y: number) {
+        const coordsToMove = {
+            x: Math.round((x)/(this.squareSize*this.penSize)) * this.penSize,
+            y: Math.round((y)/(this.squareSize*this.penSize)) * this.penSize
+        }
+        this.selectedSquares.squares = this.selectedSquares.squares.map(square => {
+            const coords = square.split(';')
+            const squareX = Number(coords[0].slice(2)) - this.selectedSquares.xStart + coordsToMove.x
+            const squareY = Number(coords[1].slice(2)) - this.selectedSquares.yStart + coordsToMove.y
+            return `x:${squareX};y:${squareY}`
+        })
+
+        const xDiff = this.selectedSquares.xEnd - this.selectedSquares.xStart
+        const yDiff = this.selectedSquares.yEnd - this.selectedSquares.yStart
+
+        this.selectedSquares.xStart = coordsToMove.x
+        this.selectedSquares.yStart = coordsToMove.y
+        this.selectedSquares.xEnd = coordsToMove.x + xDiff
+        this.selectedSquares.yEnd = coordsToMove.y + yDiff
+    }
+
+    getPixelCoord(coord: number) {
+        return coord * this.squareSize
     }
 
     setBackground(b: string) {
@@ -60,6 +110,16 @@ class Drawing {
                     this.drawing[`x:${i};y:${j}`] = this.background
                 }
             }
+        }
+    }
+
+    drawSelectedSquares() {
+        if (this.selectedSquares?.squares?.length) {
+            this.drawImage()
+            this.ctx.fillStyle = 'rgba(130, 163, 178, .5)'
+            this.selectedSquares.squares.forEach(square => {
+                this.drawSquareFromName(square)
+            })
         }
     }
 
@@ -300,11 +360,6 @@ class Drawing {
           
             while (currentSquare) {
               let shouldBreak = false
-          
-            //   if (squaresToDraw.includes(currentSquare)) {
-            //       console.log('its here')
-            //       shouldBreak = true
-            //   }
             
               if (!targetColor) {
                 if (this.drawing[currentSquare]) shouldBreak = true
@@ -314,8 +369,6 @@ class Drawing {
               const coords = currentSquare.split(";")
               const X = Number(coords[0].slice(2))
               const Y = Number(coords[1].slice(2))
-          
-            //   if (X < 0 || Y < 0 || X > maxX || Y > maxX) shouldBreak = true
           
               if (shouldBreak) {
                 currentSquare = squares.shift()
@@ -735,76 +788,37 @@ class Drawing {
         return squaresToDrawArray
     }
 
-    // selectArea(x1: number, y1: number, x2: number, y2: number) {
-    //     // for future and needs a rework
-    //     // copy the loops from drawLine method and change them to the appropriate way
-    //     this.ctx.fillStyle = this.color
-    //     console.log(x1, y1, x2, y2)
-    //     const startCoords = {
-    //         x: this.getSquareCoord(x1),
-    //         y: this.getSquareCoord(y1)
-    //     }
-    //     const endCoords = {
-    //         x: this.getSquareCoord(x2),
-    //         y: this.getSquareCoord(y2)
-    //     }
-    //     const squaresToDraw = new Set<string>()
+    selection(x1: number, y1: number, x2: number, y2: number) {
+        const startCoords = {
+            x: this.getSquareCoord(x1),
+            y: this.getSquareCoord(y1)
+        }
+        const endCoords = {
+            x: this.getSquareCoord(x2),
+            y: this.getSquareCoord(y2)
+        }
+        const squaresToSelect = new Set<string>()
 
-    //     if (startCoords.x !== endCoords.x && startCoords.y !== endCoords.y) {
-    //         const isXStartBigger: boolean = startCoords.x > endCoords.x
-    //         const isYStartBigger: boolean = startCoords.y > endCoords.y
+        const xStartBigger = startCoords.x > endCoords.x
+        const yStartBigger = startCoords.y > endCoords.y
 
-    //         let XRange: number
-    //         let YRange: number
+        this.selectedSquares.xStart = xStartBigger ? endCoords.x : startCoords.x
+        this.selectedSquares.yStart = yStartBigger ? endCoords.y : startCoords.y
+        this.selectedSquares.xEnd = xStartBigger ? startCoords.x : endCoords.x
+        this.selectedSquares.yEnd = yStartBigger ? startCoords.y : endCoords.y
 
-    //         if (isXStartBigger) {
-    //             XRange = startCoords.x - endCoords.x
-    //         } else {
-    //             XRange = endCoords.x - startCoords.x
-    //         }
+        for (let i = startCoords.x > endCoords.x ? endCoords.x : startCoords.x;
+            i <= (startCoords.x > endCoords.x ? startCoords.x : endCoords.x);
+            i++) {
+                for (let j = startCoords.y > endCoords.y ? endCoords.y : startCoords.y;
+                    j <= (startCoords.y > endCoords.y ? startCoords.y : endCoords.y);
+                    j++) {
+                        squaresToSelect.add(`x:${i};y:${j}`)
+                    }
+            }
 
-    //         if (isYStartBigger) {
-    //             YRange = startCoords.y - endCoords.y
-    //         } else {
-    //             YRange = endCoords.y - startCoords.y
-    //         }
-
-    //         const isXRangeBigger: boolean = XRange > YRange
-
-    //         let difXYRanges: number
-
-    //         if (isXRangeBigger) {
-    //             difXYRanges = YRange/XRange
-    //         } else {
-    //             difXYRanges = XRange/YRange
-    //         }
-
-    //         for (let i = isXStartBigger ? endCoords.x : startCoords.x; i < (isXStartBigger ? startCoords.x : endCoords.x); i = isXRangeBigger ? i + 1 : i + difXYRanges) {
-    //             for (let j = isYStartBigger ? endCoords.y : startCoords.y; j < (isYStartBigger ? startCoords.y : endCoords.y); j = isXRangeBigger ? j + difXYRanges : j + 1) {
-    //                 for (let k = 0; k < this.penSize; k++) {
-    //                     for (let m = 0; m < this.penSize; m++) {
-    //                         const coordX = Math.floor(i) + k
-    //                         const coordY = Math.floor(j) + m
-    //                         squaresToDraw.add(`x:${coordX};y:${coordY}`)
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     if (startCoords.x === endCoords.x && startCoords.y === endCoords.y) {
-    //         for (let i = 0; i < this.penSize; i++) {
-    //             for (let j = 0; j < this.penSize; j++) {
-    //                 squaresToDraw.add(`x:${startCoords.x + i};y:${startCoords.y + j}`)
-    //             }
-    //         }
-    //     }
-    //     const squaresToDrawArray = Array.from(squaresToDraw)
-    //     squaresToDraw.forEach(square => {
-    //         this.drawSquareFromName(square)
-    //     })
-
-    //     return squaresToDrawArray
-    // }
+        this.selectedSquares.squares = Array.from(squaresToSelect)
+    }
 }
 
 export default Drawing

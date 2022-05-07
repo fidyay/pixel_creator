@@ -38,6 +38,9 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
 
     if (canvas) {
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+        if (chosenBrush !== 'selection' && drawing.current.selectedSquares?.squares?.length) {
+            drawing.current.resetSelectedSquares()
+        }
         drawing.current.setCTX(ctx)
         drawing.current.setSquareSize(squareWidthAndHeight)
         drawing.current.setPenSize(chosenPenSize)
@@ -47,6 +50,29 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
         drawing.current.drawImage()
     }
 
+
+    function isPointedOutOfSelection(pointX: number, pointY: number) {
+        const selectionStartX = drawing.current.getPixelCoord(drawing.current.selectedSquares.xStart)
+        const selectionStartY = drawing.current.getPixelCoord(drawing.current.selectedSquares.yStart)
+        const selectionEndX = drawing.current.getPixelCoord(drawing.current.selectedSquares.xEnd) + squareSize
+        const selectionEndY = drawing.current.getPixelCoord(drawing.current.selectedSquares.yEnd) + squareSize
+
+        if (pointX < selectionStartX) {
+            return true
+        }
+        if (pointX > selectionEndX) {
+            return true
+        }
+        if (pointY < selectionStartY) {
+            return true
+        }
+        if (pointY > selectionEndY) {
+            return true
+        }
+
+        return false
+    }
+
     return (<div className="main__canvas">
                 <canvas className="main__canvas-painting" onPointerDown={e => {
                     if ((e.target as HTMLCanvasElement).className !== 'main__canvas-painting') return
@@ -54,7 +80,21 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                     const pointX = e.clientX - canvasLeft
                     const pointY = e.clientY - canvasTop
 
+
+
                     if (pointX < 0 || pointX > cannvasWidth || pointY < 0 || pointY > canvasHeight) return
+
+                    if (drawing.current.selectedSquares?.squares?.length > 0 && isPointedOutOfSelection(pointX, pointY)) {
+                        drawing.current.resetSelectedSquares()
+                    }
+
+                    let clickX = 0
+                    let clickY = 0
+
+                    if (drawing.current.selectedSquares?.squares?.length > 0) {
+                        clickX = pointX - drawing.current.selectedSquares.xStart * squareSize
+                        clickY = pointY - drawing.current.selectedSquares.yStart * squareSize
+                    }
 
                     let squaresToDraw: string[] = []
 
@@ -77,6 +117,13 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                         case 'elipse': 
                             squaresToDraw = drawing.current.elipse(pointX, pointY, pointX, pointY)
                             break
+                        case 'selection': 
+                            if (!drawing.current.selectedSquares?.squares?.length) {
+                                drawing.current.selectedSquares.isDrawing = true
+                                drawing.current.selection(pointX, pointY, pointX, pointY)
+                                drawing.current.drawSelectedSquares()
+                            }
+                            break
                         default: 
                             drawing.current.drawSquare(pointX, pointY)
                             break
@@ -88,8 +135,6 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                         const pointMoveY = e.clientY - canvasTop
 
                         if (pointMoveX < 0 || pointMoveX > cannvasWidth || pointMoveY < 0 || pointMoveY > canvasHeight) return
-
-                        // temporary code
 
                         switch(chosenBrush) {
                             case 'pen':
@@ -107,6 +152,15 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                             case 'elipse': 
                                 squaresToDraw = drawing.current.elipse(pointX, pointY, pointMoveX, pointMoveY)
                                 break
+                            case 'selection': 
+                                if (drawing.current.selectedSquares?.isDrawing) {
+                                    drawing.current.selection(pointX, pointY, pointMoveX, pointMoveY)
+                                    drawing.current.drawSelectedSquares()
+                                } else {
+                                    drawing.current.moveSelection(pointMoveX - clickX, pointMoveY - clickY)
+                                    drawing.current.drawSelectedSquares()
+                                }
+                                break
                             default: 
                                 drawing.current.drawSquare(pointMoveX, pointMoveY)
                                 break
@@ -121,6 +175,7 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                         if (squaresToDraw.length > 0) {
                             drawing.current.addAndDrawSquares(squaresToDraw)
                         }
+                        drawing.current.selectedSquares.isDrawing = false
                         window.removeEventListener('pointermove', pointerMoveListener)
                         window.removeEventListener('pointerup', pointerUpListener)
                     } 
