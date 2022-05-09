@@ -36,38 +36,6 @@ class Drawing {
         }
     }
 
-    resetSelectedSquares() {
-        this.selectedSquares.squares = {}
-        this.selectedSquares.isDrawing = false
-        this.selectedSquares.xStart = 0
-        this.selectedSquares.yStart = 0
-        this.selectedSquares.xEnd = 0
-        this.selectedSquares.yEnd = 0
-    }
-
-    moveSelection(x: number, y: number) {
-        const coordsToMove = {
-            x: Math.round((x)/(this.squareSize*this.penSize)) * this.penSize,
-            y: Math.round((y)/(this.squareSize*this.penSize)) * this.penSize
-        }
-        const newSquareObj: Squares = {}
-        Object.keys(this.selectedSquares.squares).forEach(square => {
-            const coords = square.split(';')
-            const squareX = Number(coords[0].slice(2)) - this.selectedSquares.xStart + coordsToMove.x
-            const squareY = Number(coords[1].slice(2)) - this.selectedSquares.yStart + coordsToMove.y
-            newSquareObj[`x:${squareX};y:${squareY}`] = this.selectedSquares.squares[square]
-        })
-
-        this.selectedSquares.squares = newSquareObj
-
-        const xDiff = this.selectedSquares.xEnd - this.selectedSquares.xStart
-        const yDiff = this.selectedSquares.yEnd - this.selectedSquares.yStart
-
-        this.selectedSquares.xStart = coordsToMove.x
-        this.selectedSquares.yStart = coordsToMove.y
-        this.selectedSquares.xEnd = coordsToMove.x + xDiff
-        this.selectedSquares.yEnd = coordsToMove.y + yDiff
-    }
 
     getPixelCoord(coord: number) {
         return coord * this.squareSize
@@ -117,22 +85,6 @@ class Drawing {
                     this.drawing[`x:${i};y:${j}`] = this.background
                 }
             }
-        }
-    }
-
-    drawSelectedSquares() {
-        if (Object.keys(this.selectedSquares.squares).length) {
-            this.drawImage()
-            Object.keys(this.selectedSquares.squares).forEach(square => {
-                if (this.selectedSquares.squares[square]) {
-                    const color = this.selectedSquares.squares[square]
-                    const rgb = color.slice(4, color.length - 1)
-                    this.ctx.fillStyle = `rgba(${rgb}, .5)`
-                } else {
-                    this.ctx.fillStyle = 'rgba(130, 163, 178, .5)'
-                }
-                this.drawSquareFromName(square)
-            })
         }
     }
 
@@ -788,6 +740,108 @@ class Drawing {
         })
 
         this.selectedSquares.squares = newSquaresObj
+    }
+
+    resetSelectedSquares() {
+        this.selectedSquares.squares = {}
+        this.selectedSquares.isDrawing = false
+        this.selectedSquares.xStart = 0
+        this.selectedSquares.yStart = 0
+        this.selectedSquares.xEnd = 0
+        this.selectedSquares.yEnd = 0
+    }
+
+    moveSelection(x: number, y: number) {
+        const coordsToMove = {
+            x: Math.round((x)/(this.squareSize*this.penSize)) * this.penSize,
+            y: Math.round((y)/(this.squareSize*this.penSize)) * this.penSize
+        }
+        const newSquareObj: Squares = {}
+        Object.keys(this.selectedSquares.squares).forEach(square => {
+            const coords = square.split(';')
+            const squareX = Number(coords[0].slice(2)) - this.selectedSquares.xStart + coordsToMove.x
+            const squareY = Number(coords[1].slice(2)) - this.selectedSquares.yStart + coordsToMove.y
+            newSquareObj[`x:${squareX};y:${squareY}`] = this.selectedSquares.squares[square]
+        })
+
+        this.selectedSquares.squares = newSquareObj
+
+        const xDiff = this.selectedSquares.xEnd - this.selectedSquares.xStart
+        const yDiff = this.selectedSquares.yEnd - this.selectedSquares.yStart
+
+        this.selectedSquares.xStart = coordsToMove.x
+        this.selectedSquares.yStart = coordsToMove.y
+        this.selectedSquares.xEnd = coordsToMove.x + xDiff
+        this.selectedSquares.yEnd = coordsToMove.y + yDiff
+    }
+
+    fixSquaresToSelection(moving?: boolean) {
+        if (!moving) {
+            this.clearSelection()
+        }
+        const newSelectedSquaresObj: Squares = {...this.selectedSquares.squares}
+        const keys = Object.keys(newSelectedSquaresObj)
+        keys.forEach(square => {
+            if (this.drawing[square]) {
+                newSelectedSquaresObj[square] = this.drawing[square]
+            }
+        })
+        this.selectedSquares.squares = newSelectedSquaresObj
+        if (moving) {
+            const newDrawingObj = {...this.drawing}
+            keys.forEach(key => {
+                if (newSelectedSquaresObj[key]) {
+                    delete newDrawingObj[key]
+                }
+            })
+            this.drawing = newDrawingObj
+        }
+
+        this.drawSelectedSquares()
+    }
+
+    placeSquaresFromSelection(moving?: boolean) {
+        const newDrawingObj = {...this.drawing}
+        Object.keys(this.selectedSquares.squares).forEach(key => {
+            if (this.selectedSquares.squares[key]) {
+                newDrawingObj[key] = this.selectedSquares.squares[key]
+            }
+        })
+        this.drawing = newDrawingObj
+
+        if (moving) {
+            this.clearSelection()
+        }
+
+        this.drawSelectedSquares()
+    }
+
+    clearSelection() {
+        const newSelectedSquaresObj = {...this.selectedSquares.squares}
+        Object.keys(newSelectedSquaresObj).forEach(key => {
+            newSelectedSquaresObj[key] = undefined
+        })
+        this.selectedSquares.squares = newSelectedSquaresObj
+    }
+
+    
+    drawSelectedSquares() {
+        if (Object.keys(this.selectedSquares.squares).length) {
+            this.drawImage()
+            Object.keys(this.selectedSquares.squares).forEach(square => {
+                if (this.selectedSquares.squares[square]) {
+                    const color = this.selectedSquares.squares[square]
+                    const rgb = color.slice(4, color.length - 1)
+                    this.ctx.fillStyle = `rgba(${rgb}, .5)`
+                } else {
+                    this.ctx.fillStyle = 'rgba(130, 163, 178, .5)'
+                }
+                const coords = square.split(';')
+                const X = Number(coords[0].slice(2))
+                const Y = Number(coords[1].slice(2))
+                this.ctx.fillRect(X * this.squareSize, Y * this.squareSize, this.squareSize, this.squareSize)
+            })
+        }
     }
 }
 

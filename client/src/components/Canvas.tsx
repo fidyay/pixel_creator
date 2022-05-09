@@ -13,6 +13,8 @@ interface CanvasProps {
     chosenColor: string
 }
 
+type AllowedKeyToPress = 'ShiftLeft' | 'ShiftRight' | 'KeyC' | 'KeyV' | ''
+
 let currentSquareSize = 7
 const maxWidth = document.documentElement.clientWidth * .45
 const maxHeight = document.documentElement.clientHeight * .73
@@ -20,6 +22,7 @@ const maxHeight = document.documentElement.clientHeight * .73
 const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSquareSize, background, chosenPenSize, chosenColor}: CanvasProps) => {
     const [canvas, setCanvas] = useState(null)
     const drawing = useRef(new Drawing)
+    const pressedKey = useRef<AllowedKeyToPress>('')
 
     let squareWidthAndHeight = squareSize
     let width = widthInSquares * squareWidthAndHeight
@@ -76,9 +79,34 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
 
     useEffect(() => {
         if (chosenBrush !== 'selection') return
-
+        const allowedKeys = ['ShiftLeft', 'ShiftRight', 'KeyC', 'KeyV']
+        const keyDown = (e: KeyboardEvent) => {
+            if (!allowedKeys.includes(e.code)) return
+            const code = e.code as AllowedKeyToPress
+            if (code.includes('Shift') && !pressedKey.current.includes('Shift')) {
+                drawing.current.fixSquaresToSelection(true)
+            }
+            if (e.ctrlKey && code === 'KeyC' && !pressedKey.current.includes('KeyC')) {
+                drawing.current.fixSquaresToSelection()
+            }
+            if (e.ctrlKey && code === 'KeyV' && !pressedKey.current.includes('KeyV')) {
+                drawing.current.placeSquaresFromSelection()
+            }
+            pressedKey.current = code
+        }
+        const keyUp = (e: KeyboardEvent) => {
+            if (!allowedKeys.includes(e.code)) return
+            const code = e.code as AllowedKeyToPress
+            if (code.includes('Shift') && pressedKey.current.includes('Shift')) {
+                drawing.current.placeSquaresFromSelection(true)
+            }
+            pressedKey.current = ''
+        }
+        window.addEventListener('keydown', keyDown)
+        window.addEventListener('keyup', keyUp)
         return () => {
-
+            window.removeEventListener('keydown', keyDown)
+            window.removeEventListener('keyup', keyUp)
         }
     })
 
