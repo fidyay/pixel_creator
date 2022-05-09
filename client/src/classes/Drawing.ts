@@ -36,6 +36,16 @@ class Drawing {
         }
     }
 
+    checkForPossibleCoordinate(square: string) {
+        const coords = square.split(';')
+        const X = Number(coords[0].slice(2))
+        const Y = Number(coords[1].slice(2))
+        if (X < 0) return false
+        if (X > this.canvasWidthInSquares - 1) return false
+        if (Y < 0) return false
+        if (Y > this.canvasHeightInSquares - 1) return false
+        return true
+    }
 
     getPixelCoord(coord: number) {
         return coord * this.squareSize
@@ -803,12 +813,11 @@ class Drawing {
     placeSquaresFromSelection(moving?: boolean) {
         const newDrawingObj = {...this.drawing}
         Object.keys(this.selectedSquares.squares).forEach(key => {
-            if (this.selectedSquares.squares[key]) {
+            if (this.selectedSquares.squares[key] && this.checkForPossibleCoordinate(key)) {
                 newDrawingObj[key] = this.selectedSquares.squares[key]
             }
         })
         this.drawing = newDrawingObj
-
         if (moving) {
             this.clearSelection()
         }
