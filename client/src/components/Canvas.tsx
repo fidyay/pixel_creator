@@ -1,4 +1,4 @@
-import React, { useState, useRef, PointerEvent } from "react";
+import React, { useState, useRef, PointerEvent, useEffect } from "react";
 import Drawing from "../classes/Drawing";
 import type { PenSizeType, BrushType} from "./Workplace";
 
@@ -73,6 +73,15 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
         return false
     }
 
+
+    useEffect(() => {
+        if (chosenBrush !== 'selection') return
+
+        return () => {
+
+        }
+    })
+
     return (<div className="main__canvas">
                 <canvas className="main__canvas-painting" onPointerDown={e => {
                     if ((e.target as HTMLCanvasElement).className !== 'main__canvas-painting') return
@@ -84,14 +93,14 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
 
                     if (pointX < 0 || pointX > cannvasWidth || pointY < 0 || pointY > canvasHeight) return
 
-                    if (drawing.current.selectedSquares?.squares?.length > 0 && isPointedOutOfSelection(pointX, pointY)) {
+                    if (Object.keys(drawing.current.selectedSquares.squares).length > 0 && isPointedOutOfSelection(pointX, pointY)) {
                         drawing.current.resetSelectedSquares()
                     }
 
                     let clickX = 0
                     let clickY = 0
 
-                    if (drawing.current.selectedSquares?.squares?.length > 0) {
+                    if (Object.keys(drawing.current.selectedSquares.squares).length > 0) {
                         clickX = pointX - drawing.current.selectedSquares.xStart * squareSize
                         clickY = pointY - drawing.current.selectedSquares.yStart * squareSize
                     }
@@ -118,7 +127,7 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                             squaresToDraw = drawing.current.elipse(pointX, pointY, pointX, pointY)
                             break
                         case 'selection': 
-                            if (!drawing.current.selectedSquares?.squares?.length) {
+                            if (!Object.keys(drawing.current.selectedSquares.squares).length) {
                                 drawing.current.selectedSquares.isDrawing = true
                                 drawing.current.selection(pointX, pointY, pointX, pointY)
                                 drawing.current.drawSelectedSquares()
@@ -153,7 +162,7 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                                 squaresToDraw = drawing.current.elipse(pointX, pointY, pointMoveX, pointMoveY)
                                 break
                             case 'selection': 
-                                if (drawing.current.selectedSquares?.isDrawing) {
+                                if (drawing.current.selectedSquares.isDrawing) {
                                     drawing.current.selection(pointX, pointY, pointMoveX, pointMoveY)
                                     drawing.current.drawSelectedSquares()
                                 } else {

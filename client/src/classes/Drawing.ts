@@ -1,12 +1,16 @@
 import type { PenSizeType } from "../components/Workplace";
 
+interface Squares {
+    [key: string]: string | undefined
+}
+
 interface SelectedSquares {
     isDrawing: boolean,
     xStart: number,
     yStart: number,
     xEnd: number,
     yEnd: number,
-    squares: string[]
+    squares: Squares
 }
 
 class Drawing {
@@ -28,12 +32,12 @@ class Drawing {
             yStart: 0,
             xEnd: 0,
             yEnd: 0,
-            squares: []
+            squares: {}
         }
     }
 
     resetSelectedSquares() {
-        this.selectedSquares.squares.length = 0
+        this.selectedSquares.squares = {}
         this.selectedSquares.isDrawing = false
         this.selectedSquares.xStart = 0
         this.selectedSquares.yStart = 0
@@ -46,12 +50,15 @@ class Drawing {
             x: Math.round((x)/(this.squareSize*this.penSize)) * this.penSize,
             y: Math.round((y)/(this.squareSize*this.penSize)) * this.penSize
         }
-        this.selectedSquares.squares = this.selectedSquares.squares.map(square => {
+        const newSquareObj: Squares = {}
+        Object.keys(this.selectedSquares.squares).forEach(square => {
             const coords = square.split(';')
             const squareX = Number(coords[0].slice(2)) - this.selectedSquares.xStart + coordsToMove.x
             const squareY = Number(coords[1].slice(2)) - this.selectedSquares.yStart + coordsToMove.y
-            return `x:${squareX};y:${squareY}`
+            newSquareObj[`x:${squareX};y:${squareY}`] = this.selectedSquares.squares[square]
         })
+
+        this.selectedSquares.squares = newSquareObj
 
         const xDiff = this.selectedSquares.xEnd - this.selectedSquares.xStart
         const yDiff = this.selectedSquares.yEnd - this.selectedSquares.yStart
@@ -114,10 +121,16 @@ class Drawing {
     }
 
     drawSelectedSquares() {
-        if (this.selectedSquares?.squares?.length) {
+        if (Object.keys(this.selectedSquares.squares).length) {
             this.drawImage()
-            this.ctx.fillStyle = 'rgba(130, 163, 178, .5)'
-            this.selectedSquares.squares.forEach(square => {
+            Object.keys(this.selectedSquares.squares).forEach(square => {
+                if (this.selectedSquares.squares[square]) {
+                    const color = this.selectedSquares.squares[square]
+                    const rgb = color.slice(4, color.length - 1)
+                    this.ctx.fillStyle = `rgba(${rgb}, .5)`
+                } else {
+                    this.ctx.fillStyle = 'rgba(130, 163, 178, .5)'
+                }
                 this.drawSquareFromName(square)
             })
         }
@@ -768,7 +781,13 @@ class Drawing {
                     }
             }
 
-        this.selectedSquares.squares = Array.from(squaresToSelect)
+        const newSquaresObj: Squares = {}
+
+        Array.from(squaresToSelect).forEach(square => {
+            newSquaresObj[square] = undefined
+        })
+
+        this.selectedSquares.squares = newSquaresObj
     }
 }
 
