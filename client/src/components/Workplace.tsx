@@ -22,7 +22,7 @@ const Workplace = () => {
     const [projectName, setProjectName] = useState('ProjectName')
     const compliment = useRef('')
     const [squareSize, setSquareSize] = useState(defaultSquareSize)
-    const [chosenColor, setChosenColor] = useState('#000')
+    const [chosenColor, setChosenColor] = useState('rgb(0, 0, 0)')
 
     if (compliment.current === '') {
         compliment.current = compliments[Math.round(getRandomNumber(0, 3))]
