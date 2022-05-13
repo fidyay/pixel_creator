@@ -71,6 +71,18 @@ class Drawing {
         return Math.floor((pixelCoord)/(this.squareSize*this.penSize)) * this.penSize
     }
 
+    getColorFromPixelCoords(x: number, y: number): string | null {
+        const squareCoords = {
+            x: this.getSquareCoord(x),
+            y: this.getSquareCoord(y)
+        }
+        if (this.drawing[`x:${squareCoords.x};y:${squareCoords.y}`]) {
+            return this.drawing[`x:${squareCoords.x};y:${squareCoords.y}`]
+        } 
+
+        return null
+    }
+
     setCTX(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx
     }

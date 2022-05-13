@@ -10,7 +10,8 @@ interface CanvasProps {
     widthInSquares: number,
     heightInSquares: number,
     chosenPenSize: PenSizeType,
-    chosenColor: string
+    chosenColor: string,
+    setChosenColor: React.Dispatch<React.SetStateAction<string>>
 }
 
 type AllowedKeyToPress = 'ShiftLeft' | 'ShiftRight' | 'KeyC' | 'KeyV' | ''
@@ -19,7 +20,7 @@ let currentSquareSize = 7
 const maxWidth = document.documentElement.clientWidth * .45
 const maxHeight = document.documentElement.clientHeight * .73
 
-const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSquareSize, background, chosenPenSize, chosenColor}: CanvasProps) => {
+const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSquareSize, background, chosenPenSize, chosenColor, setChosenColor}: CanvasProps) => {
     const [canvas, setCanvas] = useState(null)
     const drawing = useRef(new Drawing)
     const pressedKey = useRef<AllowedKeyToPress>('')
@@ -117,8 +118,6 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                     const pointX = e.clientX - canvasLeft
                     const pointY = e.clientY - canvasTop
 
-
-
                     if (pointX < 0 || pointX > cannvasWidth || pointY < 0 || pointY > canvasHeight) return
 
                     if (Object.keys(drawing.current.selectedSquares.squares).length > 0 && isPointedOutOfSelection(pointX, pointY)) {
@@ -161,6 +160,12 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                                 drawing.current.drawSelectedSquares()
                             }
                             break
+                        case 'pipette': 
+                            const color = drawing.current.getColorFromPixelCoords(pointX, pointY)
+                            if (color) {
+                                setChosenColor(color)
+                            }
+                            break
                         default: 
                             drawing.current.drawSquare(pointX, pointY)
                             break
@@ -197,6 +202,8 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
                                     drawing.current.moveSelection(pointMoveX - clickX, pointMoveY - clickY)
                                     drawing.current.drawSelectedSquares()
                                 }
+                                break
+                            case 'pipette': 
                                 break
                             default: 
                                 drawing.current.drawSquare(pointMoveX, pointMoveY)
