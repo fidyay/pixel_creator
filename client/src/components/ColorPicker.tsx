@@ -2,23 +2,18 @@ import React, { useState } from "react";
 
 interface ColorPickerProps {
     className: string,
+    value: string,
     onChange: (e: {value: string}) => void,
     forBackground?: boolean
 }
 
-const ColorPicker = ({className, onChange, forBackground}: ColorPickerProps) => {
+const ColorPicker = ({value, className, onChange, forBackground}: ColorPickerProps) => {
     const [colorBlock, setColorBlock] = useState(null)
     const [colorSlider, setColorSlider] = useState(null)
+    const rgbArray = value.slice(4, value.length - 1).split(',')
     const [colorBlockInfo, setColorBlockInfo] = useState({
-        color: {
-            r: forBackground ? 255 : 0,
-            g: forBackground ? 255 : 0,
-            b: forBackground ? 255 : 0
-        },
-        thumpPos: {
-            x: forBackground ? -5 : 95,
-            y: forBackground ? -5 : 95
-        }
+        x: forBackground ? -5 : 95,
+        y: forBackground ? -5 : 95
     })
     const [colorSliderInfo, setColorSliderInfo] = useState({
         color: 'rgba(255, 0, 0)',
@@ -57,22 +52,25 @@ const ColorPicker = ({className, onChange, forBackground}: ColorPickerProps) => 
 
     return (
         <div className={`color-picker ${className}`}>
-            <div style={{backgroundColor: `rgb(${colorBlockInfo.color.r}, ${colorBlockInfo.color.g}, ${colorBlockInfo.color.b})`}} className="color-picker__color"/>
+            <div style={{backgroundColor: value}} className="color-picker__color"/>
             <div className="color-picker__rgb-input">
-                <label>R: <input value={colorBlockInfo.color.r} type="number" min="0" max="255" onChange={e => {
-                    const newColor = {...colorBlockInfo.color, r: Number(e.target.value)}
-                    setColorBlockInfo({...colorBlockInfo, color: newColor})
-                    onChange({value: `rgb(${newColor.r}, ${newColor.g}, ${newColor.b})`})
+                <label>R: <input value={rgbArray[0].trim()} type="number" min="0" max="255" onChange={e => {
+                    let value = Number(e.target.value)
+                    if (value < 0) value = 0
+                    if (value > 255) value = 255
+                    onChange({value: `rgb(${value}, ${rgbArray[1]}, ${rgbArray[2]})`})
                 }}/></label>
-                <label>G: <input value={colorBlockInfo.color.g} type="number" min="0" max="255" onChange={e => {
-                    const newColor = {...colorBlockInfo.color, g: Number(e.target.value)}
-                    setColorBlockInfo({...colorBlockInfo, color: newColor})
-                    onChange({value: `rgb(${newColor.r}, ${newColor.g}, ${newColor.b})`})
+                <label>G: <input value={rgbArray[1].trim()} type="number" min="0" max="255" onChange={e => {
+                    let value = Number(e.target.value)
+                    if (value < 0) value = 0
+                    if (value > 255) value = 255
+                    onChange({value: `rgb(${rgbArray[0]}, ${value}, ${rgbArray[2]})`})
                 }}/></label>
-                <label>B: <input value={colorBlockInfo.color.b} type="number" min="0" max="255" onChange={e => {
-                    const newColor = {...colorBlockInfo.color, b: Number(e.target.value)}
-                    setColorBlockInfo({...colorBlockInfo, color: newColor})
-                    onChange({value: `rgb(${newColor.r}, ${newColor.g}, ${newColor.b})`})
+                <label>B: <input value={rgbArray[2].trim()} type="number" min="0" max="255" onChange={e => {
+                    let value = Number(e.target.value)
+                    if (value < 0) value = 0
+                    if (value > 255) value = 255
+                    onChange({value: `rgb(${rgbArray[0]}, ${rgbArray[1]}, ${value})`})
                 }}/></label>
             </div>
             <div className="color-picker__canvases">
@@ -80,7 +78,7 @@ const ColorPicker = ({className, onChange, forBackground}: ColorPickerProps) => 
                     <canvas onPointerDown={e => {
                         if (colorBlock) {
                             const {top: targetTop, height: targetHeight, left: targetLeft} = e.currentTarget.getBoundingClientRect()
-                            const responseOnBlockEvent = (e: any) => {
+                            const responseOnBlockEvent = (e: PointerEvent | React.PointerEvent) => {
                                 let X = e.clientX - targetLeft
                                 if (X < 0) X = 0
                                 if (X > targetHeight) X = targetHeight - 1
@@ -90,7 +88,7 @@ const ColorPicker = ({className, onChange, forBackground}: ColorPickerProps) => 
                                 const ctx = colorBlock.getContext('2d')
                                 const pixel = ctx.getImageData(X, Y, 1, 1).data
                                 const newColor = {r: pixel[0], g: pixel[1], b: pixel[2]}
-                                setColorBlockInfo({color: newColor, thumpPos: {x: X - 5, y: Y - 5}})
+                                setColorBlockInfo({x: X - 5, y: Y - 5})
                                 onChange({value: `rgb(${newColor.r}, ${newColor.g}, ${newColor.b})`})
                             }
                             responseOnBlockEvent(e)
@@ -102,13 +100,13 @@ const ColorPicker = ({className, onChange, forBackground}: ColorPickerProps) => 
                             window.addEventListener('pointerup', removeListeners)
                         }
                     }} ref={node => setColorBlock(node)} height="100" width="100"/>
-                    <div style={{backgroundColor: `rgb(${colorBlockInfo.color.r}, ${colorBlockInfo.color.g}, ${colorBlockInfo.color.b})`, left: `${colorBlockInfo.thumpPos.x}px`, top: `${colorBlockInfo.thumpPos.y}px`}} className="color-picker__color-block-thumb"/>
+                    <div style={{backgroundColor: `rgb(${rgbArray[0]}, ${rgbArray[1]}, ${rgbArray[2]})`, left: `${colorBlockInfo.x}px`, top: `${colorBlockInfo.y}px`}} className="color-picker__color-block-thumb"/>
                 </div>
                 <div className="color-picker__color-slider">
                     <canvas onPointerDown={e => {
                         if (colorSlider) {
                             const {top: targetTop, height: targetHeight} = e.currentTarget.getBoundingClientRect()
-                            const responseOnSliderEvent = (e: any) => {
+                            const responseOnSliderEvent = (e: PointerEvent | React.PointerEvent) => {
                                 let Y = e.clientY - targetTop
                                 if (Y < 0) Y = 0
                                 if (Y > targetHeight) Y = targetHeight - 1

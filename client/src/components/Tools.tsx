@@ -9,10 +9,11 @@ interface ToolsProps {
     setChosenPenSize: React.Dispatch<React.SetStateAction<PenSizeType>>,
     chosenBrush: BrushType,
     setChosenBrush: React.Dispatch<React.SetStateAction<BrushType>>,
-    setChosenColor: React.Dispatch<React.SetStateAction<string>>
+    setChosenColor: React.Dispatch<React.SetStateAction<string>>,
+    chosenColor: string
 }
 
-const Tools = ({chosenPenSize, setChosenPenSize, chosenBrush, setChosenBrush, setChosenColor}: ToolsProps) => {
+const Tools = ({chosenPenSize, setChosenPenSize, chosenBrush, setChosenBrush, setChosenColor, chosenColor}: ToolsProps) => {
 
     return (
         <div className="main__tools tools">
@@ -71,7 +72,7 @@ const Tools = ({chosenPenSize, setChosenPenSize, chosenBrush, setChosenBrush, se
                     </svg>
                 </Button>
             </div>
-            <ColorPicker onChange={e => setChosenColor(e.value)} className="tools__color-picker"/>
+            <ColorPicker value={chosenColor} onChange={e => setChosenColor(e.value)} className="tools__color-picker"/>
         </div>
     )
 }
