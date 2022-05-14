@@ -43,7 +43,7 @@ const Workplace = () => {
             <main className="workplace__main main">
                 <Tools setChosenColor={setChosenColor} chosenPenSize={chosenPenSize} setChosenPenSize={setChosenPenSize} chosenBrush={chosenBrush} setChosenBrush={setChosenBrush} chosenColor={chosenColor}/>
                 <Frames drawingId={drawingId} chosenFrame={chosenFrame} setChosenFrame={setChosenFrame}/>
-                <Canvas chosenFrame={chosenFrame} chosenColor={chosenColor} chosenPenSize={chosenPenSize} widthInSquares={100} heightInSquares={100} background={'transparent'} squareSize={squareSize} setSquareSize={setSquareSize} chosenBrush={chosenBrush} setChosenColor={setChosenColor} drawingId={drawingId}/>
+                <Canvas chosenFrame={chosenFrame} chosenColor={chosenColor} chosenPenSize={chosenPenSize} widthInSquares={100} heightInSquares={100} squareSize={squareSize} setSquareSize={setSquareSize} chosenBrush={chosenBrush} setChosenColor={setChosenColor} drawingId={drawingId}/>
                 <ProjectOptions/>
             </main>
         </div>
