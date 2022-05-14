@@ -60,10 +60,6 @@ class Drawing {
         return coord * this.squareSize
     }
 
-    setBackground(b: string) {
-        this.background = b
-    }
-
     setCanvasSize(h: number, w: number) {
         this.canvasHeightInSquares = h
         this.canvasWidthInSquares = w
@@ -110,10 +106,10 @@ class Drawing {
 
     drawBackground() {
         this.ctx.clearRect(0, 0, this.canvasWidthInPixels, this.canvasHeightInPixels)
-        if (this.background !== 'transparent' && Object.values(this.drawing.frames[this.chosenFrame]).length === 0) {
+        if (this.drawing.background !== 'transparent' && Object.values(this.drawing.frames[this.chosenFrame]).length === 0) {
             for (let i = 0; i < this.canvasWidthInSquares; i++) {
                 for (let j = 0; j < this.canvasHeightInSquares; j++ ) {
-                    this.drawing.frames[this.chosenFrame][`x:${i};y:${j}`] = this.background
+                    this.drawing.frames[this.chosenFrame][`x:${i};y:${j}`] = this.drawing.background
                 }
             }
         }
@@ -127,11 +123,11 @@ class Drawing {
         this.ctx.fillRect(X * this.squareSize, Y * this.squareSize, this.squareSize, this.squareSize)
     }
 
-    drawImage() {
+    drawImage(n: number) {
         this.drawBackground()
         const coordsOfSquares = Object.keys(this.drawing.frames[this.chosenFrame])
         coordsOfSquares.forEach((square: string) => {
-            this.ctx.fillStyle = this.drawing.frames[this.chosenFrame][square]
+            this.ctx.fillStyle = this.drawing.frames[n][square]
             this.drawSquareFromName(square)
         })
     }
@@ -162,7 +158,7 @@ class Drawing {
         }
     }
     drawLine(x1: number, y1: number, x2: number, y2: number) {
-        this.drawImage()
+        this.drawImage(this.chosenFrame)
         this.ctx.fillStyle = this.color
         const startCoords = {
             x: this.getSquareCoord(x1),
@@ -423,27 +419,26 @@ class Drawing {
             x: this.getSquareCoord(x),
             y: this.getSquareCoord(y)
         }
+        const newFrameObj = {...this.drawing.frames[this.chosenFrame]}
         for (let i = 0; i < this.penSize; i++) {
             for (let j = 0; j < this.penSize; j++) {
                 const coordX = startCoords.x + i
                 const coordY = startCoords.y + j
-                if (this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`] && this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`] !== this.background) {
-                    if (this.background === 'tranparent') {
-                        delete this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`]
-                        this.ctx.clearRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
-                    } else {
-                        this.ctx.fillStyle = this.background
-                        this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`] = this.background
-                        this.ctx.clearRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
+                if (newFrameObj[`x:${coordX};y:${coordY}`]) {
+                    delete newFrameObj[`x:${coordX};y:${coordY}`]
+                    this.ctx.clearRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
+                    if (this.drawing.background !== 'transparent') {
+                        this.ctx.fillStyle = this.drawing.background
                         this.ctx.fillRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
                     }
                 }
             }
         }
+        this.drawing.frames[this.chosenFrame] = {...newFrameObj}
     }
 
     rectangle(x1: number, y1: number, x2: number, y2: number) {
-        this.drawImage()
+        this.drawImage(this.chosenFrame)
         this.ctx.fillStyle = this.color
         const startCoords = {
             x: this.getSquareCoord(x1),
@@ -595,7 +590,7 @@ class Drawing {
     }
 
     elipse(x1: number, y1: number, x2: number, y2: number) {
-        this.drawImage()
+        this.drawImage(this.chosenFrame)
         this.ctx.fillStyle = this.color
         const startCoords = {
             x: this.getSquareCoord(x1),
@@ -857,7 +852,7 @@ class Drawing {
     
     drawSelectedSquares() {
         if (Object.keys(this.selectedSquares.squares).length) {
-            this.drawImage()
+            this.drawImage(this.chosenFrame)
             Object.keys(this.selectedSquares.squares).forEach(square => {
                 if (this.selectedSquares.squares[square]) {
                     const color = this.selectedSquares.squares[square]

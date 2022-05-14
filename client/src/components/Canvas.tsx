@@ -53,10 +53,9 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
         drawing.current.setSquareSize(squareWidthAndHeight)
         drawing.current.setPenSize(chosenPenSize)
         drawing.current.setColor(chosenColor)
-        drawing.current.setBackground(state.drawings[drawingId].background)
         drawing.current.setCanvasSize(heightInSquares, widthInSquares)
         drawing.current.setChosenFrame(chosenFrame)
-        drawing.current.drawImage()
+        drawing.current.drawImage(chosenFrame)
     }
 
 
