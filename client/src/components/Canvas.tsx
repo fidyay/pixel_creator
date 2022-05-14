@@ -1,6 +1,7 @@
-import React, { useState, useRef, PointerEvent, useEffect } from "react";
+import React, { useState, useRef, PointerEvent, useEffect, useContext } from "react";
 import Drawing from "../classes/Drawing";
 import type { PenSizeType, BrushType} from "./Workplace";
+import { StateContext } from "./App"
 
 interface CanvasProps {
     chosenBrush: BrushType,
@@ -11,7 +12,9 @@ interface CanvasProps {
     heightInSquares: number,
     chosenPenSize: PenSizeType,
     chosenColor: string,
-    setChosenColor: React.Dispatch<React.SetStateAction<string>>
+    setChosenColor: React.Dispatch<React.SetStateAction<string>>,
+    drawingId: string,
+    chosenFrame: number
 }
 
 type AllowedKeyToPress = 'ShiftLeft' | 'ShiftRight' | 'KeyC' | 'KeyV' | ''
@@ -20,10 +23,11 @@ let currentSquareSize = 7
 const maxWidth = document.documentElement.clientWidth * .45
 const maxHeight = document.documentElement.clientHeight * .73
 
-const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSquareSize, background, chosenPenSize, chosenColor, setChosenColor}: CanvasProps) => {
+const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSquareSize, background, chosenPenSize, chosenColor, setChosenColor, drawingId, chosenFrame}: CanvasProps) => {
     const [canvas, setCanvas] = useState(null)
     const drawing = useRef(new Drawing)
     const pressedKey = useRef<AllowedKeyToPress>('')
+    const state = useContext(StateContext)
 
     let squareWidthAndHeight = squareSize
     let width = widthInSquares * squareWidthAndHeight
@@ -45,12 +49,14 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
         if (chosenBrush !== 'selection' && drawing.current.selectedSquares?.squares?.length) {
             drawing.current.resetSelectedSquares()
         }
+        drawing.current.setDrawing(state.drawings[drawingId])
         drawing.current.setCTX(ctx)
         drawing.current.setSquareSize(squareWidthAndHeight)
         drawing.current.setPenSize(chosenPenSize)
         drawing.current.setColor(chosenColor)
         drawing.current.setBackground(background)
         drawing.current.setCanvasSize(heightInSquares, widthInSquares)
+        drawing.current.setChosenFrame(chosenFrame)
         drawing.current.drawImage()
     }
 

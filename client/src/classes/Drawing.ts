@@ -1,4 +1,5 @@
 import type { PenSizeType } from "../components/Workplace";
+import type { Drawing as DrawingType } from "../state/State"
 
 interface Squares {
     [key: string]: string | undefined
@@ -14,7 +15,7 @@ interface SelectedSquares {
 }
 
 class Drawing {
-    drawing: any
+    private drawing: DrawingType
     private ctx?: CanvasRenderingContext2D
     private squareSize: number
     private penSize: PenSizeType
@@ -22,10 +23,10 @@ class Drawing {
     private background: string
     private canvasWidthInSquares: number
     private canvasHeightInSquares: number
+    private chosenFrame: number
     public selectedSquares: SelectedSquares
 
     constructor() {
-        this.drawing = {}
         this.selectedSquares = {
             isDrawing: false,
             xStart: 0,
@@ -45,6 +46,14 @@ class Drawing {
         if (Y < 0) return false
         if (Y > this.canvasHeightInSquares - 1) return false
         return true
+    }
+
+    setDrawing(drawing: DrawingType) {
+        this.drawing = drawing
+    }
+
+    setChosenFrame(n: number) {
+        this.chosenFrame = n
     }
 
     getPixelCoord(coord: number) {
@@ -76,8 +85,8 @@ class Drawing {
             x: this.getSquareCoord(x),
             y: this.getSquareCoord(y)
         }
-        if (this.drawing[`x:${squareCoords.x};y:${squareCoords.y}`]) {
-            return this.drawing[`x:${squareCoords.x};y:${squareCoords.y}`]
+        if (this.drawing.frames[this.chosenFrame][`x:${squareCoords.x};y:${squareCoords.y}`]) {
+            return this.drawing.frames[this.chosenFrame][`x:${squareCoords.x};y:${squareCoords.y}`]
         } 
 
         return null
@@ -101,10 +110,10 @@ class Drawing {
 
     drawBackground() {
         this.ctx.clearRect(0, 0, this.canvasWidthInPixels, this.canvasHeightInPixels)
-        if (this.background !== 'transparent' && Object.values(this.drawing).length === 0) {
+        if (this.background !== 'transparent' && Object.values(this.drawing.frames[this.chosenFrame]).length === 0) {
             for (let i = 0; i < this.canvasWidthInSquares; i++) {
                 for (let j = 0; j < this.canvasHeightInSquares; j++ ) {
-                    this.drawing[`x:${i};y:${j}`] = this.background
+                    this.drawing.frames[this.chosenFrame][`x:${i};y:${j}`] = this.background
                 }
             }
         }
@@ -120,16 +129,16 @@ class Drawing {
 
     drawImage() {
         this.drawBackground()
-        const coordsOfSquares = Object.keys(this.drawing)
+        const coordsOfSquares = Object.keys(this.drawing.frames[this.chosenFrame])
         coordsOfSquares.forEach((square: string) => {
-            this.ctx.fillStyle = this.drawing[square]
+            this.ctx.fillStyle = this.drawing.frames[this.chosenFrame][square]
             this.drawSquareFromName(square)
         })
     }
 
     addAndDrawSquares(squaresToDraw: string[]) {
         squaresToDraw.forEach(square => {
-            this.drawing[square] = this.color
+            this.drawing.frames[this.chosenFrame][square] = this.color
             this.drawSquareFromName(square)
         })
     }
@@ -144,8 +153,8 @@ class Drawing {
             for (let j = 0; j < this.penSize; j++) {
                 const coordX = startCoords.x + i
                 const coordY = startCoords.y + j
-                if (!this.drawing[`x:${coordX};y:${coordY}`] || this.drawing[`x:${coordX};y:${coordY}`].color !== this.color) {
-                    this.drawing[`x:${coordX};y:${coordY}`] = this.color
+                if (!this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`] || this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`] !== this.color) {
+                    this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`] = this.color
                     this.ctx.clearRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
                     this.ctx.fillRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
                 }
@@ -334,8 +343,8 @@ class Drawing {
 
         const squaresToDraw = new Set<string>()
         let targetColor: string
-        if (this.drawing[`x:${startCoords.x};y:${startCoords.y}`]) {
-            targetColor = this.drawing[`x:${startCoords.x};y:${startCoords.y}`]
+        if (this.drawing.frames[this.chosenFrame][`x:${startCoords.x};y:${startCoords.y}`]) {
+            targetColor = this.drawing.frames[this.chosenFrame][`x:${startCoords.x};y:${startCoords.y}`]
         } else {
             // transparent
             targetColor = undefined
@@ -349,9 +358,9 @@ class Drawing {
               let shouldBreak = false
             
               if (!targetColor) {
-                if (this.drawing[currentSquare]) shouldBreak = true
+                if (this.drawing.frames[this.chosenFrame][currentSquare]) shouldBreak = true
               } else {
-                if (targetColor !== this.drawing[currentSquare]) shouldBreak = true
+                if (targetColor !== this.drawing.frames[this.chosenFrame][currentSquare]) shouldBreak = true
               }
               const coords = currentSquare.split(";")
               const X = Number(coords[0].slice(2))
@@ -367,7 +376,7 @@ class Drawing {
             if (
                 X - 1 >= 0 &&
                 !squaresToDraw.has(`x:${X - 1};y:${Y}`) &&
-                this.drawing[`x:${X - 1};y:${Y}`] === targetColor
+                this.drawing.frames[this.chosenFrame][`x:${X - 1};y:${Y}`] === targetColor
                 ) {
                 squares.push(`x:${X - 1};y:${Y}`)
                 squaresToDraw.add(`x:${X - 1};y:${Y}`)
@@ -376,7 +385,7 @@ class Drawing {
             if (
                 Y - 1 >= 0 &&
                 !squaresToDraw.has(`x:${X};y:${Y - 1}`) &&
-                this.drawing[`x:${X};y:${Y - 1}`] === targetColor
+                this.drawing.frames[this.chosenFrame][`x:${X};y:${Y - 1}`] === targetColor
                 ) {
                 squares.push(`x:${X};y:${Y - 1}`)
                 squaresToDraw.add(`x:${X};y:${Y - 1}`)
@@ -385,7 +394,7 @@ class Drawing {
             if (
                 X + 1 <= maxX &&
                 !squaresToDraw.has(`x:${X + 1};y:${Y}`) &&
-                this.drawing[`x:${X + 1};y:${Y}`] === targetColor
+                this.drawing.frames[this.chosenFrame][`x:${X + 1};y:${Y}`] === targetColor
                 ) {
                 squares.push(`x:${X + 1};y:${Y}`)
                 squaresToDraw.add(`x:${X + 1};y:${Y}`)
@@ -394,7 +403,7 @@ class Drawing {
             if (
                 Y + 1 <= maxY &&
                 !squaresToDraw.has(`x:${X};y:${Y + 1}`) &&
-                this.drawing[`x:${X};y:${Y + 1}`] === targetColor
+                this.drawing.frames[this.chosenFrame][`x:${X};y:${Y + 1}`] === targetColor
                 ) {
                 squares.push(`x:${X};y:${Y + 1}`)
                 squaresToDraw.add(`x:${X};y:${Y + 1}`)
@@ -418,13 +427,13 @@ class Drawing {
             for (let j = 0; j < this.penSize; j++) {
                 const coordX = startCoords.x + i
                 const coordY = startCoords.y + j
-                if (this.drawing[`x:${coordX};y:${coordY}`] && this.drawing[`x:${coordX};y:${coordY}`] !== this.background) {
+                if (this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`] && this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`] !== this.background) {
                     if (this.background === 'tranparent') {
-                        delete this.drawing[`x:${coordX};y:${coordY}`]
+                        delete this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`]
                         this.ctx.clearRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
                     } else {
                         this.ctx.fillStyle = this.background
-                        this.drawing[`x:${coordX};y:${coordY}`] = this.background
+                        this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`] = this.background
                         this.ctx.clearRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
                         this.ctx.fillRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
                     }
@@ -804,32 +813,32 @@ class Drawing {
         const newSelectedSquaresObj: Squares = {...this.selectedSquares.squares}
         const keys = Object.keys(newSelectedSquaresObj)
         keys.forEach(square => {
-            if (this.drawing[square]) {
-                newSelectedSquaresObj[square] = this.drawing[square]
+            if (this.drawing.frames[this.chosenFrame][square]) {
+                newSelectedSquaresObj[square] = this.drawing.frames[this.chosenFrame][square]
             }
         })
         this.selectedSquares.squares = newSelectedSquaresObj
         if (moving) {
-            const newDrawingObj = {...this.drawing}
+            const newDrawingObj = {...this.drawing.frames[this.chosenFrame]}
             keys.forEach(key => {
                 if (newSelectedSquaresObj[key]) {
                     delete newDrawingObj[key]
                 }
             })
-            this.drawing = newDrawingObj
+            this.drawing.frames[this.chosenFrame] = newDrawingObj
         }
 
         this.drawSelectedSquares()
     }
 
     placeSquaresFromSelection(moving?: boolean) {
-        const newDrawingObj = {...this.drawing}
+        const newDrawingObj = {...this.drawing.frames[this.chosenFrame]}
         Object.keys(this.selectedSquares.squares).forEach(key => {
             if (this.selectedSquares.squares[key] && this.checkForPossibleCoordinate(key)) {
                 newDrawingObj[key] = this.selectedSquares.squares[key]
             }
         })
-        this.drawing = newDrawingObj
+        this.drawing.frames[this.chosenFrame] = newDrawingObj
         if (moving) {
             this.clearSelection()
         }

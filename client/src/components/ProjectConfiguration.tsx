@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Button from "./Button";
 import ColorPicker from "./ColorPicker";
+import { useNavigate } from "react-router-dom";
+import generateId from "../functions/generateId";
+import { StateContext } from "./App";
 
 const spriteSizeTips = 'Maximum width and height for animated sprites is 100'
 const imageSizeTips = 'For images maximum width is 1024 and maximum height is 768'
 
 const ProjectConfiguration = () => {
+    const navigate = useNavigate()
     const [projectType, setProjectType] = useState('')
     const [projectBG, setProjectBG] = useState('transparent')
     const maxSizes = {
@@ -13,6 +17,8 @@ const ProjectConfiguration = () => {
         height: projectType === 'sprite' ? 100 : 768,
     }
     const numberPlaceHolder = projectType === 'sprite' ? '16' : '100'
+
+    const state = useContext(StateContext)
     
     return (
         <div className="modal">
@@ -42,7 +48,11 @@ const ProjectConfiguration = () => {
                 </fieldset>
 
                 <div className="project-configuration-form__buttons">
-                    <Button className="project-configuration-form__button" link linkPath="/workplace">Ok</Button>
+                    <Button className="project-configuration-form__button" onClick={() => {
+                        const newId = generateId()
+                        state.createDrawing(newId, projectBG)
+                        navigate(`/workplace/${newId}`)
+                    }}>Ok</Button>
                     <Button className="project-configuration-form__button" link linkPath="/">Cancel</Button>
                 </div>
             </form> 

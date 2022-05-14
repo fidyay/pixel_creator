@@ -6,6 +6,7 @@ import Frames from "./Frames";
 import Canvas from "./Canvas";
 import ProjectOptions from "./ProjectOptions";
 import getRandomNumber from "../functions/getRandomNumber";
+import { useParams } from "react-router-dom";
 
 const compliments = ['awesome', 'best', 'great', 'amazing']
 
@@ -23,6 +24,8 @@ const Workplace = () => {
     const compliment = useRef('')
     const [squareSize, setSquareSize] = useState(defaultSquareSize)
     const [chosenColor, setChosenColor] = useState('rgb(0, 0, 0)')
+    const [chosenFrame, setChosenFrame] = useState(0)
+    const {id: drawingId} = useParams()
 
     if (compliment.current === '') {
         compliment.current = compliments[Math.round(getRandomNumber(0, 3))]
@@ -39,8 +42,8 @@ const Workplace = () => {
             </header>
             <main className="workplace__main main">
                 <Tools setChosenColor={setChosenColor} chosenPenSize={chosenPenSize} setChosenPenSize={setChosenPenSize} chosenBrush={chosenBrush} setChosenBrush={setChosenBrush} chosenColor={chosenColor}/>
-                <Frames/>
-                <Canvas chosenColor={chosenColor} chosenPenSize={chosenPenSize} widthInSquares={100} heightInSquares={100} background={'transparent'} squareSize={squareSize} setSquareSize={setSquareSize} chosenBrush={chosenBrush} setChosenColor={setChosenColor}/>
+                <Frames drawingId={drawingId} chosenFrame={chosenFrame} setChosenFrame={setChosenFrame}/>
+                <Canvas chosenFrame={chosenFrame} chosenColor={chosenColor} chosenPenSize={chosenPenSize} widthInSquares={100} heightInSquares={100} background={'transparent'} squareSize={squareSize} setSquareSize={setSquareSize} chosenBrush={chosenBrush} setChosenColor={setChosenColor} drawingId={drawingId}/>
                 <ProjectOptions/>
             </main>
         </div>

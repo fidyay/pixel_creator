@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { pointerDownHandler } from "./Button";
 import Button from "./Button";
 
-
 interface FrameProps {
     height: number,
     width: number,
