@@ -137,17 +137,19 @@ class Drawing {
             x: this.getSquareCoord(x),
             y: this.getSquareCoord(y)
         }
+        const frame = {...this.drawing.frames[this.chosenFrame]}
         for (let i = 0; i < this.penSize; i++) {
             for (let j = 0; j < this.penSize; j++) {
                 const coordX = startCoords.x + i
                 const coordY = startCoords.y + j
-                if (!this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`] || this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`] !== this.color) {
-                    this.drawing.frames[this.chosenFrame][`x:${coordX};y:${coordY}`] = this.color
+                if (!frame[`x:${coordX};y:${coordY}`] || frame[`x:${coordX};y:${coordY}`] !== this.color) {
+                    frame[`x:${coordX};y:${coordY}`] = this.color
                     this.ctx.clearRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
                     this.ctx.fillRect(coordX * this.squareSize, coordY * this.squareSize, this.squareSize, this.squareSize)
                 }
             }
         }
+        this.drawing.frames[this.chosenFrame] = {...frame}
     }
     drawLine(x1: number, y1: number, x2: number, y2: number) {
         this.drawImage(this.chosenFrame)
