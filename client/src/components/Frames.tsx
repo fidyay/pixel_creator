@@ -23,7 +23,7 @@ const Frames = observer(({drawingId, chosenFrame, setChosenFrame}: FramesProps) 
             </h3>
             <ol className="frames__frame-list">
                 {frames.map((frame, index) => {
-                    return <Frame deleteFrame={e => {
+                    return <Frame drawingId={drawingId} deleteFrame={e => {
                         e.stopPropagation()
                         state.deleteFrame(drawingId, chosenFrame)
                         if (chosenFrame === index) {

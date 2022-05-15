@@ -7,8 +7,6 @@ interface CanvasProps {
     chosenBrush: BrushType,
     squareSize: number,
     setSquareSize: React.Dispatch<React.SetStateAction<number>>,
-    widthInSquares: number,
-    heightInSquares: number,
     chosenPenSize: PenSizeType,
     chosenColor: string,
     setChosenColor: React.Dispatch<React.SetStateAction<string>>,
@@ -18,24 +16,24 @@ interface CanvasProps {
 
 type AllowedKeyToPress = 'ShiftLeft' | 'ShiftRight' | 'KeyC' | 'KeyV' | ''
 
-let currentSquareSize = 7
+let currentSquareSize = 15
 const maxWidth = document.documentElement.clientWidth * .45
 const maxHeight = document.documentElement.clientHeight * .73
 
-const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSquareSize, chosenPenSize, chosenColor, setChosenColor, drawingId, chosenFrame}: CanvasProps) => {
+const Canvas = ({chosenBrush, squareSize, setSquareSize, chosenPenSize, chosenColor, setChosenColor, drawingId, chosenFrame}: CanvasProps) => {
     const [canvas, setCanvas] = useState(null)
     const drawing = useRef(new Drawing)
     const pressedKey = useRef<AllowedKeyToPress>('')
     const state = useContext(StateContext)
 
     let squareWidthAndHeight = squareSize
-    let width = widthInSquares * squareWidthAndHeight
-    let height = heightInSquares * squareWidthAndHeight
+    let width = state.drawings[drawingId].widthInSquares * squareWidthAndHeight
+    let height = state.drawings[drawingId].heightInSquares * squareWidthAndHeight
 
     while (width > maxWidth || height > maxHeight) {
         squareWidthAndHeight--
-        width = widthInSquares * squareWidthAndHeight
-        height = heightInSquares * squareWidthAndHeight
+        width = state.drawings[drawingId].widthInSquares * squareWidthAndHeight
+        height = state.drawings[drawingId].heightInSquares * squareWidthAndHeight
     }
 
     if (squareWidthAndHeight !== currentSquareSize) {
@@ -53,7 +51,6 @@ const Canvas = ({chosenBrush, widthInSquares, heightInSquares, squareSize, setSq
         drawing.current.setSquareSize(squareWidthAndHeight)
         drawing.current.setPenSize(chosenPenSize)
         drawing.current.setColor(chosenColor)
-        drawing.current.setCanvasSize(heightInSquares, widthInSquares)
         drawing.current.setChosenFrame(chosenFrame)
         drawing.current.drawImage(chosenFrame)
     }

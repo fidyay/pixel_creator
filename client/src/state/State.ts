@@ -8,7 +8,9 @@ export interface Drawing {
     id: string,
     frames: Frame[],
     saved: boolean,
-    background: string
+    background: string,
+    widthInSquares: number,
+    heightInSquares: number
 }
 
 class State {
@@ -21,12 +23,14 @@ class State {
         makeAutoObservable(this)
     }
 
-    createDrawing(id: string, background: string) {
+    createDrawing(id: string, background: string, widthInSquares: number, heightInSquares: number) {
         this.drawings[id] = {
             id,
             frames: [{}],
             saved: false,
-            background
+            background,
+            widthInSquares,
+            heightInSquares
         }
     }
 

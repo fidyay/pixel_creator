@@ -145,6 +145,11 @@ a, button {
     }
 }
 
+canvas {
+    background-image: url('../assets/images/transparent_bg.svg');
+    background-repeat: repeat;
+    background-size: 20px;
+}
 
 input[type="text"], input[type="number"] {
     background-color: $buttonbg;
@@ -436,10 +441,6 @@ input[type="number"] {
             &-painting {
                 flex-grow: 0;
                 flex-shrink: 0;
-                background-image: url('../assets/images/transparent_bg.svg');
-                background-repeat: repeat;
-                background-size: 20px;
-                
             }
         }
     }

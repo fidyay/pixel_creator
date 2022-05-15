@@ -20,9 +20,6 @@ class Drawing {
     private squareSize: number
     private penSize: PenSizeType
     private color: string
-    private background: string
-    private canvasWidthInSquares: number
-    private canvasHeightInSquares: number
     private chosenFrame: number
     public selectedSquares: SelectedSquares
 
@@ -42,9 +39,9 @@ class Drawing {
         const X = Number(coords[0].slice(2))
         const Y = Number(coords[1].slice(2))
         if (X < 0) return false
-        if (X > this.canvasWidthInSquares - 1) return false
+        if (X > this.drawing.widthInSquares - 1) return false
         if (Y < 0) return false
-        if (Y > this.canvasHeightInSquares - 1) return false
+        if (Y > this.drawing.heightInSquares - 1) return false
         return true
     }
 
@@ -60,16 +57,11 @@ class Drawing {
         return coord * this.squareSize
     }
 
-    setCanvasSize(h: number, w: number) {
-        this.canvasHeightInSquares = h
-        this.canvasWidthInSquares = w
-    }
-
     get canvasHeightInPixels() {
-        return this.canvasHeightInSquares * this.squareSize
+        return this.drawing.heightInSquares * this.squareSize
     }
     get canvasWidthInPixels() {
-        return this.canvasWidthInSquares * this.squareSize
+        return this.drawing.widthInSquares * this.squareSize
     }
 
     getSquareCoord(pixelCoord: number) {
@@ -107,8 +99,8 @@ class Drawing {
     drawBackground() {
         this.ctx.clearRect(0, 0, this.canvasWidthInPixels, this.canvasHeightInPixels)
         if (this.drawing.background !== 'transparent' && Object.values(this.drawing.frames[this.chosenFrame]).length === 0) {
-            for (let i = 0; i < this.canvasWidthInSquares; i++) {
-                for (let j = 0; j < this.canvasHeightInSquares; j++ ) {
+            for (let i = 0; i < this.drawing.widthInSquares; i++) {
+                for (let j = 0; j < this.drawing.heightInSquares; j++ ) {
                     this.drawing.frames[this.chosenFrame][`x:${i};y:${j}`] = this.drawing.background
                 }
             }
@@ -334,8 +326,8 @@ class Drawing {
             y: this.getSquareCoord(y)
         }
 
-        const maxX = this.canvasWidthInSquares - 1
-        const maxY = this.canvasHeightInSquares - 1
+        const maxX = this.drawing.widthInSquares - 1
+        const maxY = this.drawing.heightInSquares - 1
 
         const squaresToDraw = new Set<string>()
         let targetColor: string

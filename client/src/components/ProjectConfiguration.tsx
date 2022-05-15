@@ -10,13 +10,20 @@ const imageSizeTips = 'For images maximum width is 1024 and maximum height is 76
 
 const ProjectConfiguration = () => {
     const navigate = useNavigate()
-    const [projectType, setProjectType] = useState('')
+    /*  
+        User projects can be either a sprite or a image.
+        In this app sprite and image have the same structure, but image can have 1 frame only.
+    */
+    const [projectType, setProjectType] = useState('sprite')
     const [projectBG, setProjectBG] = useState('transparent')
     const maxSizes = {
         width: projectType === 'sprite' ? 100 : 1024,
         height: projectType === 'sprite' ? 100 : 768,
     }
+
     const numberPlaceHolder = projectType === 'sprite' ? '16' : '100'
+    const [projectWidthInSquares, setProjectWidthInSquares] = useState(numberPlaceHolder)
+    const [projectHeightInSquares, setProjectHeightInSquares] = useState(numberPlaceHolder)
 
     const state = useContext(StateContext)
     
@@ -35,8 +42,8 @@ const ProjectConfiguration = () => {
                     <legend className="fieldset__legend">Project size<span className="required">*</span></legend>
                     {projectType && <p className="fieldset__tips">{projectType === 'sprite' ? spriteSizeTips : imageSizeTips}</p>}
                     <div className="fieldset__number-inputs">
-                        <label className="fieldset__label">Width: <input placeholder={numberPlaceHolder} max={maxSizes.width} min="1" type="number"/></label>
-                        <label className="fieldset__label">Height: <input placeholder={numberPlaceHolder} max={maxSizes.height} min="1" type="number"/></label>
+                        <label className="fieldset__label">Width: <input value={projectWidthInSquares} onChange={e => setProjectWidthInSquares(e.target.value)} placeholder={numberPlaceHolder} max={maxSizes.width} min="1" type="number"/></label>
+                        <label className="fieldset__label">Height: <input value={projectHeightInSquares} onChange={e => setProjectHeightInSquares(e.target.value)} placeholder={numberPlaceHolder} max={maxSizes.height} min="1" type="number"/></label>
                     </div>
                 </fieldset>
 
@@ -50,7 +57,7 @@ const ProjectConfiguration = () => {
                 <div className="project-configuration-form__buttons">
                     <Button className="project-configuration-form__button" onClick={() => {
                         const newId = generateId()
-                        state.createDrawing(newId, projectBG)
+                        state.createDrawing(newId, projectBG, Number(projectWidthInSquares), Number(projectHeightInSquares))
                         navigate(`/workplace/${newId}`)
                     }}>Ok</Button>
                     <Button className="project-configuration-form__button" link linkPath="/">Cancel</Button>

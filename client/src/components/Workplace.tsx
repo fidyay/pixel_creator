@@ -12,7 +12,7 @@ const compliments = ['awesome', 'best', 'great', 'amazing']
 
 // termporary code
 const name = 'Nameofartist'
-const defaultSquareSize = 7
+const defaultSquareSize = 15
 
 export type PenSizeType = 1 | 2 | 3 | 4
 export type BrushType = 'pen' | 'line' | 'paint_bucket' | 'eraser' | 'rectangle' | 'elipse' | 'selection' | 'pipette'
@@ -43,7 +43,7 @@ const Workplace = () => {
             <main className="workplace__main main">
                 <Tools setChosenColor={setChosenColor} chosenPenSize={chosenPenSize} setChosenPenSize={setChosenPenSize} chosenBrush={chosenBrush} setChosenBrush={setChosenBrush} chosenColor={chosenColor}/>
                 <Frames drawingId={drawingId} chosenFrame={chosenFrame} setChosenFrame={setChosenFrame}/>
-                <Canvas chosenFrame={chosenFrame} chosenColor={chosenColor} chosenPenSize={chosenPenSize} widthInSquares={100} heightInSquares={100} squareSize={squareSize} setSquareSize={setSquareSize} chosenBrush={chosenBrush} setChosenColor={setChosenColor} drawingId={drawingId}/>
+                <Canvas chosenFrame={chosenFrame} chosenColor={chosenColor} chosenPenSize={chosenPenSize} squareSize={squareSize} setSquareSize={setSquareSize} chosenBrush={chosenBrush} setChosenColor={setChosenColor} drawingId={drawingId}/>
                 <ProjectOptions/>
             </main>
         </div>
