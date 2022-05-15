@@ -1,12 +1,12 @@
-import React, { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useRef, useContext } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import Tools from "./Tools";
 import Frames from "./Frames";
 import Canvas from "./Canvas";
 import ProjectOptions from "./ProjectOptions";
 import getRandomNumber from "../functions/getRandomNumber";
-import { useParams } from "react-router-dom";
+import { StateContext } from "./App";
 
 const compliments = ['awesome', 'best', 'great', 'amazing']
 
@@ -25,7 +25,14 @@ const Workplace = () => {
     const [squareSize, setSquareSize] = useState(defaultSquareSize)
     const [chosenColor, setChosenColor] = useState('rgb(0, 0, 0)')
     const [chosenFrame, setChosenFrame] = useState(0)
+    const drawings = useContext(StateContext).drawings
     const {id: drawingId} = useParams()
+    const navigate = useNavigate()
+
+    if (!drawings[drawingId]) {
+        navigate('/')
+    }
+
 
     if (compliment.current === '') {
         compliment.current = compliments[Math.round(getRandomNumber(0, 3))]

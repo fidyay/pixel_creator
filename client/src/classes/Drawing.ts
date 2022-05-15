@@ -125,10 +125,12 @@ class Drawing {
     }
 
     addAndDrawSquares(squaresToDraw: string[]) {
+        const frame = {...this.drawing.frames[this.chosenFrame]}
         squaresToDraw.forEach(square => {
-            this.drawing.frames[this.chosenFrame][square] = this.color
+            frame[square] = this.color
             this.drawSquareFromName(square)
         })
+        this.drawing.frames[this.chosenFrame] = frame
     }
 
     drawSquare(x: number, y: number) {
@@ -594,110 +596,55 @@ class Drawing {
             x: this.getSquareCoord(x2),
             y: this.getSquareCoord(y2)
         }
+        
+        let endCoordX = startCoords.x > endCoords.x ? startCoords.x : endCoords.x
+        let endCoordY = startCoords.y > endCoords.y ? startCoords.y : endCoords.y
+
+        if (endCoordX > this.drawing.widthInSquares - this.penSize) {
+            if (startCoords.x > endCoords.x) {
+                startCoords.x = this.drawing.widthInSquares - 1 - this.penSize
+            } else {
+                endCoords.x = this.drawing.widthInSquares - 1 - this.penSize
+            }
+        }
+
+        if (endCoordY > this.drawing.heightInSquares - this.penSize) {
+            if (startCoords.y > endCoords.y) {
+                startCoords.y = this.drawing.widthInSquares - 1 - this.penSize
+            } else {
+                endCoords.y = this.drawing.widthInSquares - 1 - this.penSize
+            }
+        }
+
         const squaresToDraw = new Set<string>()
 
         if (Math.abs(startCoords.x/this.penSize - endCoords.x/this.penSize) > 1 && Math.abs(startCoords.y/this.penSize - endCoords.y/this.penSize) > 1) {
             // x^2/a^2+y^2/b^2=1,a≥b>0
-            const a = (startCoords.x > endCoords.x ? startCoords.x - endCoords.x : endCoords.x - startCoords.x)/2
-            const b = (startCoords.y > endCoords.y ? startCoords.y - endCoords.y : endCoords.y - startCoords.y)/2
+            const a = Math.abs(endCoords.x - startCoords.x)/2
+            const b = Math.abs(endCoords.y - startCoords.y)/2
 
-            const zeroX = Math.floor(startCoords.x > endCoords.x ? startCoords.x - a : endCoords.x - a)
-            const zeroY = Math.floor(startCoords.y > endCoords.y ? startCoords.y - b : endCoords.y - b)
-            
-            for (let i = 0; i <= a; i++) {
-                const y = Math.ceil(Math.sqrt((1 - (i ** 2)/(a ** 2)) * (b ** 2)))
+            const startX = startCoords.x > endCoords.x ? endCoords.x : startCoords.x
+            const startY = startCoords.y > endCoords.y ? endCoords.y : startCoords.y
 
+            for (let i = -a; i <= a; i++) {
+                const Y = (Math.sqrt((1 - (i ** 2)/(a ** 2)) * b ** 2))
                 for (let l = 0; l < this.penSize; l++) {
                     for (let m = 0; m < this.penSize; m++) {
-                        const coordX = zeroX + i + l
-                        const coordY = zeroY + y + m
-                        squaresToDraw.add(`x:${coordX};y:${coordY}`)
-                    }
-                }
-
-                for (let l = 0; l < this.penSize; l++) {
-                    for (let m = 0; m < this.penSize; m++) {
-                        const coordX = zeroX - i + l
-                        const coordY = zeroY + y + m
-                        squaresToDraw.add(`x:${coordX};y:${coordY}`)
-                    }
-                }
-
-                for (let l = 0; l < this.penSize; l++) {
-                    for (let m = 0; m < this.penSize; m++) {
-                        const coordX = zeroX + i + l
-                        const coordY = zeroY - y + m
-                        squaresToDraw.add(`x:${coordX};y:${coordY}`)
-                    }
-                }
-
-                for (let l = 0; l < this.penSize; l++) {
-                    for (let m = 0; m < this.penSize; m++) {
-                        const coordX = zeroX - i + l
-                        const coordY = zeroY - y + m
-                        squaresToDraw.add(`x:${coordX};y:${coordY}`)
-                    }
-                }
-
-                if (!(squaresToDraw.has(`x:${zeroX + i - 1};y:${zeroY + y}`) || squaresToDraw.has(`x:${zeroX + i - 1};y:${zeroY + y + 1}`))) {
-                    const previousY =  Math.ceil(Math.sqrt((1 - ((i - 1) ** 2)/(a ** 2)) * (b ** 2)))
-                    for (let k = y; k < previousY; k++) {
-                        for (let l = 0; l < this.penSize; l++) {
-                            for (let m = 0; m < this.penSize; m++) {
-                                const coordX = zeroX + i + l
-                                const coordY = zeroY - k + m
-                                squaresToDraw.add(`x:${coordX};y:${coordY}`)
-                            }
-                        }
-
-                        for (let l = 0; l < this.penSize; l++) {
-                            for (let m = 0; m < this.penSize; m++) {
-                                const coordX = zeroX - i + l
-                                const coordY = zeroY - k + m
-                                squaresToDraw.add(`x:${coordX};y:${coordY}`)
-                            }
-                        }
-
-                        for (let l = 0; l < this.penSize; l++) {
-                            for (let m = 0; m < this.penSize; m++) {
-                                const coordX = zeroX + i + l
-                                const coordY = zeroY + k + m
-                                squaresToDraw.add(`x:${coordX};y:${coordY}`)
-                            }
-                        }
-
-                        for (let l = 0; l < this.penSize; l++) {
-                            for (let m = 0; m < this.penSize; m++) {
-                                const coordX = zeroX - i + l
-                                const coordY = zeroY + k + m
-                                squaresToDraw.add(`x:${coordX};y:${coordY}`)
-                            }
-                        }
-                    }
-                }
-
-                if (i === Math.floor(a)) {
-                    const previousY =  Math.ceil(Math.sqrt((1 - (Math.floor(a - 1) ** 2)/(a ** 2)) * (b ** 2)))
-                    for (let k = zeroY - previousY + 1; k < zeroY + previousY; k++) {
-                        for (let l = 0; l < this.penSize; l++) {
-                            for (let m = 0; m < this.penSize; m++) {
-                                const coordX = zeroX + i + l
-                                const coordY = k + m
-                                squaresToDraw.add(`x:${coordX};y:${coordY}`)
-                            }
-                        }
-
-                        for (let l = 0; l < this.penSize; l++) {
-                            for (let m = 0; m < this.penSize; m++) {
-                                const coordX = zeroX - i + l
-                                const coordY = k + m
-                                squaresToDraw.add(`x:${coordX};y:${coordY}`)
-                            }
-                        }
+                        squaresToDraw.add(`x:${startX + i + a + l};y:${startY + Math.floor(b - Y) + m}`)
+                        squaresToDraw.add(`x:${startX + i + a + l};y:${startY + Math.ceil(b + Y) + m}`)
                     }
                 }
             }
-            
+
+            for (let k = -b; k <= b; k++) {
+                const X = (Math.sqrt((1 - (k ** 2)/(b ** 2)) * a ** 2))
+                for (let l = 0; l < this.penSize; l++) {
+                    for (let m = 0; m < this.penSize; m++) {
+                        squaresToDraw.add(`x:${startX + Math.floor(a - X) + l};y:${startY + b + k + m}`)
+                        squaresToDraw.add(`x:${startX + Math.ceil(a + X) + l};y:${startY + b + k + m}`)
+                    }
+                }
+            }
         } else {
             for (let i = startCoords.x > endCoords.x ? endCoords.x : startCoords.x;
                 i <= (startCoords.x > endCoords.x ? startCoords.x : endCoords.x);
@@ -716,12 +663,11 @@ class Drawing {
                 }
         }
 
-        const squaresToDrawArray = Array.from(squaresToDraw)
         squaresToDraw.forEach(square => {
             this.drawSquareFromName(square)
         })
 
-        return squaresToDrawArray
+        return Array.from(squaresToDraw)
     }
 
     selection(x1: number, y1: number, x2: number, y2: number) {
