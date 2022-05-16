@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import ActiveEffect from "./Effects/ActiveEffect"
 
 interface ButtonProps {
     link?: boolean,
@@ -12,21 +13,17 @@ interface ButtonProps {
     deleteButton?: boolean
 }
 
-export const pointerDownHandler: React.PointerEventHandler<HTMLElement> = e => {
-    const {left: targetLeft, top: targetTop} = e.currentTarget.getBoundingClientRect()
-    const newX = e.clientX - targetLeft
-    const newY = e.clientY - targetTop
-    document.documentElement.style.setProperty('--x', `${newX}px`)
-    document.documentElement.style.setProperty('--y', `${newY}px`)
-}
-
-
 const Button = ({link, linkPath, onClick, className, children, transparent, chosen, deleteButton}: ButtonProps) => {
     return link ? 
-    <Link to={linkPath} onPointerDown={pointerDownHandler} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>{children}</Link> 
+    <Link to={linkPath} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>
+        {children}
+        <ActiveEffect/>
+    </Link> 
     :
-    <button onPointerDown={pointerDownHandler}
-    onClick={onClick} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>{children}</button>
+    <button onClick={onClick} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>
+        {children}
+        <ActiveEffect/>
+    </button>
 }
 
 export default Button

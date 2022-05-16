@@ -21,12 +21,6 @@ $deletebuttonbg: #BB0030;
 $modalbg: rgba(0, 0, 0, .3);
 $requiredcolor: #F56325;
 
-
-:root {
-    --x: 0;
-    --y: 0;
-}
-
 * {
     font-family: "Sansation";
     box-sizing: border-box;
@@ -71,28 +65,6 @@ a, button {
     &:hover {
         background-color: $buttonhoverbg;
     }
-    
-    &::before {
-        content: '';
-        display: block;
-        position: absolute;
-        height: 10px;
-        width: 10px;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        background-color: transparent;
-        transition: all 0s;
-    }
-
-    &:active::before {
-        width: 1000px;
-        height: 1000px;
-        left: var(--x);
-        top: var(--y);
-        background-color: rgba(0, 0, 0, .3);
-        transition: width .6s, height .6s, color .6s;
-    }
-
 
     &.transparent {
         background-color: $buttonbg;
@@ -479,12 +451,13 @@ input[type="number"] {
     }
 
     &__pen {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         svg {
+            z-index: 0;
             width: 30px;
             height: 30px;
         }
@@ -558,27 +531,6 @@ input[type="number"] {
             
             &:hover {
                 background-color: rgba($color: #fff, $alpha: .1);
-            }
-
-            &::before {
-                content: '';
-                display: block;
-                position: absolute;
-                height: 10px;
-                width: 10px;
-                transform: translate(-50%, -50%);
-                border-radius: 50%;
-                background-color: transparent;
-                transition: all 0s;
-            }
-        
-            &:active::before {
-                width: 500px;
-                height: 500px;
-                left: var(--x);
-                top: var(--y);
-                background-color: rgba(0, 0, 0, .3);
-                transition: width .6s, height .6s, color .6s;
             }
         }
     }

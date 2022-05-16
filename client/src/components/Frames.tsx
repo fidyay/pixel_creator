@@ -35,6 +35,7 @@ const Frames = observer(({drawingId, chosenFrame, setChosenFrame}: FramesProps) 
                 })}
             </ol>
             <Button onClick={() => {
+                setChosenFrame(frames.length)
                 state.createFrame(drawingId)
             }} transparent className="frames__create-frame">Create frame</Button>
         </div>
