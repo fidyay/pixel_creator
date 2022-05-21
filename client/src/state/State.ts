@@ -35,7 +35,7 @@ class State {
     }
 
     createFrame(id: string) {
-        this.drawings[id].frames.push({})
+        this.drawings[id].frames.push({...this.drawings[id].frames[this.drawings[id].frames.length - 1]})
     }
 
     deleteFrame(id: string, index: number) {

@@ -1,34 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "./Button";
+import type { Drawing } from "../state/State";
+import drawFrame from "../functions/drawFrame"
 
 interface SpriteAnimationProps {
-    width: number,
-    height: number
+    drawing: Drawing
 }
 
 const maxHeightOrWidth = 200
 
-const SpriteAnimation = ({width, height}: SpriteAnimationProps) => {
+const SpriteAnimation = ({drawing}: SpriteAnimationProps) => {
     const [canvas, setCanvas] = useState(null)
     const [fps, setFPS] = useState(16)
 
-    let canvasHeight
-    let canvasWidth
-
-    if (height === width) {
-        canvasWidth = maxHeightOrWidth
-        canvasHeight = maxHeightOrWidth
+    let squareSize: number
+    const squareWidth = maxHeightOrWidth/drawing.widthInSquares
+    const squareHeight = maxHeightOrWidth/drawing.heightInSquares
+    if (squareWidth > squareHeight) {
+        squareSize = Math.round(squareWidth)
+    } else {
+        squareSize = Math.round(squareHeight)
     }
 
-    if (height > width) {
-        canvasHeight = maxHeightOrWidth
-        canvasWidth = maxHeightOrWidth * (width/height)
-    }
+    let canvasHeight = drawing.heightInSquares * squareSize
+    let canvasWidth = drawing.widthInSquares * squareSize
 
-    if (width > height) {
-        canvasWidth = maxHeightOrWidth
-        canvasHeight = maxHeightOrWidth * (height/width)
-    }
+    useEffect(() => {
+        let animationFrame: number
+        if (canvas) {
+            let currentFrameIndex = 0
+            let timestamp = performance.now()
+            const drawSpriteAnimation = () => {
+                const currentTime = performance.now()
+                if (currentTime - timestamp > 1000/fps) {
+                    timestamp = currentTime
+                    drawFrame(drawing, canvas, canvasWidth, canvasHeight, currentFrameIndex)
+                    if (currentFrameIndex === drawing.frames.length - 1) {
+                        currentFrameIndex = 0
+                    } else {
+                        currentFrameIndex++
+                    }
+                }
+                animationFrame = requestAnimationFrame(drawSpriteAnimation)
+            }
+            animationFrame = requestAnimationFrame(drawSpriteAnimation)
+        }
+        return () => {
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame)
+            }
+        }
+    })
 
     return (
         <div className="project-options__sprite-animation sprite-animation">

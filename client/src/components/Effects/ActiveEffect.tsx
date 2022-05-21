@@ -18,7 +18,7 @@ const ActiveEffect = () => {
             const topCoord = e.clientY - parentClientRect.top
             effectDiv.current.style.left = `${leftCoord}px`
             effectDiv.current.style.top = `${topCoord}px`
-            effectDiv.current.style.transition = 'background-color .5s, width .5s, height .5s'
+            effectDiv.current.style.transition = 'background-color .3s, width .3s, height .3s'
             effectDiv.current.style.backgroundColor = 'rgba(0, 0, 0, .5)'
             if (parentClientRect.height > parentClientRect.width) {
                 effectDiv.current.style.width = `${parentClientRect.height * 3}px`

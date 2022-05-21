@@ -3,41 +3,26 @@ import ActiveEffect from "./Effects/ActiveEffect";
 import Button from "./Button";
 import { observer } from "mobx-react";
 import { StateContext } from "./App";
+import drawFrame from "../functions/drawFrame"
 
 interface FrameProps {
-    height: number,
-    width: number,
     index: number,
     chosen: boolean,
     drawingId: string,
+    canvasWidth: number,
+    canvasHeight: number,
     setChosenFrame: React.Dispatch<React.SetStateAction<number>>,
     deleteFrame: (e: React.PointerEvent<HTMLButtonElement>) => void
 }
 
 const maxHeightOrWidth = 100
 
-const Frame = observer(({height, width, index, drawingId, chosen, setChosenFrame, deleteFrame}: FrameProps) => {
+const Frame = observer(({index, drawingId, chosen, canvasWidth, canvasHeight, setChosenFrame, deleteFrame}: FrameProps) => {
     const [canvas, setCanvas] = useState(null)
     const drawing = useContext(StateContext).drawings[drawingId]
-    
-    let canvasHeight = drawing.heightInSquares > drawing.widthInSquares ? maxHeightOrWidth : drawing.heightInSquares/drawing.widthInSquares*maxHeightOrWidth
-    let canvasWidth = drawing.widthInSquares > drawing.heightInSquares ? maxHeightOrWidth : drawing.widthInSquares/drawing.heightInSquares*maxHeightOrWidth
 
     if (canvas) {
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-        if (drawing.background !== 'transparent') {
-            ctx.fillStyle = drawing.background
-            ctx.fillRect(0, 0, canvasWidth, canvasHeight)
-        }
-        let squareSize = canvasWidth/drawing.widthInSquares
-        Object.keys(drawing.frames[index]).forEach(key => {
-            const coords = key.split(';')
-            const X = Number(coords[0].slice(2))
-            const Y = Number(coords[1].slice(2))
-            ctx.fillStyle = drawing.frames[index][key]
-            ctx.clearRect(Math.floor(X * squareSize), Math.floor(Y * squareSize), squareSize, squareSize)
-            ctx.fillRect(Math.floor(X * squareSize), Math.floor(Y * squareSize), squareSize, squareSize)
-        })
+        drawFrame(drawing, canvas, canvasWidth, canvasHeight, index)
     }
 
     return (
