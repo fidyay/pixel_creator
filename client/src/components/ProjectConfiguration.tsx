@@ -4,17 +4,22 @@ import ColorPicker from "./ColorPicker";
 import { useNavigate } from "react-router-dom";
 import generateId from "../functions/generateId";
 import { StateContext } from "./App";
+import type { ProjectType } from "../state/State"
+
 
 const spriteSizeTips = 'Maximum width and height for animated sprites is 100'
 const imageSizeTips = 'For images maximum width is 1024 and maximum height is 768'
 
 const ProjectConfiguration = () => {
+    const state = useContext(StateContext)
     const navigate = useNavigate()
     /*  
         User projects can be either a sprite or a image.
         In this app sprite and image have the same structure, but image can have 1 frame only.
     */
-    const [projectType, setProjectType] = useState('sprite')
+
+    const [projectName, setProjectName] = useState(`Project ${Object.keys(state.drawings).length + 1}`)
+    const [projectType, setProjectType] = useState<ProjectType>('sprite')
     const [projectBG, setProjectBG] = useState('transparent')
     const maxSizes = {
         width: projectType === 'sprite' ? 100 : 1024,
@@ -25,13 +30,16 @@ const ProjectConfiguration = () => {
     const [projectWidthInSquares, setProjectWidthInSquares] = useState(numberPlaceHolder)
     const [projectHeightInSquares, setProjectHeightInSquares] = useState(numberPlaceHolder)
 
-    const state = useContext(StateContext)
     
     return (
         <div className="modal">
             <form className="modal__form project-configuration-form">
                 <h1 className="project-configuration-form__heading">Project configuration</h1>
-                <label className="project-configuration-form__project-name">Project name<span className="required">*</span>: <input placeholder="Project 1" type="text"/></label>
+                <label className="project-configuration-form__project-name">Project name<span className="required">*</span>: <input value={projectName}
+                onChange={e => {
+                    setProjectName(e.target.value)
+                }}
+                placeholder="Project 1" type="text"/></label>
                 <fieldset className="project-configuration-form__project-type fieldset">
                     <legend className="fieldset__legend">Project type<span className="required">*</span></legend>
                     <label className="fieldset__label" onClick={() => setProjectType('image')}><span className={`radiobutton${projectType === 'image' ? ' radiobutton_checked' : ''}`}><input name="type" type="radio"/></span>Image</label>
@@ -57,7 +65,7 @@ const ProjectConfiguration = () => {
                 <div className="project-configuration-form__buttons">
                     <Button className="project-configuration-form__button" onClick={() => {
                         const newId = generateId()
-                        state.createDrawing(newId, projectBG, Number(projectWidthInSquares), Number(projectHeightInSquares))
+                        state.createDrawing(newId, projectName, projectType, projectBG, Number(projectWidthInSquares), Number(projectHeightInSquares))
                         navigate(`/workplace/${newId}`)
                     }}>Ok</Button>
                     <Button className="project-configuration-form__button" link linkPath="/">Cancel</Button>

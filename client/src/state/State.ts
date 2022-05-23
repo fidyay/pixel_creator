@@ -4,10 +4,13 @@ interface Frame {
     [key: string]: string
 }
 
+export type ProjectType = 'sprite' | 'image'
+
 export interface Drawing {
     id: string,
+    name: string,
+    type: ProjectType,
     frames: Frame[],
-    saved: boolean,
     background: string,
     widthInSquares: number,
     heightInSquares: number
@@ -23,15 +26,20 @@ class State {
         makeAutoObservable(this)
     }
 
-    createDrawing(id: string, background: string, widthInSquares: number, heightInSquares: number) {
+    createDrawing(id: string, name: string, type: ProjectType, background: string, widthInSquares: number, heightInSquares: number) {
         this.drawings[id] = {
             id,
+            name,
+            type,
             frames: [{}],
-            saved: false,
             background,
             widthInSquares,
             heightInSquares
         }
+    }
+
+    changeDrawingName(id: string, newName: string) {
+        this.drawings[id].name = newName
     }
 
     createFrame(id: string) {
