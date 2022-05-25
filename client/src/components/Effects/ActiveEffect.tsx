@@ -43,7 +43,7 @@ const ActiveEffect = () => {
         }
     })
 
-    return <div style={{position: 'absolute', transform: 'translate(-50%, -50%)', borderRadius: '50%', zIndex: 999}} ref={effectDiv}/>
+    return <div style={{position: 'absolute', transform: 'translate(-50%, -50%)', borderRadius: '50%', zIndex: 10}} ref={effectDiv}/>
 }
 
 export default ActiveEffect

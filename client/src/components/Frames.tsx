@@ -3,6 +3,7 @@ import Button from "./Button";
 import Frame from "./Frame";
 import { StateContext } from "./App";
 import { observer } from "mobx-react";
+import Scrollbar from "./Effects/Scrollbar";
 
 interface FramesProps {
     drawingId: string,
@@ -29,19 +30,21 @@ const Frames = observer(({drawingId, chosenFrame, setChosenFrame}: FramesProps) 
             <h3 className="frames__heading">
                 Frames
             </h3>
-            <ol className="frames__frame-list">
-                {frames.map((frame, index) => {
-                    return <Frame canvasWidth={squareSize * drawing.widthInSquares} canvasHeight={squareSize * drawing.heightInSquares} drawingId={drawingId} deleteFrame={e => {
-                        e.stopPropagation()
-                        state.deleteFrame(drawingId, chosenFrame)
-                        if (chosenFrame === index) {
-                            if (index !== 0) {
-                                setChosenFrame(index - 1)
+            <Scrollbar>
+                <ol className="frames__frame-list">
+                    {frames.map((frame, index) => {
+                        return <Frame canvasWidth={squareSize * drawing.widthInSquares} canvasHeight={squareSize * drawing.heightInSquares} drawingId={drawingId} deleteFrame={e => {
+                            e.stopPropagation()
+                            state.deleteFrame(drawingId, chosenFrame)
+                            if (chosenFrame === index) {
+                                if (index !== 0) {
+                                    setChosenFrame(index - 1)
+                                }
                             }
-                        }
-                    }} setChosenFrame={setChosenFrame} chosen={chosenFrame === index} index={index} key={index}/>
-                })}
-            </ol>
+                        }} setChosenFrame={setChosenFrame} chosen={chosenFrame === index} index={index} key={index}/>
+                    })}
+                </ol>
+            </Scrollbar>
             <Button onClick={() => {
                 setChosenFrame(frames.length)
                 state.createFrame(drawingId)
