@@ -8,6 +8,7 @@ import ProjectOptions from "./ProjectOptions";
 import getRandomNumber from "../functions/getRandomNumber";
 import { StateContext } from "./App";
 import { observer } from "mobx-react";
+import { ColorType } from "../state/State";
 
 const compliments = ['awesome', 'best', 'great', 'amazing']
 
@@ -23,7 +24,7 @@ const Workplace = observer(() => {
     const [chosenBrush, setChosenBrush] = useState<BrushType>('pen')
     const compliment = useRef('')
     const [squareSize, setSquareSize] = useState(defaultSquareSize)
-    const [chosenColor, setChosenColor] = useState('rgb(0, 0, 0)')
+    const [chosenColor, setChosenColor] = useState<ColorType>('rgb(0, 0, 0)')
     const [chosenFrame, setChosenFrame] = useState(0)
     const state = useContext(StateContext)
     const drawings = state.drawings

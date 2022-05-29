@@ -1,7 +1,10 @@
 import { makeAutoObservable } from "mobx";
 
+export type CoordType = `x:${number};y:${number}`
+export type ColorType = `rgb(${number}, ${number}, ${number})` | 'transparent'
+
 interface Frame {
-    [key: string]: string
+    [key: CoordType]: ColorType
 }
 
 export type ProjectType = 'sprite' | 'image'
@@ -11,7 +14,7 @@ export interface Drawing {
     name: string,
     type: ProjectType,
     frames: Frame[],
-    background: string,
+    background: ColorType,
     widthInSquares: number,
     heightInSquares: number
 }
@@ -26,7 +29,7 @@ class State {
         makeAutoObservable(this)
     }
 
-    createDrawing(id: string, name: string, type: ProjectType, background: string, widthInSquares: number, heightInSquares: number) {
+    createDrawing(id: string, name: string, type: ProjectType, background: ColorType, widthInSquares: number, heightInSquares: number) {
         this.drawings[id] = {
             id,
             name,

@@ -1,14 +1,15 @@
 import React, { useState, useRef, PointerEvent, useEffect, useContext } from "react";
 import Drawing from "../classes/Drawing";
 import type { PenSizeType, BrushType} from "./Workplace";
-import { StateContext } from "./App"
+import { StateContext } from "./App";
+import { ColorType, CoordType } from "../state/State"
 
 interface CanvasProps {
     chosenBrush: BrushType,
     squareSize: number,
     setSquareSize: React.Dispatch<React.SetStateAction<number>>,
     chosenPenSize: PenSizeType,
-    chosenColor: string,
+    chosenColor: ColorType,
     setChosenColor: React.Dispatch<React.SetStateAction<string>>,
     drawingId: string,
     chosenFrame: number
@@ -43,7 +44,7 @@ const Canvas = ({chosenBrush, squareSize, setSquareSize, chosenPenSize, chosenCo
 
     if (canvas) {
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-        if (chosenBrush !== 'selection' && drawing.current.selectedSquares?.squares?.length) {
+        if (chosenBrush !== 'selection' && Object.keys(drawing.current.selectedSquares?.squares).length) {
             drawing.current.resetSelectedSquares()
         }
         drawing.current.setDrawing(state.drawings[drawingId])
@@ -133,7 +134,7 @@ const Canvas = ({chosenBrush, squareSize, setSquareSize, chosenPenSize, chosenCo
                         clickY = pointY - drawing.current.selectedSquares.yStart * squareSize
                     }
 
-                    let squaresToDraw: string[] = []
+                    let squaresToDraw: CoordType[] = []
 
                     switch(chosenBrush) {
                         case 'pen':

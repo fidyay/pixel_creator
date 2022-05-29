@@ -4,7 +4,7 @@ import ColorPicker from "./ColorPicker";
 import { useNavigate } from "react-router-dom";
 import generateId from "../functions/generateId";
 import { StateContext } from "./App";
-import type { ProjectType } from "../state/State"
+import type { ProjectType, ColorType } from "../state/State"
 
 
 const spriteSizeTips = 'Maximum width and height for animated sprites is 100'
@@ -20,7 +20,7 @@ const ProjectConfiguration = () => {
 
     const [projectName, setProjectName] = useState(`Project ${Object.keys(state.drawings).length + 1}`)
     const [projectType, setProjectType] = useState<ProjectType>('sprite')
-    const [projectBG, setProjectBG] = useState('transparent')
+    const [projectBG, setProjectBG] = useState<ColorType>('transparent')
     const maxSizes = {
         width: projectType === 'sprite' ? 100 : 1024,
         height: projectType === 'sprite' ? 100 : 768,
@@ -59,7 +59,11 @@ const ProjectConfiguration = () => {
                     <legend className="fieldset__legend">Background color<span className="required">*</span></legend>
                     <label onClick={() => setProjectBG('transparent')} className="fieldset__label"><span className={`radiobutton${projectBG === 'transparent' ? ' radiobutton_checked' : ''}`}><input name="type" type="radio"/></span>Transparent</label>
                     <label onClick={() => setProjectBG(projectBG === 'transparent' ? 'rgb(255, 255, 255)' : projectBG)} className="fieldset__label"><span className={`radiobutton${projectBG !== 'transparent' ? ' radiobutton_checked' : ''}`}><input name="type" type="radio"/></span>Custom</label>
-                    {projectBG !== 'transparent' && <ColorPicker onChange={e => setProjectBG(e.value)} value={projectBG} className="fieldset__color-picker" forBackground/>}
+                    {projectBG !== 'transparent' && <ColorPicker onChange={e => {
+                            const color = e.value as ColorType
+                            setProjectBG(color)
+                        }}
+                        value={projectBG} className="fieldset__color-picker" forBackground/>}
                 </fieldset>
 
                 <div className="project-configuration-form__buttons">

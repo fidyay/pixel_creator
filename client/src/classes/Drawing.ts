@@ -1,8 +1,8 @@
 import type { PenSizeType } from "../components/Workplace";
-import type { Drawing as DrawingType } from "../state/State"
+import type { Drawing as DrawingType, CoordType, ColorType } from "../state/State"
 
 interface Squares {
-    [key: string]: string | undefined
+    [key: CoordType]: ColorType | undefined
 }
 
 interface SelectedSquares {
@@ -19,7 +19,7 @@ class Drawing {
     private ctx?: CanvasRenderingContext2D
     private squareSize: number
     private penSize: PenSizeType
-    private color: string
+    private color: ColorType
     private chosenFrame: number
     public selectedSquares: SelectedSquares
 
@@ -92,7 +92,7 @@ class Drawing {
         this.penSize = s
     }
 
-    setColor(c: string) {
+    setColor(c: ColorType) {
         this.color = c
     }
 
@@ -118,13 +118,13 @@ class Drawing {
     drawImage(n: number) {
         this.drawBackground()
         const coordsOfSquares = Object.keys(this.drawing.frames[this.chosenFrame])
-        coordsOfSquares.forEach((square: string) => {
+        coordsOfSquares.forEach((square: CoordType) => {
             this.ctx.fillStyle = this.drawing.frames[n][square]
             this.drawSquareFromName(square)
         })
     }
 
-    addAndDrawSquares(squaresToDraw: string[]) {
+    addAndDrawSquares(squaresToDraw: CoordType[]) {
         const frame = {...this.drawing.frames[this.chosenFrame]}
         squaresToDraw.forEach(square => {
             frame[square] = this.color
@@ -164,7 +164,7 @@ class Drawing {
             x: this.getSquareCoord(x2),
             y: this.getSquareCoord(y2)
         }
-        const squaresToDraw = new Set<string>()
+        const squaresToDraw = new Set<CoordType>()
 
         if (startCoords.x !== endCoords.x && startCoords.y !== endCoords.y) {
             const isXStartBigger: boolean = startCoords.x > endCoords.x
@@ -333,7 +333,7 @@ class Drawing {
         const maxX = this.drawing.widthInSquares - 1
         const maxY = this.drawing.heightInSquares - 1
 
-        const squaresToDraw = new Set<string>()
+        const squaresToDraw = new Set<CoordType>()
         let targetColor: string
         if (this.drawing.frames[this.chosenFrame][`x:${startCoords.x};y:${startCoords.y}`]) {
             targetColor = this.drawing.frames[this.chosenFrame][`x:${startCoords.x};y:${startCoords.y}`]
@@ -342,7 +342,7 @@ class Drawing {
             targetColor = undefined
         }
 
-        const addToSquaresToDraw = (square: string) => {
+        const addToSquaresToDraw = (square: CoordType) => {
             const squares = [square]
             let currentSquare = squares.shift()
           
@@ -444,7 +444,7 @@ class Drawing {
             x: this.getSquareCoord(x2),
             y: this.getSquareCoord(y2)
         }
-        const squaresToDraw = new Set<string>()
+        const squaresToDraw = new Set<CoordType>()
 
         if (startCoords.x !== endCoords.x && startCoords.y !== endCoords.y) {
             const isXStartBigger: boolean = startCoords.x > endCoords.x
@@ -616,7 +616,7 @@ class Drawing {
             }
         }
 
-        const squaresToDraw = new Set<string>()
+        const squaresToDraw = new Set<CoordType>()
 
         if (Math.abs(startCoords.x/this.penSize - endCoords.x/this.penSize) > 1 && Math.abs(startCoords.y/this.penSize - endCoords.y/this.penSize) > 1) {
             // x^2/a^2+y^2/b^2=1,a≥b>0
@@ -701,7 +701,7 @@ class Drawing {
 
         const newSquaresObj: Squares = {}
 
-        Array.from(squaresToSelect).forEach(square => {
+        Array.from(squaresToSelect).forEach((square: CoordType) => {
             newSquaresObj[square] = undefined
         })
 
@@ -723,7 +723,7 @@ class Drawing {
             y: Math.round((y)/(this.squareSize*this.penSize)) * this.penSize
         }
         const newSquareObj: Squares = {}
-        Object.keys(this.selectedSquares.squares).forEach(square => {
+        Object.keys(this.selectedSquares.squares).forEach((square: CoordType) => {
             const coords = square.split(';')
             const squareX = Number(coords[0].slice(2)) - this.selectedSquares.xStart + coordsToMove.x
             const squareY = Number(coords[1].slice(2)) - this.selectedSquares.yStart + coordsToMove.y
@@ -747,7 +747,7 @@ class Drawing {
         }
         const newSelectedSquaresObj: Squares = {...this.selectedSquares.squares}
         const keys = Object.keys(newSelectedSquaresObj)
-        keys.forEach(square => {
+        keys.forEach((square: CoordType) => {
             if (this.drawing.frames[this.chosenFrame][square]) {
                 newSelectedSquaresObj[square] = this.drawing.frames[this.chosenFrame][square]
             }
@@ -755,7 +755,7 @@ class Drawing {
         this.selectedSquares.squares = newSelectedSquaresObj
         if (moving) {
             const newDrawingObj = {...this.drawing.frames[this.chosenFrame]}
-            keys.forEach(key => {
+            keys.forEach((key: CoordType) => {
                 if (newSelectedSquaresObj[key]) {
                     delete newDrawingObj[key]
                 }
@@ -768,7 +768,7 @@ class Drawing {
 
     placeSquaresFromSelection(moving?: boolean) {
         const newDrawingObj = {...this.drawing.frames[this.chosenFrame]}
-        Object.keys(this.selectedSquares.squares).forEach(key => {
+        Object.keys(this.selectedSquares.squares).forEach((key: CoordType) => {
             if (this.selectedSquares.squares[key] && this.checkForPossibleCoordinate(key)) {
                 newDrawingObj[key] = this.selectedSquares.squares[key]
             }
@@ -783,7 +783,7 @@ class Drawing {
 
     clearSelection() {
         const newSelectedSquaresObj = {...this.selectedSquares.squares}
-        Object.keys(newSelectedSquaresObj).forEach(key => {
+        Object.keys(newSelectedSquaresObj).forEach((key: CoordType) => {
             newSelectedSquaresObj[key] = undefined
         })
         this.selectedSquares.squares = newSelectedSquaresObj
@@ -793,7 +793,7 @@ class Drawing {
     drawSelectedSquares() {
         if (Object.keys(this.selectedSquares.squares).length) {
             this.drawImage(this.chosenFrame)
-            Object.keys(this.selectedSquares.squares).forEach(square => {
+            Object.keys(this.selectedSquares.squares).forEach((square: CoordType) => {
                 if (this.selectedSquares.squares[square]) {
                     const color = this.selectedSquares.squares[square]
                     const rgb = color.slice(4, color.length - 1)

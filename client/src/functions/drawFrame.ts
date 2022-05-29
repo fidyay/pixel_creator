@@ -1,4 +1,4 @@
-import type { Drawing } from "../state/State"
+import type { Drawing, CoordType } from "../state/State"
 
 const drawFrame = (drawing: Drawing, canvas: HTMLCanvasElement, canvasWidth: number, canvasHeight: number, frameIndex: number) => {
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
@@ -8,7 +8,7 @@ const drawFrame = (drawing: Drawing, canvas: HTMLCanvasElement, canvasWidth: num
         ctx.fillRect(0, 0, canvasWidth, canvasHeight)
     }
     let squareSize = canvasWidth/drawing.widthInSquares
-    Object.keys(drawing.frames[frameIndex]).forEach(key => {
+    Object.keys(drawing.frames[frameIndex]).forEach((key: CoordType) => {
         const coords = key.split(';')
         const X = Number(coords[0].slice(2))
         const Y = Number(coords[1].slice(2))

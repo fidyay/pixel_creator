@@ -63,6 +63,7 @@ a, button {
     border: none;
     cursor: pointer;
     display: block;
+    user-select: none;
 
     &:hover {
         background-color: $buttonhoverbg;
@@ -203,7 +204,10 @@ input[type="number"] {
     }
 }
 
+
+
 .home {
+
     &-header {
         display: flex;
         align-items: center;
@@ -216,7 +220,10 @@ input[type="number"] {
             text-align: center;
             margin-bottom: 30px;
         }
+    }
 
+    &__user-projects {
+        width: 100%;
     }
 }
 
@@ -488,8 +495,8 @@ input[type="number"] {
         font-size: 16px;
     }
 
-    .scroll-wrapper {
-        flex-shrink: 1;
+    .scrollbar {
+        margin-left: -20px;
     }
 
     &__frame-list {
@@ -498,11 +505,13 @@ input[type="number"] {
         flex-direction: column;
         list-style: none;
         overflow-y: auto;
+        padding: 0 20px;
 
         &-number {
             font-size: 16px;
             position: absolute;
             top: 20px;
+            user-select: none;
         }
 
         &-delete-frame {
@@ -619,9 +628,12 @@ input[type="number"] {
     display: flex;
     flex-direction: row;
     overflow-y: hidden;
+    max-width: 100vw;
 
     &__children-wrapper {
-        flex-grow: 0;
+        max-width: calc(100% - 8px);
+        max-height: 100vh;
+        flex-grow: 1;
         flex-shrink: 0;
         overflow-y: auto;
     }
@@ -629,12 +641,12 @@ input[type="number"] {
     &__scrollbar {
         flex-grow: 0;
         flex-shrink: 0;
+        width: 8px;
     }
 }
 
 .scrollbar {
     position: relative;
-    width: 8px;
     
     &__thumb {
         width: 100%;
@@ -648,5 +660,77 @@ input[type="number"] {
         &:hover {
             background-color: $scrollbarhoverbg;
         }
+    }
+}
+
+.user-projects {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    &__heading {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+    &__projects {
+        width: 100%;
+    }
+}
+
+.projects {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.project {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    position: relative;
+
+    &__link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        background-color: transparent;
+        border-radius: 0;
+
+        h3 {
+            font-size: 24px;
+        }
+    }
+}
+
+.dots {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    svg {
+        height: 80%;
+        width: 80%;
+    }
+}
+
+.parameters {
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    position: absolute;
+    top: 0px;
+    right: 20px;
+    overflow: hidden;
+
+    &__button {
+        border-radius: 0;
     }
 }
