@@ -16,7 +16,14 @@ connectionToDatabase()
 .catch(console.error)
 
 // connect to database and write resolvers
-const server = new ApolloServer({typeDefs, resolvers});
+const server = new ApolloServer({typeDefs, resolvers, context: ({req}) => {
+    const getToken = (BearerToken: string) => {
+        return BearerToken.includes('Bearer ') ? BearerToken.slice(7) : BearerToken
+    }
+    const bearerToken = req.headers.authorization || '' as string
+    const token = getToken(bearerToken)
+    return {token}
+}});
 
 server.listen().then(server => {
     console.log(`Listening at ${server.url}`)

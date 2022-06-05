@@ -23,7 +23,7 @@ const typeDefs = gql`
     }
 
     type Query {
-        me(name: String, password: String, token: String): UserInfo
+        me(name: String, password: String): UserInfo
     }
 
     # mutations
