@@ -15,6 +15,7 @@ const salt = bcrypt.genSaltSync(saltRounds)
 const resolvers = {
   Frame: GraphQLJSON,
   Query: {
+    // user accounts manipulation
     async me(_, {name, password}, {token}) {
       if (token) {
         try {
@@ -46,9 +47,13 @@ const resolvers = {
           return 'Invalid name or password'
         }
       }
-    }
+    },
+    // projects manipulation
+
+    
   },
   Mutation: {
+    // user accounts manipulation
     async createAccount(_, {name, password}) {
       const hash = bcrypt.hashSync(password, salt)
       const user = new UserModel({name, password: hash, projects: []})
@@ -60,8 +65,40 @@ const resolvers = {
         id: user.id,
         projects: []
       }
-    }
+    },
+    async updateAccountInfo(_, {name, password}, {token}) {
+      if (!token) return 'User is not authorized'
+      const { id } = jwt.verify(token, jwtPrivateKey)
+      const user = await UserModel.findById(id)
+      user.name = name
+      user.password = bcrypt.hashSync(password, salt)
+      await user.save()
+      return {
+        name: user.name,
+        token: jwt.sign({ name, id: user.id, password }, jwtPrivateKey),
+        id: user.id,
+        projects: user.projects
+      }
+    },
+    async deleteAccount (_, __, {token}) {
+      if (!token) return 'User is not authorized'
+      try {
+        const { id } = jwt.verify(token, jwtPrivateKey)
+        await UserModel.findByIdAndDelete(id)
+        return {
+          type: 'Success'
+        }
+      } catch(e) {
+        console.error(e)
+        return {
+          type: 'Error'
+        }
+      }
+    },
+      // projects manipulation
+
+
   }
-};
+}
 
 export default resolvers

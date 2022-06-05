@@ -12,7 +12,7 @@ const connectionToDatabase = async () => {
 }
 
 connectionToDatabase()
-.then(() => console.log('connected to database successfully'))
+.then(() => console.log('Connected to database successfully'))
 .catch(console.error)
 
 // connect to database and write resolvers

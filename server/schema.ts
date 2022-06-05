@@ -5,6 +5,10 @@ const typeDefs = gql`
 
     # queries
 
+    type Status {
+        type: String
+    }
+
     type Project {
         id: ID,
         name: String,
@@ -30,6 +34,8 @@ const typeDefs = gql`
 
     type Mutation {
         createAccount(name: String, password: String): UserInfo
+        updateAccountInfo(name: String, password: String): UserInfo
+        deleteAccount: Status
     }
 `
 
