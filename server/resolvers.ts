@@ -13,7 +13,7 @@ const saltRounds = 10
 const salt = bcrypt.genSaltSync(saltRounds)
 
 const resolvers = {
-  Frame: GraphQLJSON,
+  JSON: GraphQLJSON,
   Query: {
     // user accounts manipulation
     async me(_, {name, password}, {token}) {
@@ -24,8 +24,7 @@ const resolvers = {
           return {
             id: user.id,
             name: user.name,
-            token,
-            projects: user.projects
+            token
           }
         } catch (e) {
           console.error(e)
@@ -39,8 +38,7 @@ const resolvers = {
           return {
             id: user.id,
             name: user.name,
-            token: jwt.sign({ name, id: user.id, password }, jwtPrivateKey),
-            projects: user.projects
+            token: jwt.sign({ name, id: user.id, password }, jwtPrivateKey)
           }
         } catch(e) {
           console.error(e)
@@ -49,7 +47,12 @@ const resolvers = {
       }
     },
     // projects manipulation
-
+    async projects(_, __, {token}) {
+      if (!token) return 'User is not authorized'
+      const { id: authorId } = jwt.verify(token, jwtPrivateKey)
+      const projects = await UserProjectModel.find({author: authorId})
+      return projects
+    }
     
   },
   Mutation: {
@@ -76,8 +79,7 @@ const resolvers = {
       return {
         name: user.name,
         token: jwt.sign({ name, id: user.id, password }, jwtPrivateKey),
-        id: user.id,
-        projects: user.projects
+        id: user.id
       }
     },
     async deleteAccount (_, __, {token}) {
@@ -96,8 +98,47 @@ const resolvers = {
       }
     },
       // projects manipulation
-
-
+      async createProject(_, {name, type, background, widthInSquares, heightInSquares, frames}, {token}) {
+        if (!token) return 'User is not authorized'
+        const { id: authorId } = jwt.verify(token, jwtPrivateKey)
+        const newProject = new UserProjectModel({name, type, background, widthInSquares, heightInSquares, frames, author: authorId})
+        await newProject.save()
+        return {
+          id: newProject.id,
+          name,
+          type,
+          background,
+          widthInSquares,
+          heightInSquares,
+          frames
+        }
+      },
+      async updateProject(_, {id, name, frames}, {token}) {
+        if (!token) return 'User is not authorized'
+        const projectDoc = await UserProjectModel.findById(id)
+        projectDoc.name = name
+        projectDoc.frames = frames
+        await projectDoc.save()
+        return {
+          id,
+          name,
+          type: projectDoc.type,
+          background: projectDoc.background,
+          widthInSquares: projectDoc.widthInSquares,
+          heightInSquares: projectDoc.heightInSquares,
+          frames
+        }
+      },
+      async deleteProject(_, {id}, {token}) {
+        if (!token) return 'User is not authorized'
+        const { id: authorId } = jwt.verify(token, jwtPrivateKey)
+        const project = await UserProjectModel.findById(id)
+        if (project.author.toString() !== authorId) return { type: "Error" }
+        await project.delete()
+        return {
+          type: "Success"
+        }
+      }
   }
 }
 

@@ -10,6 +10,10 @@ interface Frame {
 export interface UserProject extends Document {
     _id: ObjectId,
     name: string,
+    background: string,
+    widthInSquares: number,
+    heightInSquares: number,
+    type: string,
     author: ObjectId,
     frames: Frame[]
 }
@@ -17,6 +21,10 @@ export interface UserProject extends Document {
 const userProjectSchema = new Schema<UserProject>({
     name: String,
     author: Schema.Types.ObjectId,
+    background: String,
+    widthInSquares: String,
+    heightInSquares: String,
+    type: String,
     frames: Array
 })
 

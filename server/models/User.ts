@@ -3,8 +3,7 @@ import { Schema, model, Document, ObjectId } from 'mongoose'
 export interface User extends Document {
     _id: ObjectId,
     name: string,
-    password: string,
-    projects: ObjectId[]
+    password: string
 }
 
 const userSchema = new Schema<User>({
@@ -12,8 +11,7 @@ const userSchema = new Schema<User>({
         type: String,
         unique: true
     },
-    password: String,
-    projects: [Schema.Types.ObjectId]
+    password: String
 })
 
 const UserModel = model("User", userSchema)

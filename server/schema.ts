@@ -1,7 +1,7 @@
 import { gql } from "apollo-server";
 
 const typeDefs = gql`
-    scalar Frame
+    scalar JSON
 
     # queries
 
@@ -9,33 +9,36 @@ const typeDefs = gql`
         type: String
     }
 
+    type UserInfo {
+        id: ID,
+        token: String,
+        name: String
+    }
+
     type Project {
         id: ID,
         name: String,
         type: String,
-        frames: [Frame!]!,
+        frames: [JSON!]!,
         background: String,
         widthInSquares: Int,
         heightInSquares: Int
     }
 
-    type UserInfo {
-        id: ID,
-        token: String,
-        name: String,
-        projects: [ID!]!
-    }
-
     type Query {
-        me(name: String, password: String): UserInfo
+        me(name: String, password: String): UserInfo,
+        projects: [Project!]!
     }
 
     # mutations
 
     type Mutation {
-        createAccount(name: String, password: String): UserInfo
-        updateAccountInfo(name: String, password: String): UserInfo
-        deleteAccount: Status
+        createAccount(name: String, password: String): UserInfo,
+        updateAccountInfo(name: String, password: String): UserInfo,
+        deleteAccount: Status,
+        createProject(name: String, type: String, background: String, widthInSquares: Int, heightInSquares: Int, frames: [JSON!]!): Project
+        updateProject(id: ID, name: String, frames: [JSON!]!): Project
+        deleteProject(id: ID): Status
     }
 `
 
