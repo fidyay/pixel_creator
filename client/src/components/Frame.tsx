@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import ActiveEffect from "./Effects/ActiveEffect";
 import Button from "./Button";
 import { observer } from "mobx-react";
-import { StateContext } from "./App";
+import { StateContext } from "../index";
 import drawFrame from "../functions/drawFrame"
 
 interface FrameProps {

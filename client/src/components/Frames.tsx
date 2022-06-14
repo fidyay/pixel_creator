@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Button from "./Button";
 import Frame from "./Frame";
-import { StateContext } from "./App";
+import { StateContext } from "../index";
 import { observer } from "mobx-react";
 import Scrollbar from "./Effects/Scrollbar";
 

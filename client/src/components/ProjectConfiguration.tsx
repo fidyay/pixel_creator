@@ -3,7 +3,7 @@ import Button from "./Button";
 import ColorPicker from "./ColorPicker";
 import { useNavigate } from "react-router-dom";
 import generateId from "../functions/generateId";
-import { StateContext } from "./App";
+import { StateContext } from "../index";
 import type { ProjectType, ColorType } from "../state/State"
 
 

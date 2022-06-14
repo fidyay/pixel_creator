@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Button from "./Button";
 import SpriteAnimation from "./SpriteAnimation";
-import { StateContext } from "./App"
+import { StateContext } from "../index"
 
 interface ProjectOptionsProps {
     drawingId: string

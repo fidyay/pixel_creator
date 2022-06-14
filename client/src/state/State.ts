@@ -20,13 +20,19 @@ export interface Drawing {
 }
 
 class State {
+    userName: string
     drawings: {
         [key: string]: Drawing
     }
 
     constructor() {
         this.drawings = {}
+        this.userName = ''
         makeAutoObservable(this)
+    }
+
+    setUserName(name: string) {
+        this.userName = name
     }
 
     createDrawing(id: string, name: string, type: ProjectType, background: ColorType, widthInSquares: number, heightInSquares: number) {

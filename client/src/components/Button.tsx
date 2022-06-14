@@ -10,17 +10,18 @@ interface ButtonProps {
     children: React.ReactNode,
     transparent?: boolean,
     chosen?: boolean,
-    deleteButton?: boolean
+    deleteButton?: boolean,
+    type?: "button" | "submit" | "reset"
 }
 
-const Button = ({link, linkPath, onClick, className, children, transparent, chosen, deleteButton}: ButtonProps) => {
+const Button = ({link, linkPath, onClick, className, children, transparent, chosen, deleteButton, type}: ButtonProps) => {
     return link ? 
     <Link to={linkPath} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>
         {children}
         <ActiveEffect/>
     </Link> 
     :
-    <button onClick={onClick} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>
+    <button type={type || 'button'} onClick={onClick} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>
         {children}
         <ActiveEffect/>
     </button>

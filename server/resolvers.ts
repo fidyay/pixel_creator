@@ -4,6 +4,8 @@ import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
 import UserModel from "./models/User";
 import UserProjectModel from "./models/UserProject";
+import { User } from "./models/User";
+import { UserProject } from "./models/UserProject";
 
 configEnv()
 
@@ -16,11 +18,11 @@ const resolvers = {
   JSON: GraphQLJSON,
   Query: {
     // user accounts manipulation
-    async me(_, {name, password}, {token}) {
+    async me(_, {name, password}: User, {token}) {
       if (token) {
         try {
           const { id } = jwt.verify(token, jwtPrivateKey)
-          const user = await UserModel.findById(id)
+          const user = await UserModel.findById(id) as User
           return {
             id: user.id,
             name: user.name,
@@ -34,7 +36,7 @@ const resolvers = {
       if (name && password) {
         try {
           const hash = bcrypt.hashSync(password, salt)
-          const user = await UserModel.findOne({name, password: hash})
+          const user = await UserModel.findOne({name, password: hash}) as User
           return {
             id: user.id,
             name: user.name,
@@ -72,7 +74,7 @@ const resolvers = {
     async updateAccountInfo(_, {name, password}, {token}) {
       if (!token) return 'User is not authorized'
       const { id } = jwt.verify(token, jwtPrivateKey)
-      const user = await UserModel.findById(id)
+      const user = await UserModel.findById(id) as User
       user.name = name
       user.password = bcrypt.hashSync(password, salt)
       await user.save()
@@ -115,7 +117,7 @@ const resolvers = {
       },
       async updateProject(_, {id, name, frames}, {token}) {
         if (!token) return 'User is not authorized'
-        const projectDoc = await UserProjectModel.findById(id)
+        const projectDoc = await UserProjectModel.findById(id) as UserProject
         projectDoc.name = name
         projectDoc.frames = frames
         await projectDoc.save()
@@ -132,7 +134,7 @@ const resolvers = {
       async deleteProject(_, {id}, {token}) {
         if (!token) return 'User is not authorized'
         const { id: authorId } = jwt.verify(token, jwtPrivateKey)
-        const project = await UserProjectModel.findById(id)
+        const project = await UserProjectModel.findById(id) as UserProject
         if (project.author.toString() !== authorId) return { type: "Error" }
         await project.delete()
         return {

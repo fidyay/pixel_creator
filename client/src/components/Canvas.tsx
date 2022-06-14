@@ -1,7 +1,7 @@
 import React, { useState, useRef, PointerEvent, useEffect, useContext } from "react";
 import Drawing from "../classes/Drawing";
 import type { PenSizeType, BrushType} from "./Workplace";
-import { StateContext } from "./App";
+import { StateContext } from "../index";
 import { ColorType, CoordType } from "../state/State"
 
 interface CanvasProps {

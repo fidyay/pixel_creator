@@ -1,6 +1,6 @@
 import React, {useContext, useState} from "react";
 import UserProject from "./UserProject";
-import { StateContext } from "./App";
+import { StateContext } from "../index";
 import { observer } from "mobx-react";
 
 const averageMaxWidthInPixels = 200

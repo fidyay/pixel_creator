@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { observer } from "mobx-react";
-import { StateContext } from "./App";
+import { StateContext } from "../index";
 import { Link } from "react-router-dom";
 import ProjectParameters from "./ProjectParameters";
 import drawFrame from "../functions/drawFrame";

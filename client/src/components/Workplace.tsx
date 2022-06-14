@@ -6,7 +6,7 @@ import Frames from "./Frames";
 import Canvas from "./Canvas";
 import ProjectOptions from "./ProjectOptions";
 import getRandomNumber from "../functions/getRandomNumber";
-import { StateContext } from "./App";
+import { StateContext } from "../index";
 import { observer } from "mobx-react";
 import { ColorType } from "../state/State";
 

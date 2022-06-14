@@ -22,6 +22,9 @@ $modalbg: rgba(0, 0, 0, .3);
 $requiredcolor: #F56325;
 $scrollbarbg: rgb(150, 146, 146);
 $scrollbarhoverbg: rgb(175, 172, 172);
+$linkcolor: #0960eb;
+$hoverlinkcolor: #4a8af0;
+$errorcolor: #f5383f;
 
 * {
     font-family: "Sansation";
@@ -29,6 +32,14 @@ $scrollbarhoverbg: rgb(175, 172, 172);
     padding: 0;
     margin: 0;
     color: #fff
+}
+
+
+.main-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 // remove arrows from input[type="number"]
@@ -126,7 +137,7 @@ canvas {
     background-size: 20px;
 }
 
-input[type="text"], input[type="number"] {
+input[type="text"], input[type="number"], input[type="password"] {
     background-color: $buttonbg;
     border: none;
     border-bottom: 1px solid #fff;
@@ -218,7 +229,26 @@ input[type="number"] {
             margin-top: 34px;
             font-size: 24px;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+        }
+
+        &__button {
+            margin-bottom: 20px;
+        }
+
+        &__authorization {
+            &-link {
+                background-color: transparent;
+                display: inline;
+                text-decoration: underline;
+                color: $linkcolor;
+                padding: 0;
+
+                &:hover {
+                    color: $hoverlinkcolor;
+                    background-color: transparent;
+                }
+            }
         }
     }
 
@@ -256,7 +286,6 @@ input[type="number"] {
         font-size: 24px;
     }
 
-
     &__project {
         &-type, &-size {
             margin-top: 10px;
@@ -268,6 +297,47 @@ input[type="number"] {
         width: 100%;
         display: flex;
         justify-content: space-evenly;
+    }
+}
+
+.login-or-sign-in-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px;
+
+    &__heading {
+        font-size: 24px;
+    }
+
+    
+    &__error {
+        color: $errorcolor;
+        margin-bottom: 10px;
+    }
+
+    &__field {
+        margin-bottom: 10px;
+
+        input {
+            margin-left: 10px;
+        }
+    }
+
+    &__buttons {
+        margin-top: 10px;
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    &__loader {
+        margin-top: 10px;
     }
 }
 
@@ -734,3 +804,62 @@ input[type="number"] {
         border-radius: 0;
     }
 }
+
+// loader
+
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-ellipsis div {
+    position: absolute;
+    top: 41.25%;
+    width: 16.25%;
+    height: 16.25%;
+    border-radius: 50%;
+    background: #fff;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+  .lds-ellipsis div:nth-child(1) {
+    left: 10%;
+    animation: lds-ellipsis1 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(2) {
+    left: 10%;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(3) {
+    left: 40%;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(4) {
+    left: 70%;
+    animation: lds-ellipsis3 0.6s infinite;
+  }
+  @keyframes lds-ellipsis1 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes lds-ellipsis3 {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0);
+    }
+  }
+  @keyframes lds-ellipsis2 {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(184.61%, 0);
+    }
+  }
+  
