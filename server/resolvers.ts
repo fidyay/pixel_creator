@@ -6,6 +6,7 @@ import UserModel from "./models/User";
 import UserProjectModel from "./models/UserProject";
 import { User } from "./models/User";
 import { UserProject } from "./models/UserProject";
+import { ApolloError } from "apollo-server";
 
 configEnv()
 
@@ -50,7 +51,7 @@ const resolvers = {
     },
     // projects manipulation
     async projects(_, __, {token}) {
-      if (!token) return 'User is not authorized'
+      if (!token) throw new ApolloError('User is not authorized')
       const { id: authorId } = jwt.verify(token, jwtPrivateKey)
       const projects = await UserProjectModel.find({author: authorId})
       return projects
@@ -71,12 +72,12 @@ const resolvers = {
         projects: []
       }
     },
-    async updateAccountInfo(_, {name, password}, {token}) {
-      if (!token) return 'User is not authorized'
-      const { id } = jwt.verify(token, jwtPrivateKey)
+    async changeName(_, {name}, {token}) {
+      if (!token) throw new ApolloError('User is not authorized')
+      const { id, password } = jwt.verify(token, jwtPrivateKey)
       const user = await UserModel.findById(id) as User
+      if (name === user.name) throw new ApolloError('Cannot set name to the old value.')
       user.name = name
-      user.password = bcrypt.hashSync(password, salt)
       await user.save()
       return {
         name: user.name,
@@ -84,24 +85,33 @@ const resolvers = {
         id: user.id
       }
     },
+    async changePassword(_, {password}, {token}) {
+      if (!token) throw new ApolloError('User is not authorized')
+      const { id } = jwt.verify(token, jwtPrivateKey)
+      const hash = bcrypt.hashSync(password, salt)
+      const user = await UserModel.findById(id) as User
+      if (hash === user.password) throw new ApolloError('Cannot set name to the old value.')
+      user.password = hash
+      await user.save()
+      return {
+        name: user.name,
+        token: jwt.sign({ name: user.name, id: user.id, password }, jwtPrivateKey),
+        id: user.id
+      }
+    },
     async deleteAccount (_, __, {token}) {
-      if (!token) return 'User is not authorized'
-      try {
-        const { id } = jwt.verify(token, jwtPrivateKey)
-        await UserModel.findByIdAndDelete(id)
-        return {
-          type: 'Success'
-        }
-      } catch(e) {
-        console.error(e)
-        return {
-          type: 'Error'
-        }
+      if (!token) throw new ApolloError('User is not authorized')
+      const { id } = jwt.verify(token, jwtPrivateKey)
+      await UserModel.findByIdAndDelete(id)
+      const projects = await UserProjectModel.find({author: id})
+      await Promise.all(projects.map(project => project.delete()))
+      return {
+        status: 'success'
       }
     },
       // projects manipulation
       async createProject(_, {name, type, background, widthInSquares, heightInSquares, frames}, {token}) {
-        if (!token) return 'User is not authorized'
+        if (!token) throw new ApolloError('User is not authorized')
         const { id: authorId } = jwt.verify(token, jwtPrivateKey)
         const newProject = new UserProjectModel({name, type, background, widthInSquares, heightInSquares, frames, author: authorId})
         await newProject.save()
@@ -116,7 +126,7 @@ const resolvers = {
         }
       },
       async updateProject(_, {id, name, frames}, {token}) {
-        if (!token) return 'User is not authorized'
+        if (!token) throw new ApolloError('User is not authorized')
         const projectDoc = await UserProjectModel.findById(id) as UserProject
         projectDoc.name = name
         projectDoc.frames = frames
@@ -132,16 +142,16 @@ const resolvers = {
         }
       },
       async deleteProject(_, {id}, {token}) {
-        if (!token) return 'User is not authorized'
+        if (!token) throw new ApolloError('User is not authorized')
         const { id: authorId } = jwt.verify(token, jwtPrivateKey)
         const project = await UserProjectModel.findById(id) as UserProject
         if (project.author.toString() !== authorId) return { type: "Error" }
         await project.delete()
         return {
-          type: "Success"
+          status: 'success'
         }
       }
-  }
+    }
 }
 
 export default resolvers

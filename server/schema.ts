@@ -6,7 +6,7 @@ const typeDefs = gql`
     # queries
 
     type Status {
-        type: String
+        status: String
     }
 
     type UserInfo {
@@ -34,7 +34,8 @@ const typeDefs = gql`
 
     type Mutation {
         createAccount(name: String, password: String): UserInfo,
-        updateAccountInfo(name: String, password: String): UserInfo,
+        changeName(name: String): UserInfo,
+        changePassword(password: String): UserInfo,
         deleteAccount: Status,
         createProject(name: String, type: String, background: String, widthInSquares: Int, heightInSquares: Int, frames: [JSON!]!): Project
         updateProject(id: ID, name: String, frames: [JSON!]!): Project

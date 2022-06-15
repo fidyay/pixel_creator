@@ -34,25 +34,32 @@ const LoginOrSignIn = ({creatingAccount}: LoginOrSignInProps) => {
     const [name, setUserName] = useState('')
     const [password, setUserPassword] = useState('')
     const [nameTaken, setNameTaken] = useState(false)
+    const [nameOrPasswordIsInvalid, setNameOrPasswordIsInvalid] = useState(false)
     const navigate = useNavigate()
     const state = useContext(StateContext)
     const [createAccount, { data: mutationData, loading: mutationLoading, error: mutationError }] = useMutation(CREATE_ACCOUNT)
     const [login, { data: queryData, loading: queryLoading, error: queryError }] = useLazyQuery(LOGIN_WITH_NAME_AND_PASSWORD)
 
-    const submit = async (e: SubmitEvent | React.FormEvent<HTMLFormElement> | PointerEvent | React.PointerEvent) => {
+    const submit = async (e: SubmitEvent | React.FormEvent<HTMLFormElement>) => {
         try {
             e.preventDefault()
             if (creatingAccount) {
                 const { data } = await createAccount({variables: {name, password}})
                 localStorage.setItem('token', data.createAccount.token)
                 state.setUserName(data.createAccount.name)
+                await apolloClient.resetStore()
+                navigate(`/`)
             } else {
                 const { data } = await login({variables: {name, password}})
-                localStorage.setItem('token', data.me.token)
-                state.setUserName(data.me.name)
+                if (data.me.token) {
+                    localStorage.setItem('token', data.me.token)
+                    state.setUserName(data.me.name)
+                    await apolloClient.resetStore()
+                    navigate(`/`)
+                } else {
+                    setNameOrPasswordIsInvalid(true)
+                }
             }
-            await apolloClient.resetStore()
-            navigate(`/`)
         } catch(e) {
             if (e.message.includes('duplicate key error')) {
                 setNameTaken(true)
@@ -67,14 +74,17 @@ const LoginOrSignIn = ({creatingAccount}: LoginOrSignInProps) => {
                 onChange={e => {
                     setUserName(e.target.value)
                     if (nameTaken) setNameTaken(false)
+                    if (nameOrPasswordIsInvalid) setNameOrPasswordIsInvalid(false)
                 }}
                 placeholder="User1" type="text" required/></label>
                 {nameTaken && <p className="login-or-sign-in-form__error">Name {name} is already taken.</p>}
                 <label className="login-or-sign-in-form__field">Password<span className="required">*</span>: <input value={password}
                 onChange={e => {
                     setUserPassword(e.target.value)
+                    if (nameOrPasswordIsInvalid) setNameOrPasswordIsInvalid(false)
                 }}
                 placeholder="*******" type="password" required/></label>
+                {nameOrPasswordIsInvalid && <p className="login-or-sign-in-form__error login-or-sign-in-form__login-error">Name or password is invalid.</p>}
                 {!(mutationLoading || queryLoading) && <div className="login-or-sign-in-form__buttons">
                     <Button className="login-or-sign-in-form__button" type="submit" onClick={() => {}}>Ok</Button>
                     <Button className="login-or-sign-in-form__button" link linkPath="/">Cancel</Button>

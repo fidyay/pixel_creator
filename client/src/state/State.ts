@@ -35,6 +35,11 @@ class State {
         this.userName = name
     }
 
+    clearState() {
+        this.drawings = {}
+        this.userName = ''
+    }
+ 
     createDrawing(id: string, name: string, type: ProjectType, background: ColorType, widthInSquares: number, heightInSquares: number) {
         this.drawings[id] = {
             id,

@@ -13,6 +13,10 @@ import Loader from "./Effects/Loader";
 import { observer } from "mobx-react";
 import { gql, useLazyQuery } from "@apollo/client";
 import { StateContext } from "../index";
+import ChangeName from "./ChangeName";
+import ChangePassword from "./ChangePassword";
+import LogOff from "./LogOff";
+import DeleteAccount from "./DeleteAccount";
 
 
 const GET_USER_AND_PROJET_INFO = gql`
@@ -41,7 +45,9 @@ const App = observer(() => {
     }
 
     useEffect(() => {
-        if (localStorage.getItem('token') && !state.userName) queryUserInfo()
+        if (localStorage.getItem('token') && !state.userName) {
+            queryUserInfo()
+        }
     }, [localStorage.getItem('token'), state.userName])
 
     if (loading) return <Loader className="main-loader"/>
@@ -54,6 +60,10 @@ const App = observer(() => {
                         <Route path="project-configuration" element={<ProjectConfiguration/>}/>
                         <Route path="login" element={<LoginOrSignIn/>}/>
                         <Route path="sign-in" element={<LoginOrSignIn creatingAccount/>}/>
+                        <Route path="change-username" element={<ChangeName/>}/>
+                        <Route path="change-password" element={<ChangePassword/>}/>
+                        <Route path="log-off" element={<LogOff/>}/>
+                        <Route path="delete-account" element={<DeleteAccount/>}/>
                     </Route>
                     <Route path="workplace/:id" element={<Workplace/>}/>
                     <Route path="*" element={<Navigate to="/"/>}/>
