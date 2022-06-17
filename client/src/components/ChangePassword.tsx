@@ -28,10 +28,11 @@ const ChangePassword = () => {
             const { data } = await changePassword({variables: {password: newPassword}})
             state.setUserName(data.changePassword.name)
             localStorage.setItem('token', data.changePassword.token)
-            navigate(`/`)
             await apolloClient.resetStore()
         } catch(e) {
-            if (e.message === 'Cannot set password to the old value.') setPasswordIsOld(true)
+            if (e.message === 'Cannot set password to the old value.') {
+                setPasswordIsOld(true)
+            }
         }
     }
     return (
@@ -45,11 +46,23 @@ const ChangePassword = () => {
                 }}
                 placeholder="*******" type="password" required/></label>
                 {passwordIsOld && <p className="account-action__error">Cannot set password to the old value.</p>}
-                {!loading && <div className="account-action__buttons">
-                    <Button className="account-action__button" type="submit" onClick={() => {}}>Ok</Button>
-                    <Button className="account-action__button" link linkPath="/">Cancel</Button>
-                </div>}
-                {loading && <Loader widthAndHeight={28.4} className="account-action__loader"/>}
+                {(data && data.changePassword.token) ? 
+                (
+                    <div className="account-action__success-message">
+                        <p className="account-action__success">Password succesfully changed.</p>
+                        <Button className="account-action__button" link linkPath="/">Go to home page</Button>
+                    </div>
+                )
+                :
+                loading ?
+                    <Loader widthAndHeight={28.4} className="account-action__loader"/>
+                :
+                (
+                    <div className="account-action__buttons">
+                        <Button className="account-action__button" type="submit" onClick={() => {}}>Ok</Button>
+                        <Button className="account-action__button" link linkPath="/">Cancel</Button>
+                    </div>
+                )}
             </form> 
         </div>
     )

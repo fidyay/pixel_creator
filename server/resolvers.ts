@@ -90,7 +90,7 @@ const resolvers = {
       const { id } = jwt.verify(token, jwtPrivateKey)
       const hash = bcrypt.hashSync(password, salt)
       const user = await UserModel.findById(id) as User
-      if (hash === user.password) throw new ApolloError('Cannot set name to the old value.')
+      if (hash === user.password) throw new ApolloError('Cannot set password to the old value.')
       user.password = hash
       await user.save()
       return {
