@@ -17,7 +17,7 @@ import ChangeName from "./ChangeName";
 import ChangePassword from "./ChangePassword";
 import LogOff from "./LogOff";
 import DeleteAccount from "./DeleteAccount";
-
+import type { Drawing } from "../state/State";
 
 const GET_USER_AND_PROJET_INFO = gql`
     query UserAndProjects {
@@ -26,7 +26,15 @@ const GET_USER_AND_PROJET_INFO = gql`
             token
             name
         }
-        # projects query will be added later
+        projects {
+            id
+            name
+            type
+            frames
+            background
+            widthInSquares
+            heightInSquares
+        }
     }
 `
 
@@ -39,6 +47,7 @@ const App = observer(() => {
             const { data } = await queryInfo()
             state.setUserName(data.me.name)
             localStorage.setItem('token', data.me.token)
+            data.projects.forEach((project: Drawing) => state.addProjectToState(project))
         } catch(e) {
             localStorage.removeItem('token')
         }

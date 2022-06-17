@@ -26,6 +26,7 @@ $linkcolor: #0960eb;
 $hoverlinkcolor: #4a8af0;
 $errorcolor: #f5383f;
 $successcolor: #10e85f;
+$savecolor: #ad9300;
 
 * {
     font-family: "Sansation";
@@ -173,6 +174,22 @@ input[type="number"] {
 
     &:hover {
         background-color: #ee0640;
+    }
+
+    &[disabled] {
+        background-color: #750220;
+    }
+}
+
+.save {
+    background-color: $savecolor;
+
+    &:hover {
+        background-color: #cfb000;
+    }
+
+    &[disabled] {
+        background-color: #756402 !important;
     }
 }
 
@@ -460,6 +477,7 @@ input[type="number"] {
     justify-content: space-between;
     padding: 10px;
     align-items: center;
+    position: relative;
 
     &__logo-link {
         background-color: transparent !important;
@@ -478,6 +496,10 @@ input[type="number"] {
 
     &__project-name-input {
         font-size: 24px;
+        position: absolute !important;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 
     &__nickname-compliment {

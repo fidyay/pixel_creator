@@ -37,7 +37,7 @@ const typeDefs = gql`
         changeName(name: String): UserInfo,
         changePassword(password: String): UserInfo,
         deleteAccount: Status,
-        createProject(name: String, type: String, background: String, widthInSquares: Int, heightInSquares: Int, frames: [JSON!]!): Project
+        createProject(drawing: JSON): Project
         updateProject(id: ID, name: String, frames: [JSON!]!): Project
         deleteProject(id: ID): Status
     }

@@ -110,19 +110,22 @@ const resolvers = {
       }
     },
       // projects manipulation
-      async createProject(_, {name, type, background, widthInSquares, heightInSquares, frames}, {token}) {
+      async createProject(_, {drawing}, {token}) {
         if (!token) throw new ApolloError('User is not authorized')
         const { id: authorId } = jwt.verify(token, jwtPrivateKey)
-        const newProject = new UserProjectModel({name, type, background, widthInSquares, heightInSquares, frames, author: authorId})
+        const newProject = new UserProjectModel({
+          _id: drawing.id,
+          name: drawing.name,
+          author: authorId,
+          background: drawing.background,
+          widthInSquares: drawing.widthInSquares,
+          heightInSquares: drawing.heightInSquares,
+          type: drawing.type,
+          frames: drawing.frames
+        })
         await newProject.save()
         return {
-          id: newProject.id,
-          name,
-          type,
-          background,
-          widthInSquares,
-          heightInSquares,
-          frames
+          ...drawing
         }
       },
       async updateProject(_, {id, name, frames}, {token}) {

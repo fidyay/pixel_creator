@@ -3,7 +3,6 @@ import Button from "./Button";
 import Loader from "./Effects/Loader";
 import { gql, useMutation } from "@apollo/client";
 import { StateContext, apolloClient } from "../index";
-import { useNavigate } from "react-router-dom";
 
 const CHANGE_PASSWORD = gql`
     mutation changePassword($password: String) {
@@ -20,7 +19,6 @@ const ChangePassword = () => {
     const [passwordIsOld, setPasswordIsOld] = useState(false)
     const [changePassword, {data, loading, error}] = useMutation(CHANGE_PASSWORD)
     const state = useContext(StateContext)
-    const navigate = useNavigate()
 
     const submit = async (e: SubmitEvent | React.FormEvent<HTMLFormElement>) => {
         try {

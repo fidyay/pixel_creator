@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import Button from "./Button";
 import { StateContext, apolloClient } from "../index";
-import { useNavigate } from "react-router-dom";
 import { gql, useMutation } from "@apollo/client";
 import Loader from "./Effects/Loader";
 
@@ -14,7 +13,6 @@ const DELETE_ACCOUNT = gql`
 `
 
 const DeleteAccount = () => {
-    const navigate = useNavigate()
     const state = useContext(StateContext)
     const [deleteAccount, {data, loading, error}] = useMutation(DELETE_ACCOUNT)
     const submit = async (e: SubmitEvent | React.FormEvent<HTMLFormElement>) => {

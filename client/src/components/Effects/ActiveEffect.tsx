@@ -1,9 +1,14 @@
 import React, { useRef, useEffect } from "react";
 
-const ActiveEffect = () => {
+interface ActiveEffectProps {
+    disabled?: boolean
+}
+
+const ActiveEffect = ({disabled}: ActiveEffectProps) => {
     const effectDiv = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
+        if (disabled) return 
         const parent = effectDiv.current.parentNode as HTMLElement
         if (getComputedStyle(parent).position === 'static') {
             parent.style.position = 'relative'
@@ -41,7 +46,7 @@ const ActiveEffect = () => {
             parent.removeEventListener('pointerdown', pointerDownHandler)
             window.removeEventListener('pointerup', pointerUpHandler)
         }
-    })
+    }, [disabled])
 
     return <div style={{position: 'absolute', transform: 'translate(-50%, -50%)', borderRadius: '50%', zIndex: 10}} ref={effectDiv}/>
 }

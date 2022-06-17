@@ -11,19 +11,21 @@ interface ButtonProps {
     transparent?: boolean,
     chosen?: boolean,
     deleteButton?: boolean,
+    saveButton?: boolean,
+    disabled?: boolean,
     type?: "button" | "submit" | "reset"
 }
 
-const Button = ({link, linkPath, onClick, className, children, transparent, chosen, deleteButton, type}: ButtonProps) => {
+const Button = ({link, linkPath, onClick, className, children, transparent, chosen, deleteButton, saveButton, type, disabled}: ButtonProps) => {
     return link ? 
-    <Link to={linkPath} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>
+    <Link to={linkPath} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}${saveButton ? ' save' : ''}`}>
         {children}
         <ActiveEffect/>
     </Link> 
     :
-    <button type={type || 'button'} onClick={onClick} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}`}>
+    <button type={type || 'button'} disabled={disabled} onClick={onClick} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}${saveButton ? ' save' : ''}`}>
         {children}
-        <ActiveEffect/>
+        <ActiveEffect disabled={disabled}/>
     </button>
 }
 

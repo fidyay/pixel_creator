@@ -12,8 +12,6 @@ import { ColorType } from "../state/State";
 
 const compliments = ['awesome', 'best', 'great', 'amazing']
 
-// termporary code
-const name = 'Nameofartist'
 const defaultSquareSize = 15
 
 export type PenSizeType = 1 | 2 | 3 | 4
@@ -48,7 +46,7 @@ const Workplace = observer(() => {
                     <Logo/>
                 </Link>
                 <input value={drawing.name} onChange={e => state.changeDrawingName(drawingId, e.target.value)} className="header__project-name-input" type="text"/>
-                <h3 className="header__nickname-compliment">{`By ${compliment.current} artist ${name}`}</h3>
+                <h3 className="header__nickname-compliment">{`By ${compliment.current} artist${state.userName ? ` ${state.userName} `: ''}`}</h3>
             </header>
             <main className="workplace__main main">
                 <Tools setChosenColor={setChosenColor} chosenPenSize={chosenPenSize} setChosenPenSize={setChosenPenSize} chosenBrush={chosenBrush} setChosenBrush={setChosenBrush} chosenColor={chosenColor}/>
