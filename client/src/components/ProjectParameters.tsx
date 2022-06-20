@@ -7,6 +7,7 @@ import { observer } from "mobx-react";
 import { StateContext } from "../index";
 import Loader from "./Effects/Loader";
 import { useNavigate } from "react-router-dom";
+import downloadPICR from "../functions/downloadPICR";
 
 interface ProjectParametersProps {
     drawingId: string
@@ -33,7 +34,7 @@ const ProjectParameters = observer(({drawingId}: ProjectParametersProps) => {
             </div>
             {parametersShown && (
                 <div className="parameters">
-                    <Button className="parameters__button" saveButton>Save with .picr file</Button>
+                    <Button className="parameters__button" saveButton onClick={() => downloadPICR(drawing)}>Save with .picr file</Button>
                     <Button className="parameters__button" saveButton disabled={!state.userName || !state.hasChanges(drawingId)}
                     onClick={async () => {
                         if (!state.isSavedOnline(drawingId)) {

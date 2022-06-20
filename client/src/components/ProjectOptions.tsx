@@ -6,6 +6,7 @@ import { gql, useMutation } from "@apollo/client";
 import Loader from "./Effects/Loader";
 import { useNavigate } from "react-router-dom";
 import { observer } from "mobx-react";
+import downloadPICR from "../functions/downloadPICR";
 
 interface ProjectOptionsProps {
     drawingId: string
@@ -56,7 +57,7 @@ const ProjectOptions = observer(({drawingId}: ProjectOptionsProps) => {
     return (
         <div className="main__project-options project-options">
             {drawing.type !== 'image' && <SpriteAnimation drawing={drawing}/>}
-            <Button saveButton className="project-options__button">Save with .picr file</Button>
+            <Button saveButton className="project-options__button" onClick={() => downloadPICR(drawing)}>Save with .picr file</Button>
             <Button saveButton className="project-options__button" disabled={!state.userName || !state.hasChanges(drawingId)}
             onClick={async () => {
                 if (!state.isSavedOnline(drawingId)) {
