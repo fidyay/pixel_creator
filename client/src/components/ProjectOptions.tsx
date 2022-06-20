@@ -11,7 +11,7 @@ interface ProjectOptionsProps {
     drawingId: string
 }
 
-const CREATE_PROJECT = gql`
+export const CREATE_PROJECT = gql`
     mutation createNewProject($drawing: JSON) {
         createProject(drawing: $drawing) {
             id
@@ -24,7 +24,7 @@ const CREATE_PROJECT = gql`
         }
     }
 `
-const UPDATE_PROJECT = gql`
+export const UPDATE_PROJECT = gql`
     mutation updateProject($id: ID, $name: String, $frames: [JSON!]!) {
         updateProject(id: $id, name: $name, frames: $frames) {
             id
@@ -38,7 +38,7 @@ const UPDATE_PROJECT = gql`
     }
 `
 
-const DELETE_PROJECT = gql`
+export const DELETE_PROJECT = gql`
     mutation deleteProject($id: ID) {
         deleteProject(id: $id) {
             status

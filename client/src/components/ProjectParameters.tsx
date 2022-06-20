@@ -1,9 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import ActiveEffect from "./Effects/ActiveEffect";
 import Button from "./Button";
+import { useMutation } from "@apollo/client";
+import { CREATE_PROJECT, UPDATE_PROJECT, DELETE_PROJECT } from "./ProjectOptions";
+import { observer } from "mobx-react";
+import { StateContext } from "../index";
+import Loader from "./Effects/Loader";
+import { useNavigate } from "react-router-dom";
 
-const ProjectParameters = () => {
+interface ProjectParametersProps {
+    drawingId: string
+}
+
+const ProjectParameters = observer(({drawingId}: ProjectParametersProps) => {
+    const navigate = useNavigate()
+    const state = useContext(StateContext)
+    const drawing = state.drawings[drawingId]
     const [parametersShown, setParametersShown] = useState(false)
+    const [createProject, {loading: creatingProjectLoading}] = useMutation(CREATE_PROJECT)
+    const [updateProject, {loading: updatingProjectLoading}] = useMutation(UPDATE_PROJECT)
+    const [deleteProject, {loading: deletingProjectLoading}] = useMutation(DELETE_PROJECT)
 
     return (
         <>
@@ -17,15 +33,43 @@ const ProjectParameters = () => {
             </div>
             {parametersShown && (
                 <div className="parameters">
-                    <Button className="parameters__button">Save with .picr file</Button>
-                    <Button className="parameters__button">Save on cloud</Button>
+                    <Button className="parameters__button" saveButton>Save with .picr file</Button>
+                    <Button className="parameters__button" saveButton disabled={!state.userName || !state.hasChanges(drawingId)}
+                    onClick={async () => {
+                        if (!state.isSavedOnline(drawingId)) {
+                            await createProject({variables: {drawing}})
+                            state.setSavedOnline(drawing)
+                        } else {
+                            await updateProject({variables: {id: drawing.id, name: drawing.name, frames: drawing.frames}})
+                            state.setSavedOnline(drawing)
+                        }
+                    }}
+                    >{
+                        (creatingProjectLoading || updatingProjectLoading) ? 
+                            <Loader widthAndHeight={8.4}/>
+                            :
+                            `Save ${state.isSavedOnline(drawingId) ? 'changes' : 'on cloud'}`
+                    }</Button>
                     <Button className="parameters__button">Export</Button>
-                    <Button className="parameters__button" deleteButton>Delete</Button>
+                    <Button disabled={deletingProjectLoading} className="parameters__button" deleteButton onClick={async () => {
+                        if (state.isSavedOnline(drawingId)) {
+                            await deleteProject({variables: {id: drawingId}})
+                        }
+                        navigate('/')
+                        state.deleteProject(drawingId)
+                    }}>
+                        {
+                            deletingProjectLoading ? 
+                                <Loader widthAndHeight={8.4}/>
+                                :
+                                'Delete'
+                        }
+                    </Button>
                 </div>
             )}
         </>
 
     )
-}
+})
 
 export default ProjectParameters

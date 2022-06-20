@@ -62,7 +62,7 @@ const UserProject = observer(({id, squareWidth, maxWidthInPixels, margines, onSt
                 <h3>{drawing.name}</h3>
                 <ActiveEffect/>
             </Link>
-            <ProjectParameters/>
+            <ProjectParameters drawingId={id}/>
         </div>
     )
 })
