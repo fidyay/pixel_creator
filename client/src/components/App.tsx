@@ -18,6 +18,7 @@ import ChangePassword from "./ChangePassword";
 import LogOff from "./LogOff";
 import DeleteAccount from "./DeleteAccount";
 import type { Drawing } from "../state/State";
+import ImportProject from "./ImportProject";
 
 const GET_USER_AND_PROJET_INFO = gql`
     query UserAndProjects {
@@ -73,6 +74,7 @@ const App = observer(() => {
                         <Route path="change-password" element={<ChangePassword/>}/>
                         <Route path="log-off" element={<LogOff/>}/>
                         <Route path="delete-account" element={<DeleteAccount/>}/>
+                        <Route path="import-project" element={<ImportProject/>}/>
                     </Route>
                     <Route path="workplace/:id" element={<Workplace/>}/>
                     <Route path="*" element={<Navigate to="/"/>}/>

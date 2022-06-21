@@ -98,6 +98,10 @@ class State {
         this.savedOnline[drawing.id] = JSON.stringify(drawing)
     }
 
+    addProjectToStateFromImport(drawing: Drawing) {
+        this.drawings[drawing.id] = drawing
+    }
+
     deleteProject(id: string) {
         delete this.drawings[id]
         if (this.isSavedOnline(id)) delete this.savedOnline[id]

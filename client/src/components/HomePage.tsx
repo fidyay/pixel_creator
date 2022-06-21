@@ -20,6 +20,7 @@ const HomePage = observer(() => {
                     <Logo isInMainPage/>
                     <p className="home-header__description">Free online editor for pixel art and animated sprites.</p>
                     <Button link linkPath="project-configuration" className="home-header__button">Create project</Button>
+                    <Button link linkPath="import-project" className="home-header__button">Import project</Button>
                     {(!localStorage.getItem('token') && !userName) ? (
                         <>
                             <p className="home-header__authorization">Have an account? <Link className="home-header__authorization-link" to='login'>Login here.</Link></p>
