@@ -368,13 +368,13 @@ input[type="number"] {
             justify-content: center;
             align-items: center;
             border: 1px solid #fff;
-            transition: color .5s, border .5s box-shadow .5s;
+            box-shadow: 0 0 0px $dragcolor;
+            transition: color .3s, border .3s, box-shadow .3s;
 
             &_file-dragged {
                 color: $dragcolor;
                 border: 1px solid $dragcolor;
-                box-shadow: 0 0 7px $dragcolor;
-                transition: color .5s, border .5s box-shadow .5s;
+                box-shadow: 0 0 5px $dragcolor;
             }
         }
         &-input {
