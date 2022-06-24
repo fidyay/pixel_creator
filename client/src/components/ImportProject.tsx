@@ -10,6 +10,7 @@ const maxHeightOrWidth = 200
 const ImportProject = () => {
     const navigate = useNavigate()
     const [drawing, setDrawing] = useState<Drawing>(null)
+    const [fileAboveInput, setFileAboveInput] = useState(false)
     const state = useContext(StateContext)
     const label = useRef<HTMLLabelElement>(null)
     const input = useRef<HTMLInputElement>(null)
@@ -17,7 +18,6 @@ const ImportProject = () => {
 
     useEffect(() => {
         if (!drawing) {
-            label.current.style.border = '1px solid #fff'
             label.current.style.height = '200px'
             label.current.style.width = '200px'
             input.current.style.height = '198px'
@@ -35,7 +35,6 @@ const ImportProject = () => {
 
         let canvasHeight = drawing.heightInSquares * squareSize
         let canvasWidth = drawing.widthInSquares * squareSize
-        label.current.style.border = 'none'
         label.current.style.height = `${canvasHeight}px`
         label.current.style.width = `${canvasWidth}px`
         input.current.style.height = `${canvasHeight}px`
@@ -73,11 +72,14 @@ const ImportProject = () => {
             }
         }
     }, [drawing])
+
+    const highlightLabel = () => setFileAboveInput(true)
+    const unHighlightLabel = () => setFileAboveInput(false)
     return (
         <div className="modal">
             <form className="modal__form import-project-form" onSubmit={e => e.preventDefault()}>
                 <h1 className="import-project-form__heading">Import project</h1>
-                <label ref={label} className="import-project-form__file-selection-label">
+                <label ref={label} className={`import-project-form__file-selection-label${fileAboveInput ? ' import-project-form__file-selection-label_file-dragged' : ''}`} onDragEnter={highlightLabel} onDragOver={highlightLabel} onDragLeave={unHighlightLabel} onDrop={unHighlightLabel}>
                     {
                         drawing ? 
                         <canvas className="import-project-form__file-selection-canvas" ref={canvas}/> :

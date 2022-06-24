@@ -27,6 +27,7 @@ $hoverlinkcolor: #4a8af0;
 $errorcolor: #f5383f;
 $successcolor: #10e85f;
 $savecolor: #ad9300;
+$dragcolor: #2600cf;
 
 * {
     font-family: "Sansation";
@@ -366,6 +367,15 @@ input[type="number"] {
             display: flex;
             justify-content: center;
             align-items: center;
+            border: 1px solid #fff;
+            transition: color .5s, border .5s box-shadow .5s;
+
+            &_file-dragged {
+                color: $dragcolor;
+                border: 1px solid $dragcolor;
+                box-shadow: 0 0 7px $dragcolor;
+                transition: color .5s, border .5s box-shadow .5s;
+            }
         }
         &-input {
             opacity: 0;
