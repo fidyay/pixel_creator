@@ -4,7 +4,8 @@ import ColorPicker from "./ColorPicker";
 import { useNavigate } from "react-router-dom";
 import generateId from "../functions/generateId";
 import { StateContext } from "../index";
-import type { ProjectType, ColorType } from "../state/State"
+import type { ProjectType, ColorType } from "../state/State";
+import Radiobutton from "./Radiobutton";
 
 
 const spriteSizeTips = 'Maximum width and height for animated sprites is 100'
@@ -42,8 +43,8 @@ const ProjectConfiguration = () => {
                 placeholder="Project 1" type="text"/></label>
                 <fieldset className="project-configuration-form__project-type fieldset">
                     <legend className="fieldset__legend">Project type<span className="required">*</span></legend>
-                    <label className="fieldset__label" onClick={() => setProjectType('image')}><span className={`radiobutton${projectType === 'image' ? ' radiobutton_checked' : ''}`}><input name="type" type="radio"/></span>Image</label>
-                    <label className="fieldset__label" onClick={() => setProjectType('sprite')}><span className={`radiobutton${projectType === 'sprite' ? ' radiobutton_checked' : ''}`}><input name="type" type="radio"/></span>Sprite</label>
+                    <Radiobutton className="fieldset__label" onClick={() => setProjectType('image')} radiobuttonValue="image" currentRadiobuttonValue={projectType}>Image</Radiobutton>
+                    <Radiobutton className="fieldset__label" onClick={() => setProjectType('sprite')} radiobuttonValue="sprite" currentRadiobuttonValue={projectType}>Sprite</Radiobutton>
                 </fieldset>
 
                 <fieldset className="project-configuration-form__project-size fieldset">
@@ -57,8 +58,8 @@ const ProjectConfiguration = () => {
 
                 <fieldset className="project-configuration-form__project-background-color fieldset">
                     <legend className="fieldset__legend">Background color<span className="required">*</span></legend>
-                    <label onClick={() => setProjectBG('transparent')} className="fieldset__label"><span className={`radiobutton${projectBG === 'transparent' ? ' radiobutton_checked' : ''}`}><input name="type" type="radio"/></span>Transparent</label>
-                    <label onClick={() => setProjectBG(projectBG === 'transparent' ? 'rgb(255, 255, 255)' : projectBG)} className="fieldset__label"><span className={`radiobutton${projectBG !== 'transparent' ? ' radiobutton_checked' : ''}`}><input name="type" type="radio"/></span>Custom</label>
+                    <Radiobutton className="fieldset__label" onClick={() => setProjectBG('transparent')} radiobuttonValue="transparent" currentRadiobuttonValue={projectBG}>Transparent</Radiobutton>
+                    <Radiobutton className="fieldset__label" onClick={() => setProjectBG(projectBG === 'transparent' ? 'rgb(255, 255, 255)' : projectBG)} radiobuttonValue={projectBG === 'transparent' ? 'rgb(255, 255, 255)' : projectBG} currentRadiobuttonValue={projectBG}>Custom</Radiobutton>
                     {projectBG !== 'transparent' && <ColorPicker onChange={e => {
                             const color = e.value as ColorType
                             setProjectBG(color)

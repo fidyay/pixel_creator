@@ -76,7 +76,7 @@ const ProjectOptions = observer(({drawingId}: ProjectOptionsProps) => {
             }
             </Button>
             <Button className="project-options__button">Export</Button>
-            <Button className="project-options__button">Import</Button>
+            {drawing.type === 'sprite' && <Button link linkPath="import-project" className="project-options__button">Import</Button>}
             <Button deleteButton disabled={deletingProjectLoading} className="project-options__button" onClick={async () => {
                 if (state.isSavedOnline(drawingId)) {
                     await deleteProject({variables: {id: drawingId}})

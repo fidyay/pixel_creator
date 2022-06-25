@@ -222,12 +222,12 @@ input[type="number"] {
         left: 50%;
         transform: translate(-50%, -50%);
         background-color: $inputfocusbordercolor;
-        transition: width .2s, height .2s;
+        transition: width .1s, height .1s;
     }
 
     &_checked::before {
-        height: 70%;
-        width: 70%;
+        height: 8px;
+        width: 8px;
     }
 
     input {
@@ -385,6 +385,10 @@ input[type="number"] {
             bottom: 0;
             left: 0;
         }
+    }
+
+    &__operation {
+        margin-top: 10px;
     }
 
     &__paragraph {
@@ -760,6 +764,7 @@ input[type="number"] {
 
     &__button {
         margin-top: 10px;
+        text-align: center;
     }
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, Outlet } from "react-router-dom";
 import Logo from "./Logo";
 import Tools from "./Tools";
 import Frames from "./Frames";
@@ -54,6 +54,7 @@ const Workplace = observer(() => {
                 <Canvas chosenFrame={chosenFrame} chosenColor={chosenColor} chosenPenSize={chosenPenSize} squareSize={squareSize} setSquareSize={setSquareSize} chosenBrush={chosenBrush} setChosenColor={setChosenColor} drawingId={drawingId}/>
                 <ProjectOptions drawingId={drawingId}/>
             </main>
+            <Outlet/>
         </div>
     )
 })

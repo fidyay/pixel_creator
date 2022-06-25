@@ -117,8 +117,13 @@ class Drawing {
 
     drawImage(n: number) {
         this.drawBackground()
-        const coordsOfSquares = Object.keys(this.drawing.frames[this.chosenFrame])
+        const frameObj = {...this.drawing.frames[this.chosenFrame]}
+        const coordsOfSquares = Object.keys(frameObj)
         coordsOfSquares.forEach((square: CoordType) => {
+            if (!this.checkForPossibleCoordinate(square)) {
+                delete frameObj[square]
+                this.drawing.frames[this.chosenFrame] = {...frameObj}
+            }
             this.ctx.fillStyle = this.drawing.frames[n][square]
             this.drawSquareFromName(square)
         })

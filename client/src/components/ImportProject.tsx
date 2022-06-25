@@ -3,14 +3,23 @@ import Button from "./Button";
 import type { Drawing } from "../state/State";
 import { StateContext } from "../index";
 import drawFrame from "../functions/drawFrame";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import Radiobutton from "./Radiobutton";
 
 const maxHeightOrWidth = 200
 
-const ImportProject = () => {
+interface ImportProjectProps {
+    inWorkplace?: boolean
+}
+
+type Operation = 'combining' | 'replacing'
+
+const ImportProject = ({inWorkplace}: ImportProjectProps) => {
     const navigate = useNavigate()
+    const {id: drawingId} = useParams()
     const [drawing, setDrawing] = useState<Drawing>(null)
     const [fileAboveInput, setFileAboveInput] = useState(false)
+    const [operation, setOperation] = useState<Operation>('combining')
     const state = useContext(StateContext)
     const label = useRef<HTMLLabelElement>(null)
     const input = useRef<HTMLInputElement>(null)
@@ -101,15 +110,31 @@ const ImportProject = () => {
                     <>
                         <p className="import-project-form__paragraph">Name: {drawing.name}</p>
                         <p className="import-project-form__paragraph">Type: {drawing.type}</p>
+                        <p className="import-project-form__paragraph">Width: {drawing.widthInSquares}</p>
+                        <p className="import-project-form__paragraph">Height: {drawing.heightInSquares}</p>
                         {drawing.type === 'sprite' && <p className="import-project-form__paragraph">Frames: {drawing.frames.length}</p>}
                     </>
                 )}
+
+                {inWorkplace && (
+                    <fieldset className="import-project-form__operation fieldset">
+                        <legend className="fieldset__legend">Operation<span className="required">*</span></legend>
+                        <Radiobutton className="fieldset__label" onClick={() => setOperation('combining')} radiobuttonValue="combining" currentRadiobuttonValue={operation}>Combining</Radiobutton>
+                        <Radiobutton className="fieldset__label" onClick={() => setOperation('replacing')} radiobuttonValue='replacing' currentRadiobuttonValue={operation}>Replacing</Radiobutton>
+                    </fieldset>
+                )}
+
                 <div className="import-project-form__buttons">
                     <Button className="import-project-form__button" disabled={!drawing} onClick={() => {
-                        state.addProjectToStateFromImport(drawing)
+                        if (inWorkplace) {
+                            if (operation === 'combining') state.combineProjects(drawingId, drawing)
+                            else if (operation === 'replacing') state.replaceProject(drawingId, drawing)
+                        } else {
+                            state.addProjectToStateFromImport(drawing)
+                        }
                         navigate(-1)
                     }}>Ok</Button>
-                    <Button className="import-project-form__button" link linkPath="/">Cancel</Button>
+                    <Button className="import-project-form__button" link linkPath={inWorkplace ? `/workplace/${drawingId}` : '/'}>Cancel</Button>
                 </div>
             </form> 
         </div>

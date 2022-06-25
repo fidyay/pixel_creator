@@ -106,6 +106,14 @@ class State {
         delete this.drawings[id]
         if (this.isSavedOnline(id)) delete this.savedOnline[id]
     }
+
+    combineProjects(id: string, importedProject: Drawing) {
+        this.drawings[id].frames.push(...importedProject.frames)
+    }
+
+    replaceProject(id: string, importedProject: Drawing) {
+        this.drawings[id].frames = [...importedProject.frames]
+    }
 }
 
 
