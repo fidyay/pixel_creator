@@ -6,6 +6,7 @@ import generateId from "../functions/generateId";
 import { StateContext } from "../index";
 import type { ProjectType, ColorType } from "../state/State";
 import Radiobutton from "./Radiobutton";
+import NumberInput from "./NumberInput";
 
 
 const spriteSizeTips = 'Maximum width and height for animated sprites is 100'
@@ -30,7 +31,6 @@ const ProjectConfiguration = () => {
     const numberPlaceHolder = projectType === 'sprite' ? '16' : '100'
     const [projectWidthInSquares, setProjectWidthInSquares] = useState(numberPlaceHolder)
     const [projectHeightInSquares, setProjectHeightInSquares] = useState(numberPlaceHolder)
-
     
     return (
         <div className="modal">
@@ -51,8 +51,8 @@ const ProjectConfiguration = () => {
                     <legend className="fieldset__legend">Project size<span className="required">*</span></legend>
                     {projectType && <p className="fieldset__tips">{projectType === 'sprite' ? spriteSizeTips : imageSizeTips}</p>}
                     <div className="fieldset__number-inputs">
-                        <label className="fieldset__label">Width: <input value={projectWidthInSquares} onChange={e => setProjectWidthInSquares(e.target.value)} placeholder={numberPlaceHolder} max={maxSizes.width} min="1" type="number"/></label>
-                        <label className="fieldset__label">Height: <input value={projectHeightInSquares} onChange={e => setProjectHeightInSquares(e.target.value)} placeholder={numberPlaceHolder} max={maxSizes.height} min="1" type="number"/></label>
+                        <NumberInput className="fieldset__label" frontText="Width" value={projectWidthInSquares} onChange={e => setProjectWidthInSquares(e.target.value)} placeholder={numberPlaceHolder} max={maxSizes.width} min="1"/>
+                        <NumberInput className="fieldset__label" frontText="Height" value={projectHeightInSquares} onChange={e => setProjectHeightInSquares(e.target.value)} placeholder={numberPlaceHolder} max={maxSizes.height} min="1"/>
                     </div>
                 </fieldset>
 

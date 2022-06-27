@@ -56,6 +56,7 @@ const SpriteAnimation = ({drawing}: SpriteAnimationProps) => {
         <div className="project-options__sprite-animation sprite-animation">
             <canvas height={canvasHeight} width={canvasWidth} ref={node => setCanvas(node)}/>
             <div className="sprite-animation__fps-contoller">
+                <h3 className="sprite-animation__heading">FPS:</h3>
                 <Button onClick={() => {
                     if (fps !== 1) {
                         setFPS(fps - 1)

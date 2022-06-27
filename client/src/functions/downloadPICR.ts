@@ -7,6 +7,7 @@ const downloadPICR = (drawing: Drawing) => {
     link.download = fileName
     link.href = URL.createObjectURL(file)
     link.click()
+    URL.revokeObjectURL(link.href)
 }
 
 export default downloadPICR

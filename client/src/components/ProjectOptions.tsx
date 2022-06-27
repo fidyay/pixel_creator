@@ -75,7 +75,7 @@ const ProjectOptions = observer(({drawingId}: ProjectOptionsProps) => {
                     `Save ${state.isSavedOnline(drawingId) ? 'changes' : 'on cloud'}`
             }
             </Button>
-            <Button className="project-options__button">Export</Button>
+            <Button className="project-options__button" link linkPath="export-file">Export</Button>
             {drawing.type === 'sprite' && <Button link linkPath="import-project" className="project-options__button">Import</Button>}
             <Button deleteButton disabled={deletingProjectLoading} className="project-options__button" onClick={async () => {
                 if (state.isSavedOnline(drawingId)) {

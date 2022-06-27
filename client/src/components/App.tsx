@@ -19,6 +19,7 @@ import LogOff from "./LogOff";
 import DeleteAccount from "./DeleteAccount";
 import type { Drawing } from "../state/State";
 import ImportProject from "./ImportProject";
+import ExportFile from "./ExportFile";
 
 const GET_USER_AND_PROJET_INFO = gql`
     query UserAndProjects {
@@ -78,6 +79,7 @@ const App = observer(() => {
                     </Route>
                     <Route path="workplace/:id" element={<Workplace/>}>
                         <Route path="import-project" element={<ImportProject inWorkplace/>}/>
+                        <Route path="export-file" element={<ExportFile/>}/>
                     </Route>
                     <Route path="*" element={<Navigate to="/"/>}/>
                 </Routes>

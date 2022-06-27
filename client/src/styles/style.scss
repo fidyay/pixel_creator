@@ -354,6 +354,28 @@ input[type="number"] {
     }
 }
 
+
+.exporting-file-form {
+    overflow: hidden;
+    &__number-input {
+        align-self: flex-start;
+        margin-top: 5px;
+    }
+    &__buttons {
+        margin-top: 10px;
+        width: 100%;
+        display:  flex;
+        justify-content: space-evenly;
+    }
+
+    &__canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+    }
+}
+
 .login-or-sign-in-form {
     &__login-error {
         margin-bottom: 5px;
@@ -772,6 +794,11 @@ input[type="number"] {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    &__heading {
+        font-size: 20px;
+        margin-right: 10px;
+    }
 
     &__fps-contoller {
         display: flex;

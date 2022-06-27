@@ -3,7 +3,7 @@ import { makeAutoObservable } from "mobx";
 export type CoordType = `x:${number};y:${number}`
 export type ColorType = `rgb(${number}, ${number}, ${number})` | 'transparent'
 
-interface Frame {
+export interface Frame {
     [key: CoordType]: ColorType
 }
 
