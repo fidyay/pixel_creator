@@ -6,6 +6,7 @@ interface ActiveEffectProps {
 
 const ActiveEffect = ({disabled}: ActiveEffectProps) => {
     const effectDiv = useRef<HTMLDivElement>(null)
+    const timer = useRef<ReturnType<typeof setTimeout>>(null)
 
     useEffect(() => {
         if (disabled) return 
@@ -14,6 +15,8 @@ const ActiveEffect = ({disabled}: ActiveEffectProps) => {
             parent.style.position = 'relative'
         }
         const pointerDownHandler = (e: PointerEvent) => {
+            e.stopPropagation()
+            if (timer.current) clearTimeout(timer.current)
             effectDiv.current.style.transition = ''
             effectDiv.current.style.width = '0px'
             effectDiv.current.style.height = '0px'
@@ -25,18 +28,28 @@ const ActiveEffect = ({disabled}: ActiveEffectProps) => {
             effectDiv.current.style.top = `${topCoord}px`
             effectDiv.current.style.transition = 'background-color .3s, width .3s, height .3s'
             effectDiv.current.style.backgroundColor = 'rgba(0, 0, 0, .5)'
-            if (parentClientRect.height > parentClientRect.width) {
-                effectDiv.current.style.width = `${parentClientRect.height * 3}px`
-                effectDiv.current.style.height = `${parentClientRect.height * 3}px`
-            } else {
-                effectDiv.current.style.width = `${parentClientRect.width * 3}px`
-                effectDiv.current.style.height = `${parentClientRect.width * 3}px`
-            }
+            const distanceToTop = topCoord
+            const distanceToBotton = parentClientRect.height - topCoord
+            const distanceToLeft = leftCoord
+            const distanceToRight = parentClientRect.width - leftCoord
+            const widthAndHeightByY = (distanceToTop > distanceToBotton ? distanceToTop : distanceToBotton) * 3
+            const widthAndHeightByX = (distanceToLeft > distanceToRight ? distanceToLeft : distanceToRight) * 3
+            const widthAndHeight = widthAndHeightByX > widthAndHeightByY ? widthAndHeightByX : widthAndHeightByY
+            effectDiv.current.style.width = `${widthAndHeight}px`
+            effectDiv.current.style.height = `${widthAndHeight}px`
         }
 
         const pointerUpHandler = (e: PointerEvent) => {
-            effectDiv.current.style.transition = 'background-color .4s'
+            effectDiv.current.style.transition = 'background-color .3s'
             effectDiv.current.style.backgroundColor = 'transparent'
+            const setInitialHeight = () => {
+                if (effectDiv.current) {
+                    effectDiv.current.style.transition = ''
+                    effectDiv.current.style.width = '0px'
+                    effectDiv.current.style.height = '0px'
+                }
+            }
+            timer.current = setTimeout(setInitialHeight, 300)
         }
 
         parent.addEventListener('pointerdown', pointerDownHandler)

@@ -4,7 +4,7 @@ import { StateContext } from "../index";
 import { Link } from "react-router-dom";
 import ProjectParameters from "./ProjectParameters";
 import drawFrame from "../functions/drawFrame";
-import ActiveEffect from "./Effects/ActiveEffect";
+import RippleEffect from "./Effects/RippleEffect";
 
 interface UserProjectProps {
     id: string, 
@@ -60,7 +60,7 @@ const UserProject = observer(({id, squareWidth, maxWidthInPixels, margines, onSt
             <Link style={{width: `${maxWidthInPixels}px`}} className="project__link" to={`/workplace/${id}`}>
                 <canvas width={canvasWidth} height={canvasHeight} ref={canvas}/>
                 <h3>{drawing.name}</h3>
-                <ActiveEffect/>
+                <RippleEffect/>
             </Link>
             <ProjectParameters drawingId={id}/>
         </div>

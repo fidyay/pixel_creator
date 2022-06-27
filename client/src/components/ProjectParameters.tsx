@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import ActiveEffect from "./Effects/ActiveEffect";
+import RippleEffect from "./Effects/RippleEffect";
 import Button from "./Button";
 import { useMutation } from "@apollo/client";
 import { CREATE_PROJECT, UPDATE_PROJECT, DELETE_PROJECT } from "./ProjectOptions";
@@ -30,7 +30,7 @@ const ProjectParameters = observer(({drawingId}: ProjectParametersProps) => {
                     <circle r="2" transform="matrix(-1 0 0 1 2 10)" fill="white"/>
                     <circle r="2" transform="matrix(-1 0 0 1 2 18)" fill="white"/>
                 </svg>
-                <ActiveEffect/>
+                <RippleEffect/>
             </div>
             {parametersShown && (
                 <div className="parameters">

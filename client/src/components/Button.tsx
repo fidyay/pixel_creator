@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import ActiveEffect from "./Effects/ActiveEffect"
+import RippleEffect from "./Effects/RippleEffect"
 
 interface ButtonProps {
     link?: boolean,
@@ -20,12 +20,12 @@ const Button = ({link, linkPath, onClick, className, children, transparent, chos
     return link ? 
     <Link to={linkPath} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}${saveButton ? ' save' : ''}`}>
         {children}
-        <ActiveEffect/>
+        <RippleEffect/>
     </Link> 
     :
     <button type={type || 'button'} disabled={disabled} onClick={onClick} className={`${className}${chosen ? ' chosen' : ''}${transparent ? ' transparent' : ''}${deleteButton ? ' delete' : ''}${saveButton ? ' save' : ''}`}>
         {children}
-        <ActiveEffect disabled={disabled}/>
+        <RippleEffect disabled={disabled}/>
     </button>
 }
 

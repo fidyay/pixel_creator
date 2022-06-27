@@ -35,12 +35,9 @@ const Frames = observer(({drawingId, chosenFrame, setChosenFrame}: FramesProps) 
                     {frames.map((frame, index) => {
                         return <Frame canvasWidth={squareSize * drawing.widthInSquares} canvasHeight={squareSize * drawing.heightInSquares} drawingId={drawingId} deleteFrame={e => {
                             e.stopPropagation()
+                            if (drawing.frames.length === 1) return
                             state.deleteFrame(drawingId, chosenFrame)
-                            if (chosenFrame === index) {
-                                if (index !== 0) {
-                                    setChosenFrame(index - 1)
-                                }
-                            }
+                            setChosenFrame(index - 1)
                         }} setChosenFrame={setChosenFrame} chosen={chosenFrame === index} index={index} key={index}/>
                     })}
                 </ol>
