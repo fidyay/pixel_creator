@@ -51,7 +51,7 @@ const ProjectParameters = observer(({drawingId}: ProjectParametersProps) => {
                             :
                             `Save ${state.isSavedOnline(drawingId) ? 'changes' : 'on cloud'}`
                     }</Button>
-                    <Button className="parameters__button">Export</Button>
+                    <Button className="parameters__button" link linkPath={`/export-file/${drawingId}`}>Export</Button>
                     <Button disabled={deletingProjectLoading} className="parameters__button" deleteButton onClick={async () => {
                         if (state.isSavedOnline(drawingId)) {
                             await deleteProject({variables: {id: drawingId}})

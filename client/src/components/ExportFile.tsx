@@ -49,17 +49,18 @@ const ExportFile = () => {
                 ctx.clearRect(0, 0, collumns * frameWidth * squareWidthAndHeight, rows * frameHeight * squareWidthAndHeight)
 
                 if (drawing.background === 'transparent') {
-                    startFrameCoordY = drawing.heightInSquares
                     const framesJSON = JSON.stringify(drawing.frames)
+                    console.log(framesJSON)
                     for (let i = startFrameCoordX; i < drawing.widthInSquares; i++) {
                         if (framesJSON.includes(`x:${i};`)) {
                             startFrameCoordX = i
                             break
                         }
                     }
-                    for (let i = startFrameCoordY; i >= 0; i--) {
-                        if (framesJSON.includes(`y:${i}`)) {
-                            if (i < startFrameCoordY) startFrameCoordY = i
+                    for (let i = startFrameCoordY; i < drawing.heightInSquares; i++) {
+                        if (framesJSON.includes(`y:${i}"`)) {
+                            startFrameCoordY = i
+                            break
                         }
                     }
                     for (let i = drawing.widthInSquares; i >= 0; i--) {
