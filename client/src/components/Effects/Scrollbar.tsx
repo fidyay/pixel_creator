@@ -19,7 +19,7 @@ const Scrollbar = ({children}: ScrollbarProps) => {
             let thumbY = (childrenWrapper.clientHeight ** 2)/childrenWrapperScrollHeight
             thumb.style.height = `${thumbY}px`
         }
-    })
+    }, [childrenWrapper, thumb, childrenWrapperScrollHeight])
 
 
     return (<div className="scroll-wrapper">

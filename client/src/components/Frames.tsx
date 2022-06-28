@@ -37,7 +37,8 @@ const Frames = observer(({drawingId, chosenFrame, setChosenFrame}: FramesProps) 
                             e.stopPropagation()
                             if (drawing.frames.length === 1) return
                             state.deleteFrame(drawingId, chosenFrame)
-                            setChosenFrame(index - 1)
+                            if (index === drawing.frames.length) setChosenFrame(index - 1)
+                            else setChosenFrame(index)
                         }} setChosenFrame={setChosenFrame} chosen={chosenFrame === index} index={index} key={index}/>
                     })}
                 </ol>

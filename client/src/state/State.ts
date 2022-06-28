@@ -48,6 +48,10 @@ class State {
         this.userName = ''
         this.savedOnline = {}
     }
+
+    restoreFrameState(drawingId: string, frameIndex: number, frameState: Frame) {
+        this.drawings[drawingId].frames[frameIndex] = frameState
+    }
  
     createDrawing(id: string, name: string, type: ProjectType, background: ColorType, widthInSquares: number, heightInSquares: number) {
         this.drawings[id] = {

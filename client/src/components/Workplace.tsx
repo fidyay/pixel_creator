@@ -29,7 +29,7 @@ const Workplace = observer(() => {
     const {id: drawingId} = useParams()
     const navigate = useNavigate()
 
-    if (!drawings[drawingId]) {
+    if (!drawings[drawingId] || (localStorage.getItem('token') && !state.userName)) {
         navigate('/')
     }
 

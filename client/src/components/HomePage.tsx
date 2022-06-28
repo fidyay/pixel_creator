@@ -24,7 +24,7 @@ const HomePage = observer(() => {
                     {(!localStorage.getItem('token') && !userName) ? (
                         <>
                             <p className="home-header__authorization">Have an account? <Link className="home-header__authorization-link" to='login'>Login here.</Link></p>
-                            <p className="home-header__authorization">Wanna create an account? <Link className="home-header__authorization-link" to='sign-in'>Sign in here.</Link></p>
+                            <p className="home-header__authorization">Wanna create an account? <Link className="home-header__authorization-link" to='sign-in'>Sign up here.</Link></p>
                         </> 
                     ) : (
                         <AccountOptions/>
