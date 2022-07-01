@@ -733,6 +733,8 @@ input[type="number"] {
 
         &-item {
             position: relative;
+            top: 0px;
+            transition: top .3s;
             flex-shrink: 0;
 
             &:hover {

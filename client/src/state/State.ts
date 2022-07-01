@@ -83,6 +83,14 @@ class State {
         this.drawings[id].frames = [...newFramesArray]
     }
 
+    changeFrameOrder(drawingId: string, frameIndex: number, toIndex: number) {
+        const frames = this.drawings[drawingId].frames
+        const elementOnIndex = {...frames[frameIndex]}
+        const elementOnToIndex = {...frames[toIndex]}
+        frames[toIndex] = elementOnIndex
+        frames[frameIndex] = elementOnToIndex
+    }
+
     setSavedOnline(drawing: Drawing) {
         this.savedOnline[drawing.id] = JSON.stringify(drawing)
     }
