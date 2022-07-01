@@ -2,7 +2,8 @@ import React, { useState, useRef, PointerEvent, useEffect, useContext } from "re
 import Drawing from "../classes/Drawing";
 import type { PenSizeType, BrushType} from "./Workplace";
 import { StateContext } from "../index";
-import { ColorType, CoordType } from "../state/State"
+import { ColorType, CoordType } from "../state/State";
+import { observer } from "mobx-react";
 
 interface CanvasProps {
     chosenBrush: BrushType,
@@ -15,17 +16,22 @@ interface CanvasProps {
     chosenFrame: number
 }
 
-type AllowedKeyToPress = 'ShiftLeft' | 'ShiftRight' | 'KeyC' | 'KeyV' | ''
+type AllowedKeyToPress = 'ShiftLeft' | 'ShiftRight' | 'KeyC' | 'KeyV'  | 'KeyZ' | 'KeyY' | ''
 
 let currentSquareSize = 15
 const maxWidth = document.documentElement.clientWidth * .45
 const maxHeight = document.documentElement.clientHeight * .73
 
-const Canvas = ({chosenBrush, squareSize, setSquareSize, chosenPenSize, chosenColor, setChosenColor, drawingId, chosenFrame}: CanvasProps) => {
+const Canvas = observer(({chosenBrush, squareSize, setSquareSize, chosenPenSize, chosenColor, setChosenColor, drawingId, chosenFrame}: CanvasProps) => {
     const [canvas, setCanvas] = useState(null)
     const drawing = useRef(new Drawing)
     const pressedKey = useRef<AllowedKeyToPress>('')
     const state = useContext(StateContext)
+    const actionState = useRef({
+        currentFrame: chosenFrame,
+        currentActionIndex: 0,
+        actions: [state.drawings[drawingId].frames[chosenFrame]]
+    })
 
     let squareWidthAndHeight = squareSize
     let width = state.drawings[drawingId].widthInSquares * squareWidthAndHeight
@@ -81,11 +87,39 @@ const Canvas = ({chosenBrush, squareSize, setSquareSize, chosenPenSize, chosenCo
 
 
     useEffect(() => {
-        if (chosenBrush !== 'selection') return
-        const allowedKeys = ['ShiftLeft', 'ShiftRight', 'KeyC', 'KeyV']
-        const keyDown = (e: KeyboardEvent) => {
-            if (!allowedKeys.includes(e.code)) return
+        // checking for accordance with app state
+        if (chosenFrame !== actionState.current.currentFrame) {
+            actionState.current.currentFrame = chosenFrame
+            actionState.current.currentActionIndex = 0
+            actionState.current.actions = [state.drawings[drawingId].frames[chosenFrame]]
+        }
+
+        const allowedKeys: AllowedKeyToPress[] = ['ShiftLeft', 'ShiftRight', 'KeyC', 'KeyV', 'KeyZ', 'KeyY']
+
+        // action handlers
+
+        const cancelOrRepeatActionHandler = (e: KeyboardEvent) => {
             const code = e.code as AllowedKeyToPress
+            if (!allowedKeys.includes(code)) return
+            if (code === 'KeyZ' && pressedKey.current !== 'KeyZ' && actionState.current.currentActionIndex > 0) {
+                actionState.current.currentActionIndex--
+                pressedKey.current = 'KeyZ'
+                state.restoreFrameState(drawingId, chosenFrame, actionState.current.actions[actionState.current.currentActionIndex])
+            }
+            if (code === 'KeyY' && pressedKey.current !== 'KeyY' && actionState.current.currentActionIndex < actionState.current.actions.length - 1) {
+                actionState.current.currentActionIndex++
+                pressedKey.current = 'KeyY'
+                state.restoreFrameState(drawingId, chosenFrame, actionState.current.actions[actionState.current.currentActionIndex])
+            }
+        }
+
+        window.addEventListener('keydown', cancelOrRepeatActionHandler)
+
+        // selection handlers
+
+        const selectionControlsHandler = (e: KeyboardEvent) => {
+            const code = e.code as AllowedKeyToPress
+            if (!allowedKeys.includes(code)) return
             if (code.includes('Shift') && !pressedKey.current.includes('Shift')) {
                 drawing.current.fixSquaresToSelection(true)
             }
@@ -97,18 +131,27 @@ const Canvas = ({chosenBrush, squareSize, setSquareSize, chosenPenSize, chosenCo
             }
             pressedKey.current = code
         }
+
+        // keyup handler for both
         const keyUp = (e: KeyboardEvent) => {
-            if (!allowedKeys.includes(e.code)) return
             const code = e.code as AllowedKeyToPress
+            if (!allowedKeys.includes(code)) return
             if (code.includes('Shift') && pressedKey.current.includes('Shift')) {
                 drawing.current.placeSquaresFromSelection(true)
             }
             pressedKey.current = ''
         }
-        window.addEventListener('keydown', keyDown)
+
+        if (chosenBrush === 'selection') {
+            window.addEventListener('keydown', selectionControlsHandler)
+        }
+        
         window.addEventListener('keyup', keyUp)
         return () => {
-            window.removeEventListener('keydown', keyDown)
+            window.removeEventListener('keydown', cancelOrRepeatActionHandler)
+            if (chosenBrush === 'selection') {
+                window.removeEventListener('keydown', selectionControlsHandler)
+            }
             window.removeEventListener('keyup', keyUp)
         }
     })
@@ -224,6 +267,19 @@ const Canvas = ({chosenBrush, squareSize, setSquareSize, chosenPenSize, chosenCo
                         drawing.current.selectedSquares.isDrawing = false
                         window.removeEventListener('pointermove', pointerMoveListener)
                         window.removeEventListener('pointerup', pointerUpListener)
+
+                        // adding actions 
+
+                        if (JSON.stringify(state.drawings[drawingId].frames[chosenFrame]) !== JSON.stringify(actionState.current.actions[actionState.current.actions.length - 1])) {
+                            if (actionState.current.currentActionIndex === actionState.current.actions.length - 1) {
+                                actionState.current.currentActionIndex++
+                                actionState.current.actions.push(state.drawings[drawingId].frames[chosenFrame])
+                            } else if (actionState.current.currentActionIndex < actionState.current.actions.length - 1) {
+                                actionState.current.currentActionIndex++
+                                actionState.current.actions = actionState.current.actions.slice(0, actionState.current.currentActionIndex)
+                                actionState.current.actions.push(state.drawings[drawingId].frames[chosenFrame])
+                            }
+                        }
                     } 
 
                     window.addEventListener('pointermove', pointerMoveListener)
@@ -231,6 +287,6 @@ const Canvas = ({chosenBrush, squareSize, setSquareSize, chosenPenSize, chosenCo
                     
                 }} width={width} height={height} ref={node => setCanvas(node)}/>
             </div>)
-}
+})
 
 export default Canvas

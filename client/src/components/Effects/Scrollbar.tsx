@@ -21,7 +21,6 @@ const Scrollbar = ({children}: ScrollbarProps) => {
         }
     }, [childrenWrapper, thumb, childrenWrapperScrollHeight])
 
-
     return (<div className="scroll-wrapper">
                 <div ref={node => setChildrenWrapper(node)} className="scroll-wrapper__children-wrapper"
                 onScroll={() => {
@@ -55,7 +54,6 @@ const Scrollbar = ({children}: ScrollbarProps) => {
                     <div style={{top: '0px'}} ref={node => setThumb(node)} className="scrollbar__thumb"/>
                 </div>}
             </div>)
-
 }
 
 export default Scrollbar
