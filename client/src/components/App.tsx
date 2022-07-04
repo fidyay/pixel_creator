@@ -76,7 +76,7 @@ const App = observer(() => {
                         <Route path="log-off" element={<LogOff/>}/>
                         <Route path="delete-account" element={<DeleteAccount/>}/>
                         <Route path="import-project" element={<ImportProject/>}/>
-                        <Route path="export-file/:id" element={<ExportFile/>}/>
+                        <Route path="export-file/:id" element={<ExportFile fromHomePage/>}/>
                     </Route>
                     <Route path="workplace/:id" element={<Workplace/>}>
                         <Route path="import-project" element={<ImportProject inWorkplace/>}/>

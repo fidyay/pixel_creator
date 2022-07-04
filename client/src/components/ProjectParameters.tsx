@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import RippleEffect from "./Effects/RippleEffect";
 import Button from "./Button";
 import { useMutation } from "@apollo/client";
@@ -21,6 +21,18 @@ const ProjectParameters = observer(({drawingId}: ProjectParametersProps) => {
     const [createProject, {loading: creatingProjectLoading}] = useMutation(CREATE_PROJECT)
     const [updateProject, {loading: updatingProjectLoading}] = useMutation(UPDATE_PROJECT)
     const [deleteProject, {loading: deletingProjectLoading}] = useMutation(DELETE_PROJECT)
+
+    useEffect(() => {
+        const closingProjectParameters = (e: PointerEvent) => {
+            const target = e.target as HTMLElement
+            if (target.closest('.parameters__button') || target.closest('.dots')) return
+            setParametersShown(false)
+        }
+        window.addEventListener('click', closingProjectParameters)
+        return () => {
+            window.removeEventListener('click', closingProjectParameters)
+        }
+    })
 
     return (
         <>

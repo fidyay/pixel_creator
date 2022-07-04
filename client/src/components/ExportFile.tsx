@@ -26,7 +26,11 @@ const drawFrameSprite = (ctx: CanvasRenderingContext2D, drawing: Drawing, frameI
     })
 }
 
-const ExportFile = () => {
+interface ExportFileProps {
+    fromHomePage?: boolean
+}
+
+const ExportFile = ({fromHomePage}: ExportFileProps) => {
     const navigate = useNavigate()
     const { id: drawingId } = useParams()
     const drawing = useContext(StateContext).drawings[drawingId]
@@ -122,7 +126,7 @@ const ExportFile = () => {
                 
                 <div className="exporting-file-form__buttons">
                     <Button className="exporting-file-form__button" type="submit">Ok</Button>
-                    <Button className="exporting-file-form__button" link linkPath={`/workplace/${drawingId}`}>Cancel</Button>
+                    <Button className="exporting-file-form__button" link linkPath={fromHomePage ? '/' : `/workplace/${drawingId}`}>Cancel</Button>
                 </div>
             </form>
         </div>
