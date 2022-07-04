@@ -41,7 +41,7 @@ const webpackConfig = {
         }
       },
       {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        test: /\.(png|svg|jpg|jpeg|gif|ico)$/i,
         type: 'asset/resource',
         generator: {
           filename: 'assets/images/[name].[ext]'
@@ -53,7 +53,8 @@ const webpackConfig = {
       new webpack.ProgressPlugin(),
       new webpack.HotModuleReplacementPlugin(),
       new HTMLWebpackPlugin({
-        template: './index.html'
+        template: './index.html',
+        favicon: './favicon.ico'
       }),
       new MiniCssExtractPlugin({
         filename: 'styles/[name].[contenthash].css'
