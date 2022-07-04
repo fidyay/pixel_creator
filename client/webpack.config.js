@@ -54,7 +54,7 @@ const webpackConfig = {
       new webpack.HotModuleReplacementPlugin(),
       new HTMLWebpackPlugin({
         template: './index.html',
-        favicon: './favicon.ico'
+        favicon: './src/assets/images/favicon.ico'
       }),
       new MiniCssExtractPlugin({
         filename: 'styles/[name].[contenthash].css'
