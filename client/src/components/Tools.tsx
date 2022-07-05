@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "./Button";
 import ColorPicker from "./ColorPicker";
 import type { PenSizeType, BrushType} from "./Workplace";
@@ -13,7 +13,27 @@ interface ToolsProps {
     chosenColor: string
 }
 
+type AllowedKey = 'KeyP' | 'KeyL' | 'KeyB' | 'KeyE' | 'KeyR' | 'KeyC' | 'KeyS' | 'KeyO'
+
 const Tools = ({chosenPenSize, setChosenPenSize, chosenBrush, setChosenBrush, setChosenColor, chosenColor}: ToolsProps) => {
+    useEffect(() => {
+        const selectBrushWithKeyboard = (e: KeyboardEvent) => {
+            const key = e.code as AllowedKey
+            if (e.ctrlKey || e.shiftKey || e.metaKey || e.altKey) return
+            if (key === 'KeyP') setChosenBrush('pen')
+            else if (key === 'KeyL') setChosenBrush('line')
+            else if (key === 'KeyB') setChosenBrush('paint_bucket')
+            else if (key === 'KeyE') setChosenBrush('eraser')
+            else if (key === 'KeyR') setChosenBrush('rectangle')
+            else if (key === 'KeyC') setChosenBrush('elipse')
+            else if (key === 'KeyS') setChosenBrush('selection')
+            else if (key === 'KeyO') setChosenBrush('pipette')
+        }
+        window.addEventListener('keydown', selectBrushWithKeyboard)
+        return () => {
+            window.removeEventListener('keydown', selectBrushWithKeyboard)
+        }
+    })
 
     return (
         <div className="main__tools tools">
