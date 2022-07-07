@@ -8,6 +8,10 @@ const KeyboardShortcuts = () => {
         <div className="modal">
             <div className="modal__window window__keyboard-shortcuts">
                 <h1 className="window__keyboard-shortcuts__heading">Keyboard shortcuts</h1>
+                <p className="window__keyboard-shortcuts__shortcut">1 - set pen size to 1</p>
+                <p className="window__keyboard-shortcuts__shortcut">2 - set pen size to 2</p>
+                <p className="window__keyboard-shortcuts__shortcut">3 - set pen size to 3</p>
+                <p className="window__keyboard-shortcuts__shortcut">4 - set pen size to 4</p>
                 <p className="window__keyboard-shortcuts__shortcut">P - pen</p>
                 <p className="window__keyboard-shortcuts__shortcut">L - line</p>
                 <p className="window__keyboard-shortcuts__shortcut">B - bucket</p>

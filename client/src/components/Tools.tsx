@@ -14,25 +14,57 @@ interface ToolsProps {
     chosenColor: string
 }
 
-type AllowedKey = 'KeyP' | 'KeyL' | 'KeyB' | 'KeyE' | 'KeyR' | 'KeyC' | 'KeyS' | 'KeyO'
+type AllowedKey = 'KeyP' | 'KeyL' | 'KeyB' | 'KeyE' | 'KeyR' | 'KeyC' | 'KeyS' | 'KeyO' | 'Digit1' | 'Digit2' | 'Digit3' | 'Digit4'
 
 const Tools = ({chosenPenSize, setChosenPenSize, chosenBrush, setChosenBrush, setChosenColor, chosenColor}: ToolsProps) => {
     useEffect(() => {
-        const selectBrushWithKeyboard = (e: KeyboardEvent) => {
+        const selectBrushAndPenSizeWithKeyboard = (e: KeyboardEvent) => {
+            const target = e.target as HTMLElement
+            if (target.tagName === 'INPUT') return
             const key = e.code as AllowedKey
             if (e.ctrlKey || e.shiftKey || e.metaKey || e.altKey) return
-            if (key === 'KeyP') setChosenBrush('pen')
-            else if (key === 'KeyL') setChosenBrush('line')
-            else if (key === 'KeyB') setChosenBrush('paint_bucket')
-            else if (key === 'KeyE') setChosenBrush('eraser')
-            else if (key === 'KeyR') setChosenBrush('rectangle')
-            else if (key === 'KeyC') setChosenBrush('elipse')
-            else if (key === 'KeyS') setChosenBrush('selection')
-            else if (key === 'KeyO') setChosenBrush('pipette')
+            switch(key) {
+                case 'KeyP': 
+                    setChosenBrush('pen')
+                    break
+                case 'KeyL': 
+                    setChosenBrush('line')
+                    break
+                case 'KeyB': 
+                    setChosenBrush('paint_bucket')
+                    break
+                case 'KeyE': 
+                    setChosenBrush('eraser')
+                    break
+                case 'KeyR': 
+                    setChosenBrush('rectangle')
+                    break
+                case 'KeyC': 
+                    setChosenBrush('elipse')
+                    break
+                case 'KeyS': 
+                    setChosenBrush('selection')
+                    break
+                case 'KeyO': 
+                    setChosenBrush('pipette')
+                    break
+                case 'Digit1': 
+                    setChosenPenSize(1)
+                    break
+                case 'Digit2': 
+                    setChosenPenSize(2)
+                    break
+                case 'Digit3': 
+                    setChosenPenSize(3)
+                    break
+                case 'Digit4': 
+                    setChosenPenSize(4)
+                    break
+            }
         }
-        window.addEventListener('keydown', selectBrushWithKeyboard)
+        window.addEventListener('keydown', selectBrushAndPenSizeWithKeyboard)
         return () => {
-            window.removeEventListener('keydown', selectBrushWithKeyboard)
+            window.removeEventListener('keydown', selectBrushAndPenSizeWithKeyboard)
         }
     })
 
@@ -40,10 +72,22 @@ const Tools = ({chosenPenSize, setChosenPenSize, chosenBrush, setChosenBrush, se
         <div className="main__tools tools">
             <h3 className="tools__heading">Pen sizes</h3>
             <div className="tools__pen-sizes">
-                <Button chosen={chosenPenSize === 1} onClick={() => setChosenPenSize(1)} transparent className="tools__pen-size">1</Button>
-                <Button chosen={chosenPenSize === 2} onClick={() => setChosenPenSize(2)} transparent className="tools__pen-size">2</Button>
-                <Button chosen={chosenPenSize === 3} onClick={() => setChosenPenSize(3)} transparent className="tools__pen-size">3</Button>
-                <Button chosen={chosenPenSize === 4} onClick={() => setChosenPenSize(4)} transparent className="tools__pen-size">4</Button>
+                <Button chosen={chosenPenSize === 1} onClick={() => setChosenPenSize(1)} transparent className="tools__pen-size">
+                    1
+                    <Hint>Press 1 to select</Hint>
+                </Button>
+                <Button chosen={chosenPenSize === 2} onClick={() => setChosenPenSize(2)} transparent className="tools__pen-size">
+                    2
+                    <Hint>Press 2 to select</Hint>
+                    </Button>
+                <Button chosen={chosenPenSize === 3} onClick={() => setChosenPenSize(3)} transparent className="tools__pen-size">
+                    3
+                    <Hint>Press 3 to select</Hint>
+                    </Button>
+                <Button chosen={chosenPenSize === 4} onClick={() => setChosenPenSize(4)} transparent className="tools__pen-size">
+                    4
+                    <Hint>Press 4 to select</Hint>
+                    </Button>
             </div>
             <div className="tools__pens">
                 <Button chosen={chosenBrush === 'pen'} onClick={() => setChosenBrush('pen')} transparent className="tools__pen">
