@@ -20,6 +20,7 @@ import DeleteAccount from "./DeleteAccount";
 import type { Drawing } from "../state/State";
 import ImportProject from "./ImportProject";
 import ExportFile from "./ExportFile";
+import KeyboardShortcuts from "./Keyboardshortcuts";
 
 const GET_USER_AND_PROJET_INFO = gql`
     query UserAndProjects {
@@ -81,6 +82,7 @@ const App = observer(() => {
                     <Route path="workplace/:id" element={<Workplace/>}>
                         <Route path="import-project" element={<ImportProject inWorkplace/>}/>
                         <Route path="export-file" element={<ExportFile/>}/>
+                        <Route path="keyboard-shortcuts" element={<KeyboardShortcuts/>}/>
                     </Route>
                     <Route path="*" element={<Navigate to="/"/>}/>
                 </Routes>
