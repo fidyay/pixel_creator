@@ -80,13 +80,13 @@ const Tools = ({chosenPenSize, setChosenPenSize, chosenBrush, setChosenBrush, se
                     <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 0V30H30V0H0ZM27 26.25H3V3.75H27V26.25Z" fill="#6969B3"/>
                     </svg>
-                    <Hint>Rectangle(R)</Hint>
+                    <Hint>Rectangle(R): Shift - to keep 1:1 ratio</Hint>
                 </Button>
                 <Button chosen={chosenBrush === 'elipse'} onClick={() => setChosenBrush('elipse')} transparent className="tools__pen">
                     <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M15 0C6.705 0 0 6.705 0 15C0 23.295 6.705 30 15 30C23.295 30 30 23.295 30 15C30 6.705 23.295 0 15 0ZM15 27C8.37 27 3 21.63 3 15C3 8.37 8.37 3 15 3C21.63 3 27 8.37 27 15C27 21.63 21.63 27 15 27Z" fill="#6969B3"/>
                     </svg>
-                    <Hint>Circle(C)</Hint>
+                    <Hint>Circle(C): Shift - to keep 1:1 ratio</Hint>
                 </Button>
                 <Button chosen={chosenBrush === 'selection'} onClick={() => setChosenBrush('selection')} transparent className="tools__pen">
                     <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">

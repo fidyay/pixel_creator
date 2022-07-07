@@ -438,7 +438,7 @@ class Drawing {
         this.drawing.frames[this.chosenFrame] = {...newFrameObj}
     }
 
-    rectangle(x1: number, y1: number, x2: number, y2: number) {
+    rectangle(x1: number, y1: number, x2: number, y2: number, save1to1Ratio: boolean) {
         this.drawImage(this.chosenFrame)
         this.ctx.fillStyle = this.color
         const startCoords = {
@@ -449,6 +449,20 @@ class Drawing {
             x: this.getSquareCoord(x2),
             y: this.getSquareCoord(y2)
         }
+
+        if (save1to1Ratio) {
+            const xDiff = Math.abs(startCoords.x - endCoords.x)
+            const yDiff = Math.abs(startCoords.y - endCoords.y)
+
+            if (xDiff > yDiff) {
+                if (startCoords.x < endCoords.x) endCoords.x = startCoords.x + yDiff
+                else if (startCoords.x > endCoords.x) endCoords.x = startCoords.x - yDiff
+            } else if (xDiff < yDiff) {
+                if (startCoords.y < endCoords.y) endCoords.y = startCoords.y + xDiff
+                else if (startCoords.y > endCoords.y) endCoords.y = startCoords.y - xDiff
+            }
+        }
+
         const squaresToDraw = new Set<CoordType>()
 
         if (startCoords.x !== endCoords.x && startCoords.y !== endCoords.y) {
@@ -590,7 +604,7 @@ class Drawing {
         return squaresToDrawArray
     }
 
-    elipse(x1: number, y1: number, x2: number, y2: number) {
+    elipse(x1: number, y1: number, x2: number, y2: number, save1to1Ratio: boolean) {
         this.drawImage(this.chosenFrame)
         this.ctx.fillStyle = this.color
         const startCoords = {
@@ -602,6 +616,19 @@ class Drawing {
             y: this.getSquareCoord(y2)
         }
         
+        if (save1to1Ratio) {
+            const xDiff = Math.abs(startCoords.x - endCoords.x)
+            const yDiff = Math.abs(startCoords.y - endCoords.y)
+
+            if (xDiff > yDiff) {
+                if (startCoords.x < endCoords.x) endCoords.x = startCoords.x + yDiff
+                else if (startCoords.x > endCoords.x) endCoords.x = startCoords.x - yDiff
+            } else if (xDiff < yDiff) {
+                if (startCoords.y < endCoords.y) endCoords.y = startCoords.y + xDiff
+                else if (startCoords.y > endCoords.y) endCoords.y = startCoords.y - xDiff
+            }
+        }
+
         let endCoordX = startCoords.x > endCoords.x ? startCoords.x : endCoords.x
         let endCoordY = startCoords.y > endCoords.y ? startCoords.y : endCoords.y
 

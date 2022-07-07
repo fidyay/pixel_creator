@@ -115,6 +115,18 @@ const Canvas = observer(({chosenBrush, squareSize, setSquareSize, chosenPenSize,
 
         window.addEventListener('keydown', cancelOrRepeatActionHandler)
 
+        // rectange and elipse shift handler
+
+        const rectangeAndCircleShiftHandler = (e: KeyboardEvent) => {
+            const code = e.code as AllowedKeyToPress
+            if (code.includes('Shift'))
+            pressedKey.current = code
+        }
+
+        if (chosenBrush === 'elipse' || chosenBrush === 'rectangle') {
+            window.addEventListener('keydown', rectangeAndCircleShiftHandler)
+        }
+
         // selection handlers
 
         const selectionControlsHandler = (e: KeyboardEvent) => {
@@ -132,11 +144,11 @@ const Canvas = observer(({chosenBrush, squareSize, setSquareSize, chosenPenSize,
             pressedKey.current = code
         }
 
-        // keyup handler for both
+        // keyup handler for all
         const keyUp = (e: KeyboardEvent) => {
             const code = e.code as AllowedKeyToPress
             if (!allowedKeys.includes(code)) return
-            if (code.includes('Shift') && pressedKey.current.includes('Shift')) {
+            if (code.includes('Shift') && pressedKey.current.includes('Shift') && chosenBrush === 'selection') {
                 drawing.current.placeSquaresFromSelection(true)
             }
             pressedKey.current = ''
@@ -151,6 +163,9 @@ const Canvas = observer(({chosenBrush, squareSize, setSquareSize, chosenPenSize,
             window.removeEventListener('keydown', cancelOrRepeatActionHandler)
             if (chosenBrush === 'selection') {
                 window.removeEventListener('keydown', selectionControlsHandler)
+            }
+            if (chosenBrush === 'elipse' || chosenBrush === 'rectangle') {
+                window.removeEventListener('keydown', rectangeAndCircleShiftHandler)
             }
             window.removeEventListener('keyup', keyUp)
         }
@@ -193,10 +208,10 @@ const Canvas = observer(({chosenBrush, squareSize, setSquareSize, chosenPenSize,
                             drawing.current.erase(pointX, pointY)
                             break
                         case 'rectangle':
-                            squaresToDraw = drawing.current.rectangle(pointX, pointY, pointX, pointY)
+                            squaresToDraw = drawing.current.rectangle(pointX, pointY, pointX, pointY, pressedKey.current.includes('Shift'))
                             break
                         case 'elipse': 
-                            squaresToDraw = drawing.current.elipse(pointX, pointY, pointX, pointY)
+                            squaresToDraw = drawing.current.elipse(pointX, pointY, pointX, pointY, pressedKey.current.includes('Shift'))
                             break
                         case 'selection': 
                             if (!Object.keys(drawing.current.selectedSquares.squares).length) {
@@ -234,10 +249,10 @@ const Canvas = observer(({chosenBrush, squareSize, setSquareSize, chosenPenSize,
                                 drawing.current.erase(pointMoveX, pointMoveY)
                                 break
                             case 'rectangle':
-                                squaresToDraw = drawing.current.rectangle(pointX, pointY, pointMoveX, pointMoveY)
+                                squaresToDraw = drawing.current.rectangle(pointX, pointY, pointMoveX, pointMoveY, pressedKey.current.includes('Shift'))
                                 break
                             case 'elipse': 
-                                squaresToDraw = drawing.current.elipse(pointX, pointY, pointMoveX, pointMoveY)
+                                squaresToDraw = drawing.current.elipse(pointX, pointY, pointMoveX, pointMoveY, pressedKey.current.includes('Shift'))
                                 break
                             case 'selection': 
                                 if (drawing.current.selectedSquares.isDrawing) {
