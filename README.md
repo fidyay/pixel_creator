@@ -7,17 +7,29 @@ On the home page you can see list of your projects and if you want you can creat
 You can either create a project or import the existing one saved earlier with .picr file.
 
 On the workplace page you can select different brushes and pen sizes either by clicking buttons or using these shortcuts:
+
 1 - set pen size to 1
+
 2 - set pen size to 2
+
 3 - set pen size to 3
+
 4 - set pen size to 4
+
 P - pen
+
 L - line
+
 B - bucket
+
 E - eraser
+
 R - rectangle: Shift - to keep 1:1 ratio
+
 C - circle: Shift - to keep 1:1 ratio
+
 S - selection: Shift - to move, Ctrl + C and Ctrl + V - to copy and paste
+
 O - pipette
 
 You can select color using color picker or typing rgb colors' values in it's fields.
