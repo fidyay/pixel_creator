@@ -209,6 +209,7 @@ input[type="number"] {
     border-radius: 50%;
     position: relative;
     top: 4px;
+    padding: 0;
     display: inline-block;
     border: 2px solid rgba($color: #fff, $alpha: .7);
 
@@ -216,16 +217,22 @@ input[type="number"] {
         content: '';
         width: 0;
         height: 0;
+        display: block;
+        margin: 0;
+        padding: 0;
         border-radius: 50%;
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        margin-top: 0px;
+        margin-left: 0px;
         background-color: $inputfocusbordercolor;
-        transition: width .1s, height .1s;
+        transition: width .1s, height .1s, margin-top .1s, margin-left .1s;
     }
 
     &_checked::before {
+        margin-top: -4px;
+        margin-left: -4px;
         height: 8px;
         width: 8px;
     }
