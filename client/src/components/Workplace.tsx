@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from "react";
-import { Link, useParams, useNavigate, Outlet } from "react-router-dom";
+import { Link, useParams, Navigate, Outlet } from "react-router-dom";
 import Logo from "./Logo";
 import Tools from "./Tools";
 import Frames from "./Frames";
@@ -27,13 +27,12 @@ const Workplace = observer(() => {
     const state = useContext(StateContext)
     const drawings = state.drawings
     const {id: drawingId} = useParams()
-    const navigate = useNavigate()
-
-    if (!drawings[drawingId] || (localStorage.getItem('token') && !state.userName)) {
-        navigate('/')
-    }
 
     const drawing = drawings[drawingId]
+
+    if (!drawings[drawingId]) {
+        return <Navigate to="/"/>
+    }
 
     if (compliment.current === '') {
         compliment.current = compliments[Math.round(getRandomNumber(0, 3))]
