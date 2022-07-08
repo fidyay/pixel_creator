@@ -16,9 +16,11 @@
     "ts-node-dev": "^1.1.8"
   },
   "dependencies": {
-    "apollo-server": "^3.8.1",
+    "apollo-server-core": "^3.9.0",
+    "apollo-server-express": "^3.9.0",
     "bcrypt": "^5.0.1",
     "dotenv": "^16.0.1",
+    "express": "^4.18.1",
     "graphql": "^16.5.0",
     "graphql-type-json": "^0.3.2",
     "jsonwebtoken": "^8.5.1",

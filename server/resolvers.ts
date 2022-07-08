@@ -6,7 +6,7 @@ import UserModel from "./models/User";
 import UserProjectModel from "./models/UserProject";
 import { User } from "./models/User";
 import { UserProject } from "./models/UserProject";
-import { ApolloError } from "apollo-server";
+import { ApolloError } from "apollo-server-express";
 
 configEnv()
 

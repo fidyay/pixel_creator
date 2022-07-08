@@ -1,8 +1,11 @@
 import { config as configEnv } from "dotenv";
-import { ApolloServer } from "apollo-server";
+import { ApolloServer } from "apollo-server-express";
+import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
+import express from "express";
 import typeDefs from "./schema";
 import resolvers from "./resolvers";
 import mongoose from "mongoose";
+import http from "http";
 
 configEnv() 
 
@@ -15,16 +18,28 @@ connectionToDatabase()
 .then(() => console.log('Connected to database successfully'))
 .catch(console.error)
 
-// connect to database and write resolvers
-const server = new ApolloServer({typeDefs, resolvers, context: ({req}) => {
-    const getToken = (BearerToken: string) => {
-        return BearerToken.includes('Bearer ') ? BearerToken.slice(7) : BearerToken
-    }
-    const bearerToken = req.headers.authorization || '' as string
-    const token = getToken(bearerToken)
-    return {token}
-}});
+const startServer = async () => {
+    const app = express()
+    
+    const httpServer = http.createServer(app)
 
-server.listen().then(server => {
-    console.log(`Listening at ${server.url}`)
-})
+    const server = new ApolloServer({typeDefs, resolvers, plugins: [ApolloServerPluginDrainHttpServer({ httpServer })], context: ({req}) => {
+        const getToken = (BearerToken: string) => {
+            return BearerToken.includes('Bearer ') ? BearerToken.slice(7) : BearerToken
+        }
+        const bearerToken = req.headers.authorization || '' as string
+        const token = getToken(bearerToken)
+        return {token}
+    }})
+
+    await server.start()
+    
+    server.applyMiddleware({ app, path: '/graphql' })
+    
+    const port = process.env.PORT || 4000
+    
+    await new Promise<void>(resolve => httpServer.listen({ port }, resolve))
+    console.log(`Server ready at http://localhost:${port}${server.graphqlPath}`)
+}
+
+startServer().catch(console.error)
