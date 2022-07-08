@@ -88,6 +88,9 @@ if (devMode) {
     static: './build',
     historyApiFallback: true,
     hot: true,
+    proxy: {
+      '/graphql': 'http://localhost:4000'
+    },
     client: {
       reconnect: true
     },
