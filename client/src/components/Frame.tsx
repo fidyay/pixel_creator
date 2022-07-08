@@ -4,6 +4,7 @@ import Button from "./Button";
 import { observer } from "mobx-react";
 import { StateContext } from "../index";
 import drawFrame from "../functions/drawFrame";
+import Hint from "./Hint";
 
 interface FrameProps {
     index: number,

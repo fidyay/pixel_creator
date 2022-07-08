@@ -37,14 +37,14 @@ const Frames = observer(({drawingId, chosenFrame, setChosenFrame}: FramesProps) 
                         return <Frame canvasWidth={squareSize * drawing.widthInSquares} canvasHeight={squareSize * drawing.heightInSquares} drawingId={drawingId} deleteFrame={e => {
                             e.stopPropagation()
                             if (drawing.frames.length === 1) return
-                            state.deleteFrame(drawingId, chosenFrame)
+                            state.deleteFrame(drawingId, index)
                             if (index === drawing.frames.length) setChosenFrame(index - 1)
-                            else setChosenFrame(index)
+                            if (chosenFrame === drawing.frames.length) setChosenFrame(chosenFrame - 1)
                         }}
                         copyFrame={e => {
                             e.stopPropagation()
-                            state.copyFrame(drawingId, index)
                             setChosenFrame(frames.length)
+                            state.copyFrame(drawingId, index)
                         }}
                         setChosenFrame={setChosenFrame} chosen={chosenFrame === index}
                         changeOrder={e => {
