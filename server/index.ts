@@ -22,10 +22,10 @@ connectionToDatabase()
 const startServer = async () => {
     const app = express()
 
-    app.use(express.static('../client/build'))
+    app.use(express.static('./client'))
 
     app.get('*', (req, res) => {
-        res.sendFile(path.resolve('../client/build/index.html'))
+        res.sendFile(path.resolve('./client/index.html'))
     })
     
     const httpServer = http.createServer(app)

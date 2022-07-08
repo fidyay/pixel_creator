@@ -13,7 +13,7 @@ const webpackConfig = {
   output: {
     clean: true,
     filename: 'js/[name].[contenthash].js',
-    path: path.resolve(__dirname, 'build')
+    path: path.resolve('../build/client')
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx']

@@ -8,7 +8,7 @@ import {
 import HomePage from "./HomePage";
 import ProjectConfiguration from "./ProjectConfiguration";
 import Workplace from "./Workplace";
-import LoginOrSignIn from "./LoginOrSignIn";
+import LoginOrSignUp from "./LoginOrSignUp";
 import Loader from "./Effects/Loader";
 import { observer } from "mobx-react";
 import { gql, useLazyQuery } from "@apollo/client";
@@ -70,8 +70,8 @@ const App = observer(() => {
                 <Routes>
                     <Route path="/" element={<HomePage/>}>
                         <Route path="project-configuration" element={<ProjectConfiguration/>}/>
-                        <Route path="login" element={<LoginOrSignIn/>}/>
-                        <Route path="sign-in" element={<LoginOrSignIn creatingAccount/>}/>
+                        <Route path="login" element={<LoginOrSignUp/>}/>
+                        <Route path="sign-in" element={<LoginOrSignUp creatingAccount/>}/>
                         <Route path="change-username" element={<ChangeName/>}/>
                         <Route path="change-password" element={<ChangePassword/>}/>
                         <Route path="log-off" element={<LogOff/>}/>

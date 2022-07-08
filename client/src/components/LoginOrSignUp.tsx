@@ -80,7 +80,7 @@ const LoginOrSignIn = ({creatingAccount}: LoginOrSignInProps) => {
     return (
         <div className="modal">
             <form className="modal__form login-or-sign-in-form" onSubmit={submit}>
-                <h1 className="login-or-sign-in-form__heading">{creatingAccount ? 'Sign in' : 'Login'}</h1>
+                <h1 className="login-or-sign-in-form__heading">{creatingAccount ? 'Sign up' : 'Login'}</h1>
                 <label className="login-or-sign-in-form__field">Name<span className="required">*</span>: <input value={name}
                 onChange={e => {
                     setUserName(e.target.value)
