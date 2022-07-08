@@ -50,11 +50,18 @@ const resolvers = {
       }
     },
     // projects manipulation
-    async projects(_, __, {token}) {
-      if (!token) throw new ApolloError('User is not authorized')
-      const { id: authorId } = jwt.verify(token, jwtPrivateKey)
-      const projects = await UserProjectModel.find({author: authorId})
-      return projects
+    async projects(_, {authorName, authorPassword}, {token}) {
+      if (!token && !authorName) throw new ApolloError('User is not authorized')
+      if (authorName && authorPassword) {
+        const hash = bcrypt.hashSync(authorPassword, salt)
+        const user = await UserModel.findOne({authorName, password: hash}) as User
+        const projects = await UserProjectModel.find({author: user.id})
+        return projects
+      } else if (token) {
+        const { id: authorId } = jwt.verify(token, jwtPrivateKey)
+        const projects = await UserProjectModel.find({author: authorId})
+        return projects
+      }
     }
     
   },

@@ -6,6 +6,7 @@ import typeDefs from "./schema";
 import resolvers from "./resolvers";
 import mongoose from "mongoose";
 import http from "http";
+import path from "path";
 
 configEnv() 
 
@@ -20,6 +21,12 @@ connectionToDatabase()
 
 const startServer = async () => {
     const app = express()
+
+    // app.use(express.static('../client/build'))
+
+    // app.get('*', (req, res) => {
+    //     res.sendFile(path.resolve('../client/build/index.html'))
+    // })
     
     const httpServer = http.createServer(app)
 
@@ -39,7 +46,7 @@ const startServer = async () => {
     const port = process.env.PORT || 4000
     
     await new Promise<void>(resolve => httpServer.listen({ port }, resolve))
-    console.log(`Server ready at http://localhost:${port}${server.graphqlPath}`)
+    console.log(`Server ready at http://localhost:${port}`)
 }
 
 startServer().catch(console.error)

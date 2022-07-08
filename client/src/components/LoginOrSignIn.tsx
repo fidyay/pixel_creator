@@ -5,6 +5,7 @@ import { gql, useMutation, useLazyQuery } from "@apollo/client";
 import { StateContext } from "../index";
 import Loader from "./Effects/Loader";
 import { apolloClient } from "../index";
+import type { Drawing } from "../state/State";
 
 interface LoginOrSignInProps {
     creatingAccount?: boolean
@@ -23,9 +24,18 @@ const CREATE_ACCOUNT = gql`
 const LOGIN_WITH_NAME_AND_PASSWORD = gql`
     query LoginWithNameAndPassword($name: String, $password: String) {
         me(name: $name, password: $password) {
-        id
-        token
-        name
+            id
+            token
+            name
+        }
+        projects(authorName: $name, authorPassword: $password) {
+            background
+            id
+            name
+            type
+            frames
+            widthInSquares
+            heightInSquares
         }
     }
 `
@@ -47,15 +57,16 @@ const LoginOrSignIn = ({creatingAccount}: LoginOrSignInProps) => {
                 const { data } = await createAccount({variables: {name, password}})
                 localStorage.setItem('token', data.createAccount.token)
                 state.setUserName(data.createAccount.name)
-                await apolloClient.resetStore()
                 navigate(`/`)
+                await apolloClient.resetStore()
             } else {
                 const { data } = await login({variables: {name, password}})
                 if (data.me.token) {
                     localStorage.setItem('token', data.me.token)
                     state.setUserName(data.me.name)
-                    await apolloClient.resetStore()
+                    data.projects.forEach((project: Drawing) => state.addProjectToState(project))
                     navigate(`/`)
+                    await apolloClient.resetStore()
                 } else {
                     setNameOrPasswordIsInvalid(true)
                 }

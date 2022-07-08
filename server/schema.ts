@@ -27,7 +27,7 @@ const typeDefs = gql`
 
     type Query {
         me(name: String, password: String): UserInfo,
-        projects: [Project!]!
+        projects(authorName: String, authorPassword: String): [Project!]!
     }
 
     # mutations
