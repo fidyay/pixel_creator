@@ -41,6 +41,11 @@ const Frames = observer(({drawingId, chosenFrame, setChosenFrame}: FramesProps) 
                             if (index === drawing.frames.length) setChosenFrame(index - 1)
                             else setChosenFrame(index)
                         }}
+                        copyFrame={e => {
+                            e.stopPropagation()
+                            state.copyFrame(drawingId, index)
+                            setChosenFrame(frames.length)
+                        }}
                         setChosenFrame={setChosenFrame} chosen={chosenFrame === index}
                         changeOrder={e => {
                             const el = e.currentTarget

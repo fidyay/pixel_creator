@@ -739,6 +739,32 @@ input[type="number"] {
             }
         }
 
+        &-copy-frame {
+            position: absolute;
+            z-index: 999;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            bottom: 5px;
+            right: 5px;
+            opacity: 0;
+            transition: opacity .3s;
+            background-color: $bodybg !important;
+
+            &:hover {
+                background-color: $buttonhoverbg !important;
+            }
+
+            svg {
+                width: 30px;
+                height: 30px;
+                flex-shrink: 0;
+                flex-grow: 0;
+            }
+        }
+
         &-item {
             position: relative;
             top: 0px;
@@ -746,7 +772,7 @@ input[type="number"] {
             flex-shrink: 0;
 
             &:hover {
-                .frames__frame-list-delete-frame {
+                .frames__frame-list-delete-frame, .frames__frame-list-copy-frame {
                     opacity: 1;
                 }
             }
