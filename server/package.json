@@ -1,14 +1,13 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
   "private": true,
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node index.ts",
     "dev": "ts-node-dev --respawn ./index.ts",
-    "build": "tsc"
+    "build": "tsc && node buildServerScripts/copyEnv.js && cd ../build && npm init -y && npm i apollo-server-core apollo-server-express bcrypt dotenv express graphql graphql-type-json jsonwebtoken mongoose && cd ../server && node buildServerScripts/addStartScriptToBuildPackageJSON.js"
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +24,8 @@
     "graphql": "^16.5.0",
     "graphql-type-json": "^0.3.2",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.3.5"
-  }
+    "mongoose": "^6.4.4"
+  },
+  "keywords": [],
+  "description": ""
 }

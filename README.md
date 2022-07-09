@@ -65,13 +65,8 @@ Both are made with TypeScript.
 1. Install dependencies in server and client directories.
 2. Go to server directory in your terminal.
 3. Type npm run build.
-4. Copy the env file to the build directory.
-5. Go to build directory in your terminal.
-6. Type npm init.
-7. Copy dependencies from the server package.json to the build package.json.
-8. Add "start": "node index.js" to the scripts in build package.json.
-9. Go to client directory in your terminal.
-10. Type npm run build.
-11. Go to build directory in your terminal. 
-12. Type npm start.
+4. Go to client directory in your terminal.
+5. Type npm run build.
+6. Go to build directory in your terminal. 
+7. Type npm start.
 
