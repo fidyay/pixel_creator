@@ -64,9 +64,7 @@ Both are made with TypeScript.
 [You can try it here](https://pixel-creator.herokuapp.com/) or if you want to launch its on you local machine you need: 
 1. Install dependencies in server and client directories.
 2. Go to server directory in your terminal.
-3. Type npm run build.
-4. Go to client directory in your terminal.
-5. Type npm run build.
-6. Go to build directory in your terminal. 
-7. Type npm start.
+3. Type npm run buildFullApp.
+4. Go to build directory in your terminal. 
+5. Type npm start.
 
