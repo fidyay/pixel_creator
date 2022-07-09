@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node index.ts",
     "dev": "ts-node-dev --respawn ./index.ts",
-    "build": "tsc && node buildServerScripts/copyEnv.js && cd ../build && npm init -y && npm i apollo-server-core apollo-server-express bcrypt dotenv express graphql graphql-type-json jsonwebtoken mongoose && cd ../server && node buildServerScripts/addStartScriptToBuildPackageJSON.js"
+    "build": "tsc && node buildServerScripts/copyEnv.js && cd ../build && npm init -y && cd ../server && node buildServerScripts/addStartScriptAndDependeciesToBuildPackageJSON.js && cd ../build && npm install"
   },
   "author": "",
   "license": "ISC",
