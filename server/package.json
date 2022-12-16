@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node index.ts",
+    "runBuild": "node index.js",
     "dev": "ts-node-dev --respawn ./index.ts",
-    "build": "tsc && node buildServerScripts/copyEnv.js && cd ../build && npm init -y && cd ../server && node buildServerScripts/addStartScriptAndDependeciesToBuildPackageJSON.js && cd ../build && npm install",
+    "build": "tsc && cp package.json ../build && cd ../build && npm install",
     "buildFullApp": "npm run build && cd ../client && npm run build"
   },
   "author": "",
