@@ -1,7 +1,9 @@
 # Pixel Creator
+
 Free online editor for pixel art and animated sprites.
 
 ## Documentation
+
 On the home page you can see list of your projects and if you want you can create an account or login to the existing. It's not necessary, you only need this if you want to save your project online.
 
 You can either create a project or import the existing one saved earlier with .picr file.
@@ -45,6 +47,7 @@ You can export a png file of your sprite or image on the corresponding modal and
 You can import .picr file by combining two projects or replacing frames of the opened one.
 
 ## About this app
+
 Front end is made using React, Mobx, SCSS, GrapgQl with Apollo Client.
 Back end is made using Apollo Server combined with Express framework.
 Both are made with TypeScript.
@@ -52,6 +55,7 @@ Both are made with TypeScript.
 ## Usage
 
 ### Dev version
+
 1. Copy this repository to your machine
 2. Go to server directory in your terminal.
 3. Install it's dependencies.
@@ -61,10 +65,11 @@ Both are made with TypeScript.
 7. Type npm start.
 
 ### Prod version
-[You can try it here](https://pixel-creator.herokuapp.com/) or if you want to launch its on you local machine you need: 
+
+[You can try it here](https://pixel-creator.onrender.com/) or if you want to launch its on you local machine you need:
+
 1. Install dependencies in server and client directories.
 2. Go to server directory in your terminal.
 3. Type npm run buildFullApp.
-4. Go to build directory in your terminal. 
+4. Go to build directory in your terminal.
 5. Type npm start.
-
